@@ -1,8 +1,6 @@
 # Production deployment and hardening
 
-This document describes what **`nexus build`** produces, how **server actions** are secured in current releases (0.7.5+), and which **environment variables** matter in production.
-
-**Source:** this file lives in **[github.com/bierfor/nexusjs-site](https://github.com/bierfor/nexusjs-site)** (served at **nexusjs.dev** as `/docs/PRODUCTION.md`). It is kept in sync with the framework monorepo copy when possible. For the full version history, see **[CHANGELOG.md](https://github.com/bierfor/nexus/blob/main/CHANGELOG.md)** in **[github.com/bierfor/nexus](https://github.com/bierfor/nexus)**.
+This document describes what **`nexus build`** produces, how **server actions** are secured in current releases (0.7.5+), and which **environment variables** matter in production. For the full version history, see **[CHANGELOG.md](https://github.com/bierfor/nexus/blob/main/CHANGELOG.md)** in the framework monorepo.
 
 ## Build output (`.nexus/`)
 
@@ -72,9 +70,9 @@ From **`@nexus_js/server`**:
 
 ## Publishing the framework (maintainers)
 
-See **[PUBLISHING.md](https://github.com/bierfor/nexus/blob/main/docs/PUBLISHING.md)** in the framework monorepo. Prefer **`pnpm release:safe`** (build + test + publish) over **`pnpm release`** when you want tests to gate the release.
+See **[PUBLISHING.md](https://github.com/bierfor/nexus/blob/main/docs/PUBLISHING.md)**. Prefer **`pnpm release:safe`** (build + test + publish) over **`pnpm release`** when you want tests to gate the release.
 
 ## Further reading
 
-- **nexusjs.dev** — landing: [`/`](/) · this doc: [`/docs/PRODUCTION.md`](/docs/PRODUCTION.md) · repo: **[github.com/bierfor/nexusjs-site](https://github.com/bierfor/nexusjs-site)**.
-- Changelog: **[CHANGELOG.md](https://github.com/bierfor/nexus/blob/main/CHANGELOG.md)** (framework monorepo).
+- **nexusjs.dev** — deployed from **[github.com/bierfor/nexusjs-site](https://github.com/bierfor/nexusjs-site)**; this file is served at **[nexusjs.dev/docs/PRODUCTION.md](https://nexusjs.dev/docs/PRODUCTION.md)**. Landing source in the monorepo: **[docs/index.html](https://github.com/bierfor/nexus/blob/main/docs/index.html)**.
+- Changelog: **[CHANGELOG.md](https://github.com/bierfor/nexus/blob/main/CHANGELOG.md)**.
