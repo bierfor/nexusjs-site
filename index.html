@@ -1,0 +1,3220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Nexus.js — Full-stack framework | Islands, Runes, Server Actions &amp; Hardened Mode</title>
+  <meta id="meta-desc" name="description" content="Nexus.js: opinionated full-stack framework for 2026 — Svelte 5 Runes, islands architecture, server actions, pretext security, and Hardened Mode. Technical purity without the bureaucracy of mega-frameworks.">
+  <meta name="keywords" content="Nexus.js, Nexus framework, full-stack JavaScript, Svelte 5, Runes, islands architecture, server actions, SSR, pretext, Hardened Mode, supply chain security, TypeScript">
+  <meta name="author" content="Nexus Contributors">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" href="assets/nexus-logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/nexus-logo.svg">
+  <link rel="canonical" href="https://nexusjs.dev/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nexusjs.dev/">
+  <meta id="og-title" property="og:title" content="Nexus.js — Full-stack framework | Islands, Runes &amp; Hardened Mode">
+  <meta id="og-desc" property="og:description" content="Opinionated framework with technical purity: surgical JS via islands, pretext for secure server data, and Hardened Mode as your build-time auditor.">
+  <meta property="og:site_name" content="Nexus.js">
+  <meta property="og:image" content="https://nexusjs.dev/assets/nexus-logo.svg">
+  <meta property="og:locale" id="og-locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta id="tw-title" name="twitter:title" content="Nexus.js — Full-stack framework">
+  <meta id="tw-desc" name="twitter:description" content="Islands + Runes + Server Actions + Hardened Mode. Built for real problems in 2026.">
+  <meta name="twitter:image" content="https://nexusjs.dev/assets/nexus-logo.svg">
+  <link rel="alternate" hreflang="en" href="https://nexusjs.dev/">
+  <link rel="alternate" hreflang="es" href="https://nexusjs.dev/">
+  <link rel="alternate" hreflang="pt" href="https://nexusjs.dev/">
+  <link rel="alternate" hreflang="x-default" href="https://nexusjs.dev/">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebSite","@id":"https://nexusjs.dev/#website","name":"Nexus.js","url":"https://nexusjs.dev/","description":"Full-stack JavaScript framework: islands, Svelte 5 Runes, server actions, pretext, Hardened Mode.","inLanguage":["en","es","pt"],"publisher":{"@id":"https://nexusjs.dev/#org"}},
+    {"@type":"Organization","@id":"https://nexusjs.dev/#org","name":"Nexus.js","url":"https://nexusjs.dev/","logo":{"@type":"ImageObject","url":"https://nexusjs.dev/assets/nexus-logo.svg"}},
+    {"@type":"SoftwareApplication","name":"Nexus.js","applicationCategory":"DeveloperApplication","operatingSystem":"Cross-platform","license":"https://opensource.org/licenses/MIT","url":"https://github.com/bierfor/nexus","description":"Opinionated full-stack framework with islands architecture, Runes reactivity, and security-first compiler & audit tooling."}
+  ]}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Prism.js for syntax highlighting (light) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --bg2: #ffffff;
+      --surface: #f4f4f5;
+      --surface-elevated: #ffffff;
+      --border: #e4e4e7;
+      --border-strong: #d4d4d8;
+      --accent: #18181b;
+      --accent-soft: #3b82f6;
+      --accent2: #2563eb;
+      --accent-muted: rgba(37, 99, 235, 0.08);
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --text: #18181b;
+      --text-secondary: #52525b;
+      --muted: #71717a;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --sidebar-w: 272px;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 24px rgba(0,0,0,.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    /* Anchor targets clear fixed mobile header */
+    section[id] {
+      scroll-margin-top: 1rem;
+    }
+    @media (max-width: 900px) {
+      section[id] {
+        scroll-margin-top: 4.5rem;
+      }
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+      letter-spacing: -0.01em;
+    }
+
+    aside {
+      width: var(--sidebar-w);
+      height: 100vh;
+      max-height: 100vh;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      padding: 28px 22px 24px;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+    }
+
+    aside nav#sidebar-nav {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 0 40px;
+      overscroll-behavior: contain;
+    }
+
+    .logo-img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      object-fit: contain;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+    }
+
+    .logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .logo-version {
+      font-size: 10px;
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 7px;
+      margin-left: auto;
+      font-family: var(--mono);
+    }
+
+    .nav-section {
+      padding: 6px 22px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 18px;
+    }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 22px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13.5px;
+      border-left: 2px solid transparent;
+      transition: color .15s, background .15s, border-color .15s;
+    }
+
+    nav a:hover { color: var(--text); background: rgba(0,0,0,.03); }
+    nav a.active {
+      color: var(--accent2);
+      border-left-color: var(--accent2);
+      background: var(--accent-muted);
+      font-weight: 500;
+    }
+
+    nav a:focus-visible {
+      outline: 2px solid var(--accent2);
+      outline-offset: -2px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      z-index: 10000;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 0 0 8px 0;
+      text-decoration: none;
+    }
+    .skip-link:focus {
+      left: 0;
+      top: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .read-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      z-index: 9999;
+      pointer-events: none;
+      background: transparent;
+    }
+    .read-progress__bar {
+      height: 100%;
+      width: 100%;
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      background: linear-gradient(90deg, var(--accent2), #1d4ed8);
+    }
+
+    .mobile-topbar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      padding: 0 12px 0 8px;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 95;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .nav-toggle:hover { background: var(--surface); }
+    .nav-toggle:focus-visible {
+      outline: 2px solid var(--accent2);
+      outline-offset: 2px;
+    }
+    .nav-toggle-icon {
+      display: grid;
+      gap: 5px;
+      width: 20px;
+    }
+    .nav-toggle-icon span {
+      display: block;
+      height: 2px;
+      background: currentColor;
+      border-radius: 1px;
+    }
+
+    .mobile-brand {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      min-width: 0;
+    }
+    .mobile-brand-logo {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 9px;
+      object-fit: contain;
+      box-shadow: 0 1px 6px rgba(15, 23, 42, 0.1);
+    }
+    .mobile-brand-suffix {
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 13px;
+      margin-left: 6px;
+    }
+
+    .mobile-lang {
+      display: none;
+      align-items: center;
+      gap: 2px;
+    }
+    .mobile-lang .lang-btn {
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+
+    .nav-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    body.nav-open .nav-backdrop {
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .nav-filter-wrap {
+      padding: 0 14px 12px;
+      margin: 0 8px 4px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-filter {
+      width: 100%;
+      padding: 8px 10px 8px 32px;
+      font-size: 13px;
+      font-family: var(--sans);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2371717a' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E") 10px center no-repeat;
+      background-size: 14px;
+    }
+    .nav-filter::placeholder { color: var(--muted); }
+    .nav-filter:focus {
+      outline: none;
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px var(--accent-muted);
+    }
+
+    .copy-code-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--sans);
+      color: var(--muted);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      opacity: 0.85;
+      transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .copy-code-btn { opacity: 0; }
+      pre[class*="language-"]:hover .copy-code-btn { opacity: 1; }
+    }
+    .copy-code-btn:focus {
+      opacity: 1;
+    }
+    .copy-code-btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+    .copy-code-btn:focus-visible {
+      opacity: 1;
+      outline: 2px solid var(--accent2);
+    }
+    .copy-code-btn.is-copied {
+      color: var(--green);
+      border-color: rgba(22,163,74,.4);
+    }
+
+    .to-top {
+      position: fixed;
+      right: 20px;
+      bottom: 24px;
+      z-index: 90;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg2);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s, border-color 0.15s;
+    }
+    .to-top.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .to-top:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+    .to-top:focus-visible {
+      outline: 2px solid var(--accent2);
+    }
+
+    main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      max-width: calc(100% - var(--sidebar-w));
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, #ffffff 0%, #fafafa 55%, #f4f4f5 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 96px 80px 72px;
+      text-align: center;
+    }
+
+    /* Triangle mesh: tiled rhombi (each cell reads as four triangles) */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='42' viewBox='0 0 48 42'%3E%3Cpath d='M24 0 L48 21 L24 42 L0 21 Z' fill='none' stroke='rgba(0,0,0,0.06)' stroke-width='0.9'/%3E%3C/svg%3E");
+      background-size: 48px 42px;
+      mask-image: radial-gradient(ellipse 95% 75% at 50% 0%, black 18%, transparent 72%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(900px, 90vw);
+      height: 420px;
+      background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-logo {
+      display: block;
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 24px;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(0, 0, 0, 0.06);
+      object-fit: contain;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: var(--mono);
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 4.5vw, 56px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 36px;
+      font-weight: 450;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s, background .15s, border-color .15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,.15);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,.2); }
+
+    .btn-outline {
+      background: var(--bg2);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+    }
+    .btn-outline:hover { border-color: var(--text); color: var(--text); }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 52px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+      min-width: 76px;
+      position: relative;
+      padding-top: 14px;
+    }
+
+    /* Small triangle marker above each stat (not square boxes) */
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 10px solid rgba(37, 99, 235, 0.35);
+    }
+
+    .stat-num {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 500; }
+
+    .content {
+      padding: 0 80px 100px;
+      max-width: 920px;
+    }
+
+    section { padding-top: 64px; }
+    section:first-of-type { padding-top: 56px; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 10px;
+      font-family: var(--mono);
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+
+    h3 {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 36px 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+
+    p { color: var(--text-secondary); margin-bottom: 16px; }
+
+    .lead {
+      font-size: 17px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    pre[class*="language-"] {
+      position: relative;
+      background: var(--surface-elevated) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      padding: 20px 76px 20px 24px !important;
+      margin: 20px 0;
+      overflow-x: auto;
+      font-size: 13px !important;
+      line-height: 1.6 !important;
+      box-shadow: var(--shadow-sm);
+    }
+
+    code[class*="language-"] {
+      font-family: var(--mono) !important;
+      font-size: 13px !important;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      padding: 10px 16px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-bottom: 0;
+    }
+
+    .code-title + pre[class*="language-"] {
+      border-radius: 0 0 var(--radius) var(--radius) !important;
+      margin-top: 0 !important;
+    }
+
+    .code-lang {
+      font-size: 10px;
+      background: var(--bg2);
+      color: var(--accent2);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    :not(pre) > code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent2);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: border-color .2s, box-shadow .2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+
+    .card-icon { font-size: 22px; margin-bottom: 10px; }
+    .card h4 { margin: 0 0 6px; font-size: 14px; color: var(--text); }
+    .card p { font-size: 13px; margin: 0; color: var(--muted); }
+
+    .dir-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .dir-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+
+    .dir-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .dir-table tr:hover td { background: rgba(0,0,0,.02); }
+
+    .dir-table code { font-size: 12px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--mono);
+    }
+    .badge-purple { background: rgba(124,58,237,.1); color: #6d28d9; }
+    .badge-cyan   { background: rgba(6,182,212,.1);  color: #0891b2; }
+    .badge-green  { background: rgba(22,163,74,.1); color: var(--green); }
+    .badge-amber  { background: rgba(217,119,6,.1); color: var(--amber); }
+    .badge-red    { background: rgba(220,38,38,.1);  color: var(--red); }
+
+    .callout {
+      border-left: 3px solid var(--accent2);
+      background: var(--accent-muted);
+      padding: 16px 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 20px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .callout.tip  { border-color: var(--green);  background: rgba(22,163,74,.08); }
+    .callout.warn { border-color: var(--amber);  background: rgba(217,119,6,.08); }
+    .callout.info { border-color: var(--accent2); background: var(--accent-muted); }
+    .callout strong { display: block; margin-bottom: 6px; color: var(--text); }
+
+    .steps { counter-reset: step; margin: 24px 0; }
+    .step { display: flex; gap: 16px; margin-bottom: 24px; }
+    .step-num {
+      counter-increment: step;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-content h4 { margin: 0 0 6px; color: var(--text); }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    .cmp-scroll {
+      overflow-x: auto;
+      margin: 24px 0;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cmp-table {
+      width: 100%;
+      min-width: 1040px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .cmp-table th {
+      padding: 12px 10px;
+      background: var(--surface);
+      text-align: center;
+      font-weight: 600;
+      font-size: 11px;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .cmp-table th:first-child { text-align: left; padding-left: 14px; }
+    .cmp-table td {
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      background: var(--bg2);
+    }
+    .cmp-table td:first-child {
+      text-align: left;
+      color: var(--text);
+      font-weight: 500;
+      padding-left: 14px;
+    }
+    .cmp-table tr:hover td { background: var(--surface); }
+    .check { color: var(--green); font-size: 15px; }
+    .cross { color: var(--red);   font-size: 15px; }
+    .partial { color: var(--amber); font-size: 13px; }
+
+    .lang-bar {
+      position: fixed;
+      top: 16px; right: 24px;
+      display: flex;
+      gap: 6px;
+      z-index: 100;
+      padding: 4px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow-md);
+    }
+    .lang-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .lang-btn.active, .lang-btn:hover {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .philosophy-section {
+      padding-bottom: 8px;
+    }
+    .philosophy-section .lead {
+      max-width: 720px;
+    }
+    .philosophy-flow {
+      margin: 28px 0 8px;
+      padding: 22px 24px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0f9ff 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+    .philosophy-flow h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      color: var(--text);
+    }
+    .philosophy-flow p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+    .philosophy-closing h3 {
+      margin: 32px 0 10px;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+    .philosophy-closing p {
+      max-width: 680px;
+      margin: 0 0 12px;
+    }
+    .philosophy-question {
+      font-style: italic;
+      color: var(--accent2);
+      font-weight: 500;
+      margin-top: 20px !important;
+    }
+
+    .enterprise-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 28px 0 20px;
+    }
+
+    .enterprise-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .enterprise-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-md);
+    }
+
+    .ec-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #eff6ff, #dbeafe);
+      color: var(--accent2);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .enterprise-card h4 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .enterprise-card p {
+      font-size: 13px;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .enterprise-foot {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    .enterprise-foot a {
+      color: var(--accent2);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .enterprise-foot a:hover { text-decoration: underline; }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+    main .content a:not(.btn) {
+      color: var(--accent2);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    main .content a:not(.btn):hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      .mobile-topbar {
+        display: flex;
+      }
+      .mobile-lang {
+        display: flex;
+      }
+      .lang-bar {
+        display: none;
+      }
+      aside {
+        display: flex;
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+        box-shadow: none;
+        z-index: 200;
+      }
+      body.nav-open aside {
+        transform: translateX(0);
+        box-shadow: 8px 0 40px rgba(0,0,0,.12);
+      }
+      body.nav-open {
+        overflow: hidden;
+      }
+      main {
+        margin-left: 0;
+        max-width: 100%;
+        padding-top: 52px;
+      }
+      .hero, .content {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .hero {
+        padding-top: 72px;
+      }
+      .hero-logo {
+        width: 72px;
+        height: 72px;
+        margin-bottom: 20px;
+      }
+      .to-top {
+        right: 14px;
+        bottom: 16px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<div class="read-progress" aria-hidden="true"><div class="read-progress__bar" id="read-progress-bar"></div></div>
+
+<header class="mobile-topbar">
+  <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="sidebar-nav" aria-label="Open menu">
+    <span class="nav-toggle-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
+  <a href="#top" class="mobile-brand">
+    <img class="mobile-brand-logo" src="assets/nexus-logo.svg" width="32" height="32" alt="" decoding="async" />
+    <span>Nexus <span class="mobile-brand-suffix">docs</span></span>
+  </a>
+  <div class="mobile-lang">
+    <button type="button" class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button type="button" class="lang-btn" onclick="setLang('es')">ES</button>
+    <button type="button" class="lang-btn" onclick="setLang('pt')">PT</button>
+  </div>
+</header>
+
+<div class="nav-backdrop" id="nav-backdrop" aria-hidden="true"></div>
+
+<!-- ── Language switcher ──────────────────────────────────────────────────── -->
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('pt')">PT</button>
+</div>
+
+<!-- ── Sidebar ────────────────────────────────────────────────────────────── -->
+<aside>
+  <a href="#top" class="sidebar-logo">
+    <img class="logo-img" src="assets/nexus-logo.svg" width="36" height="36" alt="" decoding="async" />
+    <span class="logo-text">Nexus</span>
+    <span class="logo-version">v0.7.4</span>
+  </a>
+  <nav id="sidebar-nav">
+    <div class="nav-filter-wrap">
+      <label for="nav-filter" class="visually-hidden">Filter navigation</label>
+      <input type="search" class="nav-filter" id="nav-filter" placeholder="Filter sections…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="nav-section" data-i18n="nav.gettingStarted">Getting Started</div>
+    <a href="#install" class="active" data-i18n="nav.install">⚡ Installation</a>
+    <a href="#quickstart" data-i18n="nav.quickStart">🚀 Quick Start</a>
+    <a href="#project-structure">📁 Project Structure</a>
+
+    <div class="nav-section" data-i18n="nav.core">Core Concepts</div>
+    <a href="#why-nexus" data-i18n="nav.why">✨ Why Nexus</a>
+    <a href="#nx-format">📄 .nx Format</a>
+    <a href="#routing">🗺️ File Routing</a>
+    <a href="#islands">🏝️ Islands</a>
+    <a href="#runes">⚡ Runes</a>
+
+    <div class="nav-section" data-i18n="nav.data">Data & Server</div>
+    <a href="#server-actions">⚙️ Server Actions</a>
+    <a href="#cache">💾 Cache & Revalidate</a>
+    <a href="#database">🗄️ Database</a>
+    <a href="#streaming">🌊 Streaming SSR</a>
+
+    <div class="nav-section" data-i18n="nav.advanced">Advanced</div>
+    <a href="#enterprise" data-i18n="nav.enterprise">🏢 Enterprise &amp; subdomains</a>
+    <a href="#store">🌐 Global Store</a>
+    <a href="#navigation">↔️ SPA Navigation</a>
+    <a href="#middleware">🔒 Middleware</a>
+    <a href="#seo">🔍 SEO & Head</a>
+    <a href="#assets">🖼️ Assets</a>
+    <a href="#multitenant">🏢 Multi-Tenant</a>
+    <a href="#local-first">📴 Local-First Sync</a>
+    <a href="#zero-bundle">✨ Zero-Bundle UI</a>
+
+    <div class="nav-section" data-i18n="nav.security">Security</div>
+    <a href="#security">🛡️ Security by Default</a>
+    <a href="#audit">🔍 nexus audit</a>
+    <a href="#supply-chain">⛓️ Supply Chain Guard</a>
+    <a href="#nexus-fix">🔧 nexus fix</a>
+
+    <div class="nav-section" data-i18n="nav.tooling">Tooling</div>
+    <a href="#cli">🛠️ CLI Reference</a>
+    <a href="#studio">🎛️ Nexus Studio</a>
+    <a href="#testing">🧪 Testing</a>
+    <a href="#deployment">🚀 Deployment</a>
+
+    <div class="nav-section" data-i18n="nav.reference">Reference</div>
+    <a href="#changelog">📋 Changelog</a>
+    <a href="#comparison">⚖️ Comparison</a>
+    <a href="#packages">📦 Packages</a>
+  </nav>
+</aside>
+
+<!-- ── Main ───────────────────────────────────────────────────────────────── -->
+<main>
+
+  <!-- Hero -->
+  <div class="hero" id="top">
+    <img class="hero-logo" src="assets/nexus-logo.svg" width="88" height="88" alt="Nexus" decoding="async" />
+    <div class="hero-badge">
+      <span>◆</span>
+      <span data-i18n="hero.badge">Islands Architecture + Svelte 5 Runes + Server Actions</span>
+    </div>
+    <h1 data-i18n="hero.title">The Definitive<br>Full-Stack Framework</h1>
+    <p data-i18n="hero.subtitle">Zero JS by default. Progressive hydration where you need it. Server Actions that are type-safe, race-condition-safe, and edge-ready.</p>
+    <div class="hero-actions">
+      <a href="#quickstart" class="btn btn-primary" data-i18n="hero.cta1">Get Started →</a>
+      <a href="https://github.com/bierfor/nexus" class="btn btn-outline" target="_blank" data-i18n="hero.cta2">GitHub ↗</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">18</div><div class="stat-label" data-i18n="hero.stat1">Packages</div></div>
+      <div class="stat"><div class="stat-num">0kb</div><div class="stat-label" data-i18n="hero.stat2">JS by Default</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-i18n="hero.stat3">TypeScript</div></div>
+      <div class="stat"><div class="stat-num">v0.7.4</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- WHY NEXUS — positioning & engineering perspective                  -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="why-nexus" class="philosophy-section">
+      <div class="section-label" data-i18n="why.label">Position</div>
+      <h2 data-i18n="why.title">Technical courage, not bureaucracy</h2>
+      <p class="lead" data-i18n="why.lead">
+        What makes Nexus.js special is not only that it is fast or modern, but that it is an opinionated framework with courage.
+        While other stacks have become giant bureaucracies (infinite cache layers and config), Nexus is born from technical purity that solves real problems in 2026.
+      </p>
+
+      <div class="enterprise-grid">
+        <div class="enterprise-card">
+          <div class="ec-icon">⚡</div>
+          <h4 data-i18n="why.card1t">Reactivity without the tax</h4>
+          <p data-i18n="why.card1d">Other frameworks punish you for interactivity: one animated button can mean tens of kilobytes of React or Vue runtime. With Runes (<code>$state</code>, <code>$derived</code>) and islands, JavaScript is surgical — only the code for that control ships. The rest is real HTML. SPA power with the weight of a 90s static site.</p>
+        </div>
+        <div class="enterprise-card">
+          <div class="ec-icon">◇</div>
+          <h4 data-i18n="why.card2t">Pretext: security and speed together</h4>
+          <p data-i18n="why.card2d">Integrating pretext as a first-class entry means no “loading spinner hell”: data is ready when HTML arrives. Security is native — Nexus validates sessions and filters DB-shaped data before the browser even knows it exists, closing whole classes of accidental exposure bugs.</p>
+        </div>
+        <div class="enterprise-card">
+          <div class="ec-icon">🛡️</div>
+          <h4 data-i18n="why.card3t">Hardened Mode: the framework as auditor</h4>
+          <p data-i18n="why.card3d">The compiler stops you from leaking API keys to the client or shipping known-vulnerable dependencies (CVEs). That is what separates toys from professional tools — Nexus helps you not ruin your week with a basic security mistake.</p>
+        </div>
+      </div>
+
+      <div class="philosophy-flow">
+        <h3 data-i18n="why.flowTitle">Why NexusFlow is the perfect showcase</h3>
+        <p data-i18n="why.flowBody">NexusFlow proves all three at once: the editor stays fluid with islands, auth leans on Hardened Mode, and the dashboard loads in milliseconds thanks to pretext.</p>
+      </div>
+
+      <div class="philosophy-closing">
+        <h3 data-i18n="why.closingTitle">The invisible effect</h3>
+        <p data-i18n="why.closingBody">The best part of Nexus is that you do not feel you are fighting the framework — no endless <code>useEffect</code>, memo wars, or webpack archaeology. You write HTML, CSS, and standard JavaScript; the compiler does the dirty work. Nexus is what developers would build for themselves if they had the time to do it right from scratch.</p>
+        <p class="philosophy-question" data-i18n="why.question">What excites you more: island speed or the peace of mind from Hardened Mode?</p>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- ENTERPRISE — overview (deep dive: #multitenant)                    -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="enterprise">
+      <div class="section-label" data-i18n="ent.label">Enterprise</div>
+      <h2 data-i18n="ent.title">Built for multi-tenant products</h2>
+      <p class="lead" data-i18n="ent.lead">
+        Nexus treats <strong>tenant subdomains</strong> and <strong>custom domains</strong> as first-class routing concerns — not middleware glue. Ideal for B2B SaaS, agencies with white-label portals, and internal tools per company.
+      </p>
+
+      <div class="enterprise-grid">
+        <div class="enterprise-card">
+          <div class="ec-icon">◇</div>
+          <h4 data-i18n="ent.c1t">Subdomain per tenant</h4>
+          <p data-i18n="ent.c1d">Serve <code>acme.yourplatform.com</code>, <code>globex.yourplatform.com</code>, and <code>staging--client.app.com</code> from one deployment. The router resolves the tenant from <code>Host</code> before your handlers run.</p>
+        </div>
+        <div class="enterprise-card">
+          <div class="ec-icon">◎</div>
+          <h4 data-i18n="ent.c2t">Custom domains</h4>
+          <p data-i18n="ent.c2d">Map customer-owned DNS (CNAME) to your edge. <code>tenant.isCustomDomain</code> distinguishes branded URLs from shared subdomains for analytics and billing.</p>
+        </div>
+        <div class="enterprise-card">
+          <div class="ec-icon">▣</div>
+          <h4 data-i18n="ent.c3t">Isolation by default</h4>
+          <p data-i18n="ent.c3d">Cache keys are prefixed per tenant, responses can carry <code>Vary: Host</code>, and the DB adapter warns when queries omit <code>tenantId</code> — reducing cross-tenant mistakes in production.</p>
+        </div>
+        <div class="enterprise-card">
+          <div class="ec-icon">↗</div>
+          <h4 data-i18n="ent.c4t">Typed <code>ctx.tenant</code></h4>
+          <p data-i18n="ent.c4d">Resolve branding, plan limits, and feature flags in <code>resolveMeta()</code> once; consume <code>tenant.meta</code> in every server block without parsing headers by hand.</p>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <strong data-i18n="ent.calloutTitle">Typical rollout</strong>
+        <span data-i18n="ent.calloutBody">Wildcard DNS <code>*.app.com</code> → your load balancer → Nexus with <code>tenant.mode: 'subdomain'</code>. For enterprise customers, add a row in your DB and point their domain with a CNAME to your edge — same codebase, isolated context.</span>
+      </div>
+
+      <p class="enterprise-foot"><a href="#multitenant" data-i18n="ent.link">Full multi-tenant API &amp; configuration →</a></p>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- GETTING STARTED                                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="install">
+      <div class="section-label">Getting Started</div>
+      <h2 data-i18n="install.title">Installation</h2>
+      <p class="lead" data-i18n="install.lead">Nexus requires Node.js ≥ 22 and pnpm ≥ 9. It works on any OS.</p>
+
+      <h3 data-i18n="install.prereq">Prerequisites</h3>
+      <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
+      <pre><code class="language-bash">node --version   # Must be ≥ 22.0.0
+npm install -g pnpm
+pnpm --version   # Must be ≥ 9.0.0</code></pre>
+    </section>
+
+    <section id="quickstart">
+      <div class="section-label">Getting Started</div>
+      <h2 data-i18n="qs.title">Quick Start</h2>
+      <p class="lead" data-i18n="qs.lead">Create a new Nexus project in seconds with the official scaffolder.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4 data-i18n="qs.step1">Scaffold a new project</h4>
+            <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
+            <pre><code class="language-bash">pnpm create @nexus_js/nexus@latest my-app
+cd my-app</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4 data-i18n="qs.step2">Install dependencies</h4>
+            <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
+            <pre><code class="language-bash">pnpm install</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4 data-i18n="qs.step3">Start the dev server</h4>
+            <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
+            <pre><code class="language-bash">pnpm dev
+# → http://localhost:3000</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <strong>💡 Syntax Highlighting</strong>
+        Add <code>"*.nx": "html"</code> to your <code>.vscode/settings.json</code> → <code>files.associations</code>. Nexus already includes this in every scaffolded project.
+      </div>
+    </section>
+
+    <section id="project-structure">
+      <div class="section-label">Getting Started</div>
+      <h2 data-i18n="struct.title">Project Structure</h2>
+      <p class="lead" data-i18n="struct.lead">A typical Nexus app looks like this:</p>
+
+      <div class="code-title"><span>my-app/</span><span class="code-lang">tree</span></div>
+      <pre><code class="language-bash">my-app/
+├── src/
+│   ├── routes/
+│   │   ├── +layout.nx        # Root layout (wraps every page)
+│   │   ├── +page.nx          # → /
+│   │   ├── blog/
+│   │   │   ├── +layout.nx    # Blog layout
+│   │   │   ├── +page.nx      # → /blog
+│   │   │   └── [slug]/
+│   │   │       ├── +page.nx  # → /blog/:slug
+│   │   │       ├── +server.nx # API: GET/POST /blog/:slug
+│   │   │       └── error.nx  # Error boundary for this route
+│   │   └── (auth)/           # Route group (no URL segment)
+│   │       ├── login/+page.nx
+│   │       └── signup/+page.nx
+│   └── components/
+│       ├── Header.nx
+│       └── Counter.nx
+├── public/                   # Static files served as-is
+├── nexus.config.ts           # Framework configuration
+├── tsconfig.json
+└── package.json</code></pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- CORE CONCEPTS                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="nx-format">
+      <div class="section-label">Core Concepts</div>
+      <h2 data-i18n="nx.title">The .nx Component Format</h2>
+      <p class="lead" data-i18n="nx.lead">Every Nexus page and component is a <code>.nx</code> file with up to four sections.</p>
+
+      <div class="code-title"><span>src/routes/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+// ① SERVER BLOCK — runs ONLY on the server, never sent to browser
+// Fetch data, access env vars, call the DB
+import { cache } from '@nexus_js/runtime';
+import { defineHead } from '@nexus_js/head';
+
+const posts = await cache(() => fetch('/api/posts').then(r => r.json()), {
+  ttl: 60,        // Cache for 60 seconds
+  tags: ['post'], // Invalidate with revalidate(['post'])
+});
+
+defineHead({
+  title: 'My Blog — Nexus',
+  description: 'The best articles on the web',
+  og: { image: '/og.png' },
+});
+---
+
+&lt;script&gt;
+// ② ISLAND BLOCK — reactive code, runs in the browser
+// Uses Svelte 5 Rune syntax for fine-grained reactivity
+let { initialCount = 0 } = $props();
+let count = $state(initialCount);
+let doubled = $derived(count * 2);
+
+$effect(() => {
+  console.log('Count is now:', count);
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- ③ TEMPLATE — HTML first, zero JS unless islands are used --&gt;
+
+  &lt;!-- Static content (zero JS cost) --&gt;
+  &lt;ul&gt;
+    {#each posts as post}
+      &lt;li&gt;&lt;a href="/blog/{post.slug}"&gt;{post.title}&lt;/a&gt;&lt;/li&gt;
+    {/each}
+  &lt;/ul&gt;
+
+  &lt;!-- Interactive island — hydrated when visible in viewport --&gt;
+  &lt;Counter client:visible initialCount={42} /&gt;
+
+  &lt;!-- Server-only component (never sends JS to browser) --&gt;
+  &lt;HeavyChart server:only data={chartData} /&gt;
+&lt;/template&gt;
+
+&lt;style&gt;
+  /* ④ STYLE — automatically scoped to this component */
+  /* No class name collisions, ever */
+  li { padding: 8px 0; border-bottom: 1px solid #eee; }
+  a  { color: var(--accent); text-decoration: none; }
+&lt;/style&gt;</code></pre>
+
+      <h3>Section Rules</h3>
+      <table class="dir-table">
+        <thead><tr><th>Section</th><th>Delimiters</th><th>Runs</th><th>Access to</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-purple">---</span> Server</td><td><code>---</code> ... <code>---</code></td><td>Server only</td><td>DB, env vars, cookies, file system</td></tr>
+          <tr><td><span class="badge badge-cyan">&lt;script&gt;</span> Island</td><td><code>&lt;script&gt;</code> ... <code>&lt;/script&gt;</code></td><td>Browser only</td><td>DOM, Runes, user events</td></tr>
+          <tr><td><span class="badge badge-green">&lt;template&gt;</span></td><td><code>&lt;template&gt;</code> ... <code>&lt;/template&gt;</code></td><td>Both (SSR + hydrate)</td><td>All data from server + island</td></tr>
+          <tr><td><span class="badge badge-amber">&lt;style&gt;</span></td><td><code>&lt;style&gt;</code> ... <code>&lt;/style&gt;</code></td><td>Build-time (AOT)</td><td>N/A — compiled to scoped CSS</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="routing">
+      <div class="section-label">Core Concepts</div>
+      <h2 data-i18n="routing.title">File-Based Routing</h2>
+      <p class="lead" data-i18n="routing.lead">The file system is your router. No config required.</p>
+
+      <table class="dir-table">
+        <thead><tr><th>File</th><th>URL</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>+page.nx</code></td><td><code>/</code></td><td>Home page</td></tr>
+          <tr><td><code>blog/+page.nx</code></td><td><code>/blog</code></td><td>Static route</td></tr>
+          <tr><td><code>blog/[slug]/+page.nx</code></td><td><code>/blog/:slug</code></td><td>Dynamic segment</td></tr>
+          <tr><td><code>blog/[...rest]/+page.nx</code></td><td><code>/blog/*</code></td><td>Catch-all</td></tr>
+          <tr><td><code>(auth)/login/+page.nx</code></td><td><code>/login</code></td><td>Route group (no segment)</td></tr>
+          <tr><td><code>+layout.nx</code></td><td>all children</td><td>Shared layout wrapper</td></tr>
+          <tr><td><code>+server.nx</code></td><td>same route</td><td>API endpoint (GET/POST/etc.)</td></tr>
+          <tr><td><code>error.nx</code></td><td>same dir</td><td>Error boundary</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Dynamic Routes</h3>
+      <div class="code-title"><span>src/routes/blog/[slug]/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+// ctx.params is fully typed from your route pattern
+const { slug } = ctx.params;
+const post = await ctx.db.query('post', 'findOne', () =>
+  ctx.db.client.post.findUnique({ where: { slug } })
+);
+
+if (!post) {
+  ctx.status(404);
+  ctx.redirect('/blog');
+}
+---
+&lt;template&gt;
+  &lt;article&gt;
+    &lt;h1&gt;{post.title}&lt;/h1&gt;
+    &lt;p&gt;{post.body}&lt;/p&gt;
+  &lt;/article&gt;
+&lt;/template&gt;</code></pre>
+
+      <h3>Layouts</h3>
+      <p>Layouts wrap child pages with shared UI. They compose from outermost to innermost.</p>
+      <div class="code-title"><span>src/routes/+layout.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">&lt;template&gt;
+  &lt;header&gt;
+    &lt;nav&gt;
+      &lt;a href="/"&gt;Home&lt;/a&gt;
+      &lt;a href="/blog"&gt;Blog&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;!-- Child page renders here --&gt;
+    &lt;!--nexus:slot--&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;© 2026 My App&lt;/footer&gt;
+&lt;/template&gt;</code></pre>
+
+      <h3>API Routes (+server.nx)</h3>
+      <div class="code-title"><span>src/routes/api/posts/+server.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+// Export HTTP method handlers directly
+export async function GET(ctx) {
+  const posts = await ctx.db.client.post.findMany();
+  return ctx.json(posts);
+}
+
+export async function POST(ctx) {
+  const body = await ctx.request.json();
+  const post = await ctx.db.client.post.create({ data: body });
+  return ctx.json(post, 201);
+}
+---</code></pre>
+    </section>
+
+    <section id="islands">
+      <div class="section-label">Core Concepts</div>
+      <h2 data-i18n="islands.title">Islands Architecture</h2>
+      <p class="lead" data-i18n="islands.lead">Every component is static by default. Add a hydration directive only where interactivity is needed.</p>
+
+      <table class="dir-table">
+        <thead><tr><th>Directive</th><th>When it hydrates</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td><code>client:load</code></td><td>Immediately on page load</td><td>Critical UI — modals, nav, auth forms</td></tr>
+          <tr><td><code>client:idle</code></td><td>After <code>requestIdleCallback</code></td><td>Non-critical widgets, analytics</td></tr>
+          <tr><td><code>client:visible</code></td><td>When entering the viewport (<code>IntersectionObserver</code>)</td><td>Below-the-fold content, carousels</td></tr>
+          <tr><td><code>client:media="(max-width:768px)"</code></td><td>When media query matches</td><td>Mobile-only components</td></tr>
+          <tr><td><code>server:only</code></td><td>Never — pure SSR</td><td>Heavy charts, admin tables, no JS</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-title"><span>src/routes/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">&lt;template&gt;
+  &lt;!-- Hero text: zero JS. Pure HTML. Fastest possible. --&gt;
+  &lt;h1&gt;Welcome&lt;/h1&gt;
+
+  &lt;!-- Nav dropdown: needs JS immediately --&gt;
+  &lt;NavDropdown client:load /&gt;
+
+  &lt;!-- Comments section: loads when user scrolls to it --&gt;
+  &lt;Comments client:visible postId={post.id} /&gt;
+
+  &lt;!-- Mobile menu: only costs JS on mobile --&gt;
+  &lt;MobileMenu client:media="(max-width: 768px)" /&gt;
+
+  &lt;!-- Data table: 80kb of Ag-Grid, never sent to browser --&gt;
+  &lt;AdminTable server:only rows={rows} /&gt;
+&lt;/template&gt;</code></pre>
+
+      <div class="callout info">
+        <strong>How islands prevent waterfalls</strong>
+        Nexus's compiler scans your entire component tree at build time and emits <code>&lt;link rel="modulepreload"&gt;</code> for all nested islands in parallel — before the browser discovers them itself.
+      </div>
+    </section>
+
+    <section id="runes">
+      <div class="section-label">Core Concepts</div>
+      <h2 data-i18n="runes.title">Runes — Reactive Primitives</h2>
+      <p class="lead" data-i18n="runes.lead">Nexus implements Svelte 5 Rune semantics. The most ergonomic reactivity system in the JavaScript ecosystem.</p>
+
+      <h3>$state — Reactive Value</h3>
+      <pre><code class="language-typescript">let count = $state(0);
+let user  = $state&lt;User | null&gt;(null);
+let items = $state&lt;string[]&gt;([]);
+
+// Mutate directly — no .value, no setState()
+count++;
+items.push('new item');
+user = { name: 'Alice', role: 'admin' };</code></pre>
+
+      <h3>$derived — Computed Value</h3>
+      <pre><code class="language-typescript">let count   = $state(0);
+let doubled = $derived(count * 2);
+let label   = $derived(count === 0 ? 'empty' : `${count} items`);
+let heavy   = $derived.by(() => {
+  // For multi-line derivations
+  return items.filter(i => i.active).length;
+});</code></pre>
+
+      <h3>$effect — Side Effects</h3>
+      <pre><code class="language-typescript">$effect(() => {
+  // Runs after render, re-runs when count changes
+  document.title = `Count: ${count}`;
+});
+
+$effect(() => {
+  const id = setInterval(() => count++, 1000);
+  // Return a cleanup function
+  return () => clearInterval(id);
+});</code></pre>
+
+      <h3>$props — Component Props</h3>
+      <pre><code class="language-typescript">// In a component's &lt;script&gt; block
+let {
+  title,
+  count = 0,          // default value
+  onSave,             // callback
+  class: className,   // rename reserved words
+} = $props();</code></pre>
+
+      <h3>$optimistic — Optimistic UI</h3>
+      <pre><code class="language-typescript">// Instant UI update before server confirms
+const savePost = $optimistic(
+  async (draft: Post) => {
+    return await callAction('savePost', draft);
+  },
+  // Optimistic updater — applied instantly
+  (current: Post[], draft: Post) => {
+    return current.map(p => p.id === draft.id ? { ...p, ...draft } : p);
+  }
+);
+
+// Usage:
+await savePost(editedPost);
+// UI updates immediately, rolls back if server errors</code></pre>
+
+      <h3>$sync — Synchronized State</h3>
+      <pre><code class="language-typescript">// Stays in sync with cookies/sessionStorage/localStorage
+const theme = $sync('theme', {
+  default: 'light' as 'light' | 'dark',
+  storage: 'cookie',   // or 'session' | 'local'
+  path: '/',
+});
+
+// Changing theme updates the cookie automatically
+theme.value = 'dark';
+// Refreshing the page restores the value automatically</code></pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- DATA & SERVER                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="server-actions">
+      <div class="section-label">Data & Server</div>
+      <h2 data-i18n="actions.title">Server Actions</h2>
+      <p class="lead" data-i18n="actions.lead">Type-safe functions that run on the server, called from the client like regular async functions. Race-condition-safe by design.</p>
+
+      <h3>Defining a Server Action</h3>
+      <div class="code-title"><span>src/routes/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+// Mark with "use server" — the compiler extracts this to a server module
+async function createPost(formData: FormData, ctx: NexusContext) {
+  "use server";
+
+  const title = formData.get('title') as string;
+  const body  = formData.get('body')  as string;
+
+  // ctx.db is your configured DB adapter
+  const post = await ctx.db.mutate('post', 'create', () =>
+    ctx.db.client.post.create({ data: { title, body } })
+  );
+
+  // Invalidates the 'post' cache tag everywhere
+  await revalidate(['post']);
+
+  return post; // Date fields serialize automatically ✓
+}
+---
+
+&lt;script&gt;
+let title = $state('');
+let body  = $state('');
+let saving = $state(false);
+let error  = $state&lt;string | null&gt;(null);
+
+async function handleSubmit(e: SubmitEvent) {
+  e.preventDefault();
+  saving = true;
+  error  = null;
+
+  try {
+    const result = await callAction('createPost', new FormData(e.target as HTMLFormElement));
+    console.log('Created:', result);
+  } catch (err) {
+    error = err.message;
+  } finally {
+    saving = false;
+  }
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;form onsubmit={handleSubmit}&gt;
+    &lt;input name="title" bind:value={title} placeholder="Title" /&gt;
+    &lt;textarea name="body" bind:value={body}&gt;&lt;/textarea&gt;
+    &lt;button type="submit" disabled={saving}&gt;
+      {saving ? 'Saving…' : 'Publish'}
+    &lt;/button&gt;
+    {#if error}&lt;p class="error"&gt;{error}&lt;/p&gt;{/if}
+  &lt;/form&gt;
+&lt;/template&gt;</code></pre>
+
+      <h3>Race Condition Strategies</h3>
+      <p>Configure how concurrent calls to the same action are handled:</p>
+      <div class="code-title"><span>src/server/actions.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import { registerAction } from '@nexus_js/server/actions';
+
+// 'cancel' — abort previous, run latest (search, autosave)
+registerAction('search',     searchFn,  { race: 'cancel' });
+
+// 'queue'  — run sequentially in order (cart updates)
+registerAction('addToCart',  cartFn,    { race: 'queue' });
+
+// 'reject' — 409 if one is already in flight (payments)
+registerAction('checkout',   payFn,     { race: 'reject' });
+
+// 'ignore' — all run in parallel (analytics, logging)
+registerAction('trackEvent', trackFn,   { race: 'ignore' });
+
+// Idempotent — same idempotency key returns cached result
+registerAction('importData', importFn,  { idempotent: true, timeout: 120_000 });</code></pre>
+    </section>
+
+    <section id="cache">
+      <div class="section-label">Data & Server</div>
+      <h2 data-i18n="cache.title">Cache & Revalidation</h2>
+      <p class="lead" data-i18n="cache.lead">Stale-while-revalidate caching with tag-based invalidation. Smart <code>Cache-Control</code> headers computed automatically.</p>
+
+      <div class="code-title"><span>src/routes/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+import { cache, revalidate } from '@nexus_js/runtime';
+
+// Cache for 60 seconds, tag as 'posts'
+const posts = await cache(() => db.post.findMany(), {
+  ttl: 60,
+  tags: ['post', 'homepage'],
+});
+
+// Immutable — cache forever (static assets/data)
+const config = await cache(() => readConfig(), { ttl: Infinity });
+
+// No cache (sensitive/personalized data)
+const cart = await cache(() => getCart(userId), { ttl: 0 });
+---</code></pre>
+
+      <div class="code-title"><span>Server Action</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">async function deletePost(id: string, ctx: NexusContext) {
+  "use server";
+  await ctx.db.client.post.delete({ where: { id } });
+
+  // Purge all routes that fetched with tag 'post'
+  await revalidate(['post']);
+
+  // Or purge a specific path
+  await revalidatePath('/blog');
+}</code></pre>
+
+      <div class="callout info">
+        <strong>Automatic Cache-Control Headers</strong>
+        Nexus reads all <code>ttl</code> values used during rendering and emits the most conservative <code>Cache-Control</code> header. A page with <code>ttl: 60</code> automatically gets <code>s-maxage=60, stale-while-revalidate=120</code>. No manual header configuration needed.
+      </div>
+    </section>
+
+    <section id="database">
+      <div class="section-label">Data & Server</div>
+      <h2 data-i18n="db.title">Database — Bring Your Own</h2>
+      <p class="lead" data-i18n="db.lead">Nexus doesn't bundle an ORM. It wraps your client with caching, invalidation, and Edge awareness.</p>
+
+      <h3>Setup (nexus.config.ts)</h3>
+      <div class="code-title"><span>nexus.config.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import { defineNexus } from '@nexus_js/cli';
+import { defineDB } from '@nexus_js/db';
+import { PrismaClient } from '@prisma/client';
+
+export default defineNexus({
+  db: defineDB(new PrismaClient(), {
+    defaultTtl: 60,              // Cache every query for 60s by default
+    tags: (table) => [table],   // Auto-tag by table name
+  }),
+});</code></pre>
+
+      <h3>Prisma Adapter</h3>
+      <pre><code class="language-typescript">import { prismaAdapter } from '@nexus_js/db/adapters/prisma';
+import { PrismaClient } from '@prisma/client';
+
+const db = prismaAdapter(new PrismaClient(), {
+  slowQueryThreshold: 200, // Warn if query > 200ms
+});</code></pre>
+
+      <h3>Drizzle Adapter (Edge-native)</h3>
+      <pre><code class="language-typescript">import { drizzleAdapter } from '@nexus_js/db/adapters/drizzle';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzleAdapter(drizzle(sql), { edge: true });</code></pre>
+
+      <h3>Turso / libSQL Adapter</h3>
+      <pre><code class="language-typescript">import { libsqlAdapter } from '@nexus_js/db/adapters/libsql';
+import { createClient } from '@libsql/client';
+
+const db = libsqlAdapter(createClient({
+  url: process.env.TURSO_URL!,
+  authToken: process.env.TURSO_TOKEN,
+}));</code></pre>
+
+      <h3>Using the DB in Server Actions</h3>
+      <pre><code class="language-typescript">// In any .nx server block or Server Action
+// ctx.db is fully typed from your defineNexus() config
+
+// Cached query — result stored for defaultTtl seconds
+const posts = await ctx.db.query('post', 'findMany', () =>
+  ctx.db.client.post.findMany({ where: { published: true } })
+);
+
+// Mutation — auto-invalidates 'post' cache tag
+const post = await ctx.db.mutate('post', 'create', () =>
+  ctx.db.client.post.create({ data: { title, body } })
+);</code></pre>
+    </section>
+
+    <section id="streaming">
+      <div class="section-label">Data & Server</div>
+      <h2 data-i18n="streaming.title">Streaming SSR</h2>
+      <p class="lead" data-i18n="streaming.lead">Send the HTML shell to the browser instantly, then stream in the slow parts as they resolve — without blocking the fast parts.</p>
+
+      <div class="code-title"><span>src/routes/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+import { Suspense } from '@nexus_js/server/streaming';
+
+// Fast data: available immediately
+const user = await getUser(ctx);
+
+// Slow data: wrapped in Suspense — doesn't block page render
+const slowData = Suspense(
+  fetchAnalytics(),   // Promise
+  {
+    fallback: '&lt;div class="skeleton"&gt;Loading…&lt;/div&gt;',
+    render: (data) =&gt; `&lt;Chart data="${JSON.stringify(data)}" /&gt;`,
+  }
+);
+---
+
+&lt;template&gt;
+  &lt;!-- Renders immediately, user doesn't wait --&gt;
+  &lt;h1&gt;Welcome, {user.name}&lt;/h1&gt;
+
+  &lt;!-- Placeholder shown while slowData resolves --&gt;
+  {slowData.placeholder}
+&lt;/template&gt;</code></pre>
+
+      <div class="callout tip">
+        <strong>How it works</strong>
+        Nexus emits a <code>&lt;template&gt;</code> placeholder for each Suspense boundary. When the Promise resolves, the server sends a tiny script that teleports the resolved HTML into position — with zero client-side fetching.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- ADVANCED                                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="store">
+      <div class="section-label">Advanced</div>
+      <h2 data-i18n="store.title">Global State Store</h2>
+      <p class="lead" data-i18n="store.lead">Shared state across islands and pages. Hydration Miss = 0. State is never lost during SPA navigation.</p>
+
+      <div class="code-title"><span>src/components/Cart.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">&lt;script&gt;
+import { useStore } from '@nexus_js/runtime';
+
+// State persists in sessionStorage across /shop → /checkout → /confirm
+const cart = useStore('cart', {
+  default: [] as CartItem[],
+  persist: 'session',   // 'memory' | 'session' | 'url'
+});
+
+function addItem(item: CartItem) {
+  cart.value = [...cart.value, item];
+}
+
+function removeItem(id: string) {
+  cart.value = cart.value.filter(i =&gt; i.id !== id);
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div class="cart"&gt;
+    {#each cart.value as item}
+      &lt;div&gt;{item.name} &lt;button onclick={() =&gt; removeItem(item.id)}&gt;×&lt;/button&gt;&lt;/div&gt;
+    {/each}
+    &lt;p&gt;Total: {cart.value.length} items&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
+      <p>Any other island can read the same store by using the same key:</p>
+      <pre><code class="language-typescript">// In any island anywhere in the app
+const cart = useStore('cart', { default: [] });
+console.log(cart.value); // [{ id: 'sku-1', name: 'Widget', qty: 2 }]</code></pre>
+
+      <h3>Persistence Modes</h3>
+      <table class="dir-table">
+        <thead><tr><th>Mode</th><th>Survives</th><th>Use for</th></tr></thead>
+        <tbody>
+          <tr><td><code>'memory'</code></td><td>Navigation (SPA)</td><td>Ephemeral UI state</td></tr>
+          <tr><td><code>'session'</code></td><td>Hard refresh (same tab)</td><td>Cart, form drafts, wizard state</td></tr>
+          <tr><td><code>'url'</code></td><td>Sharing the URL</td><td>Filters, search, pagination</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="navigation">
+      <div class="section-label">Advanced</div>
+      <h2 data-i18n="nav.title">SPA Navigation</h2>
+      <p class="lead" data-i18n="nav.lead">Nexus uses Server-Driven DOM Morphing. No virtual DOM diff, no full page reload. Islands keep their state.</p>
+
+      <p>It works automatically — just use regular <code>&lt;a&gt;</code> tags. Nexus intercepts clicks, fetches the new page as HTML, and surgically updates the DOM while preserving live islands.</p>
+
+      <h3>Programmatic Navigation</h3>
+      <pre><code class="language-typescript">import { navigate, prefetch } from '@nexus_js/runtime';
+
+// Navigate to a new route
+await navigate('/dashboard');
+
+// Navigate with a query string
+await navigate('/search?q=nexus&category=frameworks');
+
+// Prefetch a route on hover (preloads HTML + JS)
+prefetch('/dashboard');
+
+// In an island:
+&lt;a href="/dashboard"
+   onmouseenter={() =&gt; prefetch('/dashboard')}&gt;
+  Dashboard
+&lt;/a&gt;</code></pre>
+
+      <h3>How Island State Survives Navigation</h3>
+      <div class="callout info">
+        <strong>Three-layer protection</strong>
+        <br>1. Islands that exist in a shared layout are <strong>never re-mounted</strong> — the morphing algorithm preserves them in-place.<br>
+        2. State in <code>useStore()</code> is <strong>checkpointed to sessionStorage</strong> before navigation and restored after.<br>
+        3. The server embeds a <strong>store snapshot</strong> in the navigation payload so new islands on the next page can initialize with the correct state.
+      </div>
+    </section>
+
+    <section id="middleware">
+      <div class="section-label">Advanced</div>
+      <h2 data-i18n="mw.title">Middleware</h2>
+      <p class="lead" data-i18n="mw.lead">Web-standard middleware pipeline. Runs on Node.js, Cloudflare Workers, and Vercel Edge.</p>
+
+      <div class="code-title"><span>src/middleware.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import { sequence, cors, rateLimit, auth, securityHeaders } from '@nexus_js/middleware';
+
+export const middleware = sequence(
+  securityHeaders(),           // CSP, HSTS, X-Frame-Options
+  cors({ origins: ['https://myapp.com'] }),
+  rateLimit({ max: 100, window: 60 }),   // 100 req/min per IP
+  auth({
+    // Protect routes matching /admin/*
+    protect: /^\/admin/,
+    redirectTo: '/login',
+    verify: async (req) =&gt; {
+      const token = req.headers.get('authorization')?.slice(7);
+      return token ? await verifyJWT(token) : null;
+    },
+  }),
+);</code></pre>
+
+      <h3>Custom Middleware</h3>
+      <pre><code class="language-typescript">import type { MiddlewareFn } from '@nexus_js/middleware';
+
+export const requestLogger: MiddlewareFn = async (request, next) => {
+  const start = Date.now();
+  const response = await next(request);
+  console.log(`${request.method} ${request.url} — ${Date.now() - start}ms`);
+  return response;
+};</code></pre>
+
+      <h3>Edge Adapters</h3>
+      <pre><code class="language-typescript">// Cloudflare Workers
+import { toCloudflareHandler } from '@nexus_js/middleware';
+export default toCloudflareHandler(middleware);
+
+// Vercel Edge Functions
+import { toVercelEdge } from '@nexus_js/middleware';
+export default toVercelEdge(middleware);</code></pre>
+    </section>
+
+    <section id="seo">
+      <div class="section-label">Advanced</div>
+      <h2 data-i18n="seo.title">SEO & Head Management</h2>
+      <p class="lead" data-i18n="seo.lead">Server-side metadata injection with client-side reactive updates.</p>
+
+      <div class="code-title"><span>src/routes/blog/[slug]/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+import { defineHead } from '@nexus_js/head';
+
+const post = await ctx.db.query('post', 'findOne', () =>
+  ctx.db.client.post.findUnique({ where: { slug: ctx.params.slug } })
+);
+
+// Sets &lt;title&gt;, &lt;meta&gt;, Open Graph, Twitter Card — all server-side
+defineHead({
+  title: `${post.title} — My Blog`,
+  description: post.excerpt,
+  canonical: `https://myblog.com/blog/${post.slug}`,
+  og: {
+    title: post.title,
+    description: post.excerpt,
+    image: post.coverImage,
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@myhandle',
+  },
+  // Inject arbitrary tags
+  meta: [
+    { name: 'author', content: post.author.name },
+  ],
+  link: [
+    { rel: 'canonical', href: `https://myblog.com/blog/${post.slug}` },
+  ],
+});
+---</code></pre>
+
+      <h3>Reactive Head Updates (Client-side)</h3>
+      <pre><code class="language-typescript">import { useHead } from '@nexus_js/head';
+
+// In an island — updates &lt;title&gt; reactively
+let count = $state(0);
+
+useHead(() => ({
+  title: count === 0 ? 'Inbox' : `Inbox (${count})`,
+}));</code></pre>
+    </section>
+
+    <section id="assets">
+      <div class="section-label">Advanced</div>
+      <h2 data-i18n="assets.title">Assets — Images & Fonts</h2>
+      <p class="lead" data-i18n="assets.lead">Automatic AVIF/WebP conversion, responsive srcsets, blur placeholders, and font optimization.</p>
+
+      <h3>Images</h3>
+      <div class="code-title"><span>src/routes/+page.nx</span><span class="code-lang">.nx</span></div>
+      <pre><code class="language-html">---
+import { renderImage } from '@nexus_js/assets';
+
+// Generates AVIF/WebP srcset, blur placeholder, lazy loading
+const heroImg = renderImage('/hero.jpg', {
+  width: 1200,
+  alt: 'Nexus Framework hero',
+  priority: true,   // preload (LCP image)
+  quality: 85,
+});
+---
+&lt;template&gt;
+  {heroImg}
+  &lt;!-- Outputs:
+  &lt;picture&gt;
+    &lt;source srcset="/hero.avif 1200w" type="image/avif"&gt;
+    &lt;source srcset="/hero.webp 1200w" type="image/webp"&gt;
+    &lt;img src="/hero.jpg" width="1200" loading="eager" ...&gt;
+  &lt;/picture&gt;
+  --&gt;
+&lt;/template&gt;</code></pre>
+
+      <h3>Font Optimization</h3>
+      <pre><code class="language-typescript">// nexus.config.ts
+import { defineNexus } from '@nexus_js/cli';
+
+export default defineNexus({
+  assets: {
+    fonts: [
+      {
+        family: 'Inter',
+        src: 'https://fonts.googleapis.com/css2?family=Inter',
+        display: 'swap',
+        preload: true,   // Adds &lt;link rel="preload"&gt; in &lt;head&gt;
+        inline: false,   // true → inlines CSS in &lt;style&gt; for zero FOUT
+      },
+    ],
+  },
+});</code></pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- TOOLING                                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="cli">
+      <div class="section-label">Tooling</div>
+      <h2 data-i18n="cli.title">CLI Reference</h2>
+      <p class="lead" data-i18n="cli.lead">All Nexus commands follow the same pattern: <code>nexus &lt;command&gt; [options]</code></p>
+
+      <table class="dir-table">
+        <thead><tr><th>Command</th><th>Description</th><th>Since</th></tr></thead>
+        <tbody>
+          <tr><td><code>nexus dev</code></td><td>Start dev server with HMR on <code>localhost:3000</code> + background CVE audit</td><td>v0.1</td></tr>
+          <tr><td><code>nexus dev --port 4200</code></td><td>Dev server on custom port</td><td>v0.1</td></tr>
+          <tr><td><code>nexus build</code></td><td>Production build → <code>.nexus/output/</code> (fails on critical CVEs in block mode)</td><td>v0.1</td></tr>
+          <tr><td><code>nexus start</code></td><td>Start the production server</td><td>v0.1</td></tr>
+          <tr><td><code>nexus studio</code></td><td>Open Nexus Studio at <code>localhost:4000</code></td><td>v0.2</td></tr>
+          <tr><td><code>nexus routes</code></td><td>Print the full route manifest</td><td>v0.1</td></tr>
+          <tr><td><code>nexus check</code></td><td>TypeScript type-check (runs <code>tsc --noEmit</code>)</td><td>v0.1</td></tr>
+          <tr><td><code>nexus analyze</code></td><td>Bundle budget report per route</td><td>v0.1</td></tr>
+          <tr><td><code>nexus add &lt;block&gt;</code></td><td>Install a Nexus Block from the marketplace</td><td>v0.3</td></tr>
+          <tr><td><code>nexus audit</code></td><td>Run full security audit (code + deps)</td><td>v0.5</td></tr>
+          <tr><td><code>nexus audit --ci</code></td><td>Exit 1 on any critical finding — designed for CI pipelines</td><td>v0.5</td></tr>
+          <tr><td><code>nexus audit --json</code></td><td>Machine-readable JSON output</td><td>v0.5</td></tr>
+          <tr><td><code>nexus fix</code></td><td>Auto-update vulnerable dependencies to patched versions</td><td>v0.6</td></tr>
+          <tr><td><code>nexus fix --dry-run</code></td><td>Preview fixes without writing any files</td><td>v0.6</td></tr>
+          <tr><td><code>nexus fix --force</code></td><td>Also fix medium + low severity vulnerabilities</td><td>v0.6</td></tr>
+          <tr><td><code>create-nexus my-app</code></td><td>Scaffold a new Nexus project</td><td>v0.1</td></tr>
+        </tbody>
+      </table>
+
+      <h3>nexus.config.ts</h3>
+      <div class="code-title"><span>nexus.config.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import { defineNexus } from '@nexus_js/cli';
+
+export default defineNexus({
+  // Dev server
+  server: {
+    port: 3000,
+    host: 'localhost',
+  },
+
+  // Database adapter
+  db: defineDB(new PrismaClient()),
+
+  // Asset pipeline
+  assets: {
+    images: { formats: ['avif', 'webp'], quality: 85 },
+    fonts: [{ family: 'Inter', src: '...', display: 'swap' }],
+  },
+
+  // Internationalisation
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'es', 'pt'],
+  },
+
+  // Vite plugins (fully compatible)
+  plugins: [
+    myVitePlugin(),
+  ],
+
+  // Bundle budget (kb gzip)
+  build: {
+    budget: 50,
+  },
+
+  // Multi-Tenant support (v0.4)
+  tenant: {
+    mode: 'subdomain',
+    baseDomain: 'app.com',
+  },
+
+  // AI predictive prefetch (v0.3)
+  ai: {
+    prefetch: 'smart',    // 'aggressive' | 'smart' | 'off'
+    budget: '500kb',
+    wifiOnly: true,
+  },
+
+  // Security (v0.5 / v0.6)
+  security: {
+    hardened: true,
+    allowVulnerable: {
+      'some-pdf-lib': {
+        cve: 'CVE-2025-1234',
+        reason: 'Build-time only, never ships to browser.',
+        expires: '2026-06-01',
+      },
+    },
+  },
+});</code></pre>
+    </section>
+
+    <section id="studio">
+      <div class="section-label">Tooling</div>
+      <h2 data-i18n="studio.title">Nexus Studio</h2>
+      <p class="lead" data-i18n="studio.lead">A real-time developer dashboard with zero external dependencies.</p>
+
+      <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
+      <pre><code class="language-bash">nexus studio
+# → Opens http://localhost:4000</code></pre>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🗺️</div>
+          <h4>Layout Tree</h4>
+          <p>Visual hierarchy of nested layouts for the current route.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏝️</div>
+          <h4>Island Map</h4>
+          <p>All live islands, their reactive state, and hydration strategy.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <h4>Action Log</h4>
+          <p>Real-time stream of Server Action calls with payloads and timings.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💾</div>
+          <h4>Cache Inspector</h4>
+          <p>Active cache entries, TTLs, hit/miss ratio.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h4>Store Viewer</h4>
+          <p>Live snapshot of the Global State Store across islands.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <h4>JS Cost</h4>
+          <p>Bundle budget for the current route (raw + gzip).</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🛡️</div>
+          <h4>Security Panel</h4>
+          <p>Live view of CSRF tokens, rate-limit windows, and secret leak scan results.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📴</div>
+          <h4>Sync Queue</h4>
+          <p>Pending <code>$localSync</code> operations, conflict log, and online/offline state.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="testing">
+      <div class="section-label">Tooling</div>
+      <h2 data-i18n="testing.title">Testing</h2>
+      <p class="lead" data-i18n="testing.lead">First-class Vitest integration with helpers for SSR, islands, and Server Actions.</p>
+
+      <h3>SSR Testing</h3>
+      <pre><code class="language-typescript">import { renderSSR } from '@nexus_js/testing';
+
+test('renders blog post', async () => {
+  const { html, status } = await renderSSR('/blog/hello-world');
+  expect(status).toBe(200);
+  expect(html).toContain('Hello World');
+  expect(html).toContain('&lt;title&gt;Hello World — My Blog&lt;/title&gt;');
+});</code></pre>
+
+      <h3>Island Testing</h3>
+      <pre><code class="language-typescript">import { mountIsland, fireEvent } from '@nexus_js/testing';
+
+test('counter increments', async () => {
+  const { getByText, getByRole } = await mountIsland('./Counter.nx', {
+    props: { initialCount: 5 },
+  });
+
+  expect(getByText('Count: 5')).toBeTruthy();
+
+  await fireEvent.click(getByRole('button', { name: 'Increment' }));
+
+  expect(getByText('Count: 6')).toBeTruthy();
+});</code></pre>
+
+      <h3>Server Action Testing</h3>
+      <pre><code class="language-typescript">import { createActionTestHarness } from '@nexus_js/testing';
+
+test('createPost saves to DB', async () => {
+  const harness = createActionTestHarness('./src/routes/+page.nx');
+
+  const actions = await harness.listActions();
+  expect(actions).toContain('createPost');
+
+  const formData = new FormData();
+  formData.set('title', 'Test Post');
+  formData.set('body', 'Hello!');
+
+  const result = await harness.invokeAction('createPost', formData);
+  expect(result.title).toBe('Test Post');
+});</code></pre>
+    </section>
+
+    <section id="deployment">
+      <div class="section-label">Tooling</div>
+      <h2 data-i18n="deploy.title">Deployment</h2>
+      <p class="lead" data-i18n="deploy.lead">Nexus targets the Web Platform. Any runtime that speaks <code>Request</code>/<code>Response</code> works.</p>
+
+      <h3>Node.js (VPS / Docker)</h3>
+      <pre><code class="language-bash">nexus build
+nexus start        # Starts on PORT env var or 3000
+
+# Docker
+docker build -t my-app .
+docker run -p 3000:3000 my-app</code></pre>
+
+      <h3>Cloudflare Workers</h3>
+      <pre><code class="language-typescript">// src/entry.cloudflare.ts
+import { toCloudflareHandler } from '@nexus_js/middleware';
+import { createNexusServer } from '@nexus_js/server';
+
+const server = await createNexusServer({ root: '.', dev: false });
+export default toCloudflareHandler(server.fetch);</code></pre>
+
+      <h3>Vercel</h3>
+      <pre><code class="language-json">// vercel.json
+{
+  "builds": [{ "src": "package.json", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "/" }]
+}</code></pre>
+
+      <h3>Deno Deploy / Bun</h3>
+      <pre><code class="language-typescript">// Nexus uses only Web-standard APIs
+// No Node.js-specific APIs in the critical path
+// Works on Deno Deploy and Bun without modification</code></pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- REFERENCE                                                            -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- MULTI-TENANT (v0.4)                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="multitenant">
+      <div class="section-label">Advanced — multi-tenant</div>
+      <h2>🏢 Multi-Tenant — configuration &amp; API</h2>
+      <p class="lead">This section complements <a href="#enterprise">Enterprise &amp; subdomains</a>: here is the concrete <code>nexus.config.ts</code> surface and how <code>tenant</code> flows into routes.</p>
+
+      <h3>Routing modes</h3>
+      <table class="dir-table">
+        <thead><tr><th><code>tenant.mode</code></th><th>Use case</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>'subdomain'</code></td><td>Wildcard SaaS — one app, many tenants on <code>*.baseDomain</code></td><td><code>acme.app.com</code> → tenant <code>acme</code></td></tr>
+          <tr><td><code>'domain'</code></td><td>Bring-your-own-domain — customer CNAMEs to your edge</td><td><code>portal.customer.com</code> → resolved tenant row</td></tr>
+          <tr><td><code>'path'</code></td><td>Single host, tenant in URL (admin consoles, docs)</td><td><code>app.com/t/acme/dashboard</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>How it works</h3>
+      <p>The router inspects <code>Host</code> (and path when using <code>'path'</code> mode), resolves a stable <code>tenantId</code>, and merges <code>resolveMeta()</code> into <code>ctx.tenant</code> before your <code>.nx</code> server block runs. Cache tags, server cache keys, and optional DB helpers can all key off that id — so subdomains for companies are not a second-class concern layered on top of routing.</p>
+
+      <h3>DNS checklist (subdomain SaaS)</h3>
+      <ol style="margin:16px 0 16px 22px; color:var(--text-secondary); line-height:1.8">
+        <li><strong style="color:var(--text)">Wildcard record</strong> — <code>*.app.com</code> A/AAAA or CNAME to your edge (Vercel, Cloudflare, Fly, etc.).</li>
+        <li><strong style="color:var(--text)">APEX</strong> — <code>app.com</code> for marketing or login; tenant app lives on subdomains or custom hosts.</li>
+        <li><strong style="color:var(--text)">TLS</strong> — issue a wildcard cert for <code>*.app.com</code>; per-customer certs when using custom domains (often via your provider’s automation).</li>
+        <li><strong style="color:var(--text)">Staging</strong> — separate <code>*.staging.app.com</code> or path-based tenants to avoid polluting production metadata.</li>
+      </ol>
+
+      <div class="code-title"><span>packages/router/src/tenant.ts — key API</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import { extractTenant } from '@nexus_js/router';
+
+// nexus.config.ts
+export default defineNexusConfig({
+  tenant: {
+    mode: 'subdomain',           // 'subdomain' | 'domain' | 'path'
+    baseDomain: 'app.com',
+    async resolveMeta(tenantId) {
+      return await db.tenants.findUnique({ where: { id: tenantId } });
+    },
+  },
+});
+
+// In any server block — tenant is injected automatically
+const { tenant } = ctx;
+// tenant.id, tenant.domain, tenant.isCustomDomain, tenant.meta</code></pre>
+
+      <h3>Route files</h3>
+      <div class="code-title"><span>src/routes/[tenant]/+page.nx</span><span class="code-lang">html</span></div>
+      <pre><code class="language-html">---
+// tenant is already extracted — no manual parsing
+const { tenant } = ctx;
+const data = await db.products.findMany({
+  where: { tenantId: tenant.id },   // RLS enforced at the framework layer
+});
+---
+&lt;template&gt;
+  &lt;h1&gt;Welcome, {tenant.meta.name}!&lt;/h1&gt;
+  {#each data as item}
+    &lt;ProductCard {item} /&gt;
+  {/each}
+&lt;/template&gt;</code></pre>
+
+      <h3>Automatic isolation</h3>
+      <table class="dir-table">
+        <thead><tr><th>Concern</th><th>Nexus Behavior</th></tr></thead>
+        <tbody>
+          <tr><td>Cache keys</td><td>Prefixed with <code>tenant:{id}:</code> — zero cross-tenant cache bleed</td></tr>
+          <tr><td>Cookies</td><td>Scoped per tenant domain / subdomain by the browser</td></tr>
+          <tr><td>DB queries</td><td><code>@nexus_js/db</code> adapter warns if <code>tenantId</code> filter is missing</td></tr>
+          <tr><td>Vary headers</td><td>Automatic <code>Vary: Host</code> on tenant-aware responses where applicable</td></tr>
+          <tr><td>Server Actions</td><td>Action tokens are bound to the same session + host as the page that rendered the island — avoids cross-subdomain replay</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- LOCAL-FIRST SYNC (v0.4)                                           -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="local-first">
+      <div class="section-label">Advanced — v0.4</div>
+      <h2>📴 Local-First Sync Engine</h2>
+      <p class="lead">Inspired by Replicache and ElectricSQL — writes are instant (IndexedDB latency: 0ms) and sync to the server in the background when online.</p>
+
+      <h3>The <code>$localSync</code> rune</h3>
+      <div class="code-title"><span>src/routes/captures/+page.nx</span><span class="code-lang">html</span></div>
+      <pre><code class="language-html">&lt;script&gt;
+import { $localSync } from '@nexus_js/sync';
+
+// Reactive, offline-first collection — backed by IndexedDB
+const captures = $localSync('pokemon-captures', {
+  endpoint: '/_nexus/sync',           // server sync endpoint
+  conflict: 'last-write-wins',        // or (local, remote) => resolved
+});
+
+async function capture(pokemon) {
+  // Writes locally in &lt;1ms, queues for server sync
+  await captures.push({ id: pokemon.id, name: pokemon.name, ts: Date.now() });
+}
+
+async function remove(id) {
+  await captures.remove(id);
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;Status: {captures.status}&lt;/p&gt;    &lt;!-- 'synced' | 'pending' | 'error' --&gt;
+  &lt;p&gt;Pending ops: {captures.pending}&lt;/p&gt;
+
+  {#each captures.value as c}
+    &lt;div&gt;{c.name} &lt;button on:click={() =&gt; remove(c.id)}&gt;Release&lt;/button&gt;&lt;/div&gt;
+  {/each}
+
+  &lt;button on:click={() =&gt; captures.flush()}&gt;Sync now&lt;/button&gt;
+&lt;/template&gt;</code></pre>
+
+      <h3>Server sync endpoint</h3>
+      <div class="code-title"><span>src/routes/+server.nx — POST /_nexus/sync</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">export async function POST({ request }) {
+  const { ops } = await request.json();
+  const results = [];
+  for (const op of ops) {
+    if (op.type === 'push') {
+      await db.captures.upsert({ where: { id: op.key }, create: op.value, update: op.value });
+      results.push({ key: op.key, status: 'ok' });
+    } else if (op.type === 'delete') {
+      await db.captures.delete({ where: { id: op.key } });
+      results.push({ key: op.key, status: 'ok' });
+    }
+  }
+  return Response.json({ results });
+}</code></pre>
+
+      <h3>Conflict resolution strategies</h3>
+      <table class="dir-table">
+        <thead><tr><th>Strategy</th><th>Behavior</th></tr></thead>
+        <tbody>
+          <tr><td><code>'last-write-wins'</code></td><td>Highest <code>ts</code> field always wins — great for user preferences</td></tr>
+          <tr><td><code>'server-wins'</code></td><td>Remote always overrides local — great for inventory counts</td></tr>
+          <tr><td><code>'client-wins'</code></td><td>Local always overrides remote — great for offline-first notes</td></tr>
+          <tr><td><code>(local, remote) =&gt; resolved</code></td><td>Custom merger function — full control</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- ZERO-BUNDLE UI (v0.4)                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="zero-bundle">
+      <div class="section-label">Advanced — v0.4</div>
+      <h2>✨ Zero-Bundle UI Components</h2>
+      <p class="lead">Interactive components with <strong>0.0 KB</strong> of JavaScript. The Nexus compiler detects when a component needs no dynamic logic and emits pure HTML + CSS instead.</p>
+
+      <div class="code-title"><span>any .nx file</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import {
+  renderAccordion,
+  renderTabs,
+  renderTooltip,
+  renderModal,
+  renderProgressRing,
+} from '@nexus_js/ui';
+
+// All of these compile to 0 bytes of JS — pure CSS interaction</code></pre>
+
+      <h3>Accordion (CSS details/summary)</h3>
+      <div class="code-title"><span>server block</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">const html = renderAccordion([
+  { title: 'What is Nexus?', body: 'The definitive full-stack framework.' },
+  { title: 'Does it need React?', body: 'No. Zero React dependency.' },
+]);</code></pre>
+
+      <h3>Tabs (CSS :target trick)</h3>
+      <pre><code class="language-typescript">const html = renderTabs([
+  { id: 'js', label: 'JavaScript', content: '...' },
+  { id: 'ts', label: 'TypeScript', content: '...' },
+]);</code></pre>
+
+      <h3>Component catalogue</h3>
+      <table class="dir-table">
+        <thead><tr><th>Component</th><th>CSS Technique</th><th>JS KB</th></tr></thead>
+        <tbody>
+          <tr><td><code>renderAccordion</code></td><td><code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code></td><td>0</td></tr>
+          <tr><td><code>renderTabs</code></td><td>CSS <code>:target</code> selector</td><td>0</td></tr>
+          <tr><td><code>renderTooltip</code></td><td>CSS <code>:hover</code> + <code>[role=tooltip]</code></td><td>0</td></tr>
+          <tr><td><code>renderModal</code></td><td>CSS <code>:target</code> + <code>&lt;dialog&gt;</code></td><td>0</td></tr>
+          <tr><td><code>renderProgressRing</code></td><td>Pure SVG <code>stroke-dashoffset</code></td><td>0</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- SECURITY BY DEFAULT (v0.5)                                        -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="security">
+      <div class="section-label">Security — v0.5</div>
+      <h2>🛡️ Security by Default</h2>
+      <p class="lead">Nexus treats security as a compilation concern, not a runtime afterthought. Five layers of protection are active with zero configuration.</p>
+
+      <h3>1 — Anti-CSRF & Replay (Action Tokens)</h3>
+      <p>Every island render generates an ephemeral HMAC-signed token bound to the user session. <code>createAction</code> validates it automatically — single-use, expired in 5 minutes.</p>
+      <div class="code-title"><span>packages/server/src/csrf.ts — how it works</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">// Automatic — you never write this manually
+const token = await generateActionToken(sessionId, secretKey);
+// token is injected into the island's hidden &lt;input&gt; by the renderer
+
+// On the server, createAction calls this before your handler runs:
+await validateActionToken(token, sessionId, secretKey);
+// Throws if: wrong HMAC | expired | already used (replay detected)</code></pre>
+
+      <h3>2 — Ghost Wall: Secret Leak Detection</h3>
+      <p>The Nexus compiler scans every <code>.nx</code> file. If a server-side variable matching <code>*_SECRET</code>, <code>*_KEY</code>, or <code>process.env.*</code> is referenced inside a client island, the build fails immediately with a pedagogical error.</p>
+      <div class="code-title"><span>build output on a detected leak</span><span class="code-lang">bash</span></div>
+      <pre><code class="language-bash">[Nexus Guard] ⛔ SECRET LEAK DETECTED
+  File: src/routes/dashboard/+page.nx
+  Variable: STRIPE_SECRET_KEY (matches pattern *_SECRET)
+  Found in: island script block (line 42)
+
+  Server secrets must never reach the client bundle.
+  Wrap sensitive logic in a Server Action instead.</code></pre>
+
+      <h3>3 — XSS Auto-Encoding</h3>
+      <p><code>@nexus_js/serialize</code> automatically HTML entity-encodes all strings flowing from server to client islands. No developer action required.</p>
+      <pre><code class="language-typescript">// Before serialization (server side):
+{ name: "&lt;script&gt;alert(1)&lt;/script&gt;" }
+
+// After @nexus_js/serialize.encode (island receives):
+{ name: "&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;" }</code></pre>
+
+      <h3>4 — Per-Action Rate Limiting</h3>
+      <div class="code-title"><span>src/actions/capture.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">export const captureAction = createAction({
+  rateLimit: { window: '1m', max: 3 },   // sliding-window per user IP
+  schema: z.object({ pokemonId: z.number().int().positive() }),
+  async handler({ pokemonId }, ctx) {
+    return await db.captures.create({ data: { pokemonId, userId: ctx.user.id } });
+  },
+});
+// 429 response with Retry-After header is automatic on limit breach</code></pre>
+
+      <h3>5 — Hardened Mode (Security Headers)</h3>
+      <div class="code-title"><span>nexus.config.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">export default defineNexusConfig({
+  security: {
+    hardened: true,   // enables all headers below
+    headers: {
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'nonce-{nonce}'",
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=()',
+    },
+  },
+});</code></pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- NEXUS AUDIT (v0.5 / v0.6)                                         -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="audit">
+      <div class="section-label">Security — v0.5 / v0.6</div>
+      <h2>🔍 nexus audit</h2>
+      <p class="lead">A static analysis + dependency security scanner that runs both in CI and live during <code>nexus dev</code>. It catches what <code>npm audit</code> misses.</p>
+
+      <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
+      <pre><code class="language-bash">nexus audit              # Full scan — code + deps
+nexus audit --ci         # Exit 1 on any critical finding (for pipelines)
+nexus audit --json       # Machine-readable output</code></pre>
+
+      <h3>What it scans</h3>
+      <table class="dir-table">
+        <thead><tr><th>Check</th><th>Source</th><th>Severity</th></tr></thead>
+        <tbody>
+          <tr><td>Secret variables in client islands</td><td>Compiler / Guard</td><td>🔴 Critical</td></tr>
+          <tr><td>Forms without input validation schema</td><td>Static AST</td><td>🟠 High</td></tr>
+          <tr><td>Routes missing auth middleware</td><td>Route manifest</td><td>🟠 High</td></tr>
+          <tr><td>Missing security headers in production</td><td>nexus.config.ts</td><td>🟡 Medium</td></tr>
+          <tr><td>Dependency CVEs (OSV database)</td><td>@nexus_js/audit engine</td><td>Varies</td></tr>
+          <tr><td>Supply chain risks (npm registry)</td><td>@nexus_js/audit engine</td><td>🟡 Medium+</td></tr>
+          <tr><td>Open redirect patterns</td><td>Static AST</td><td>🟠 High</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Override policy</h3>
+      <p>Acknowledge a known CVE with a mandatory <code>reason</code> and an <code>expires</code> date. After the expiry, the build fails again automatically.</p>
+      <div class="code-title"><span>nexus.config.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">export default defineNexusConfig({
+  security: {
+    hardened: {
+      allowVulnerable: {
+        'some-pdf-lib': {
+          cve: 'CVE-2025-1234',
+          reason: 'Used only at build-time; never ships to the browser.',
+          expires: '2026-06-01',   // build fails again after this date
+        },
+      },
+    },
+  },
+});</code></pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- SUPPLY CHAIN GUARD (v0.6)                                         -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="supply-chain">
+      <div class="section-label">Security — v0.6</div>
+      <h2>⛓️ Supply Chain Guard</h2>
+      <p class="lead"><code>@nexus_js/audit</code> queries the npm registry to detect high-risk dependency patterns before they become your problem.</p>
+
+      <h3>Risk signals detected</h3>
+      <table class="dir-table">
+        <thead><tr><th>Signal</th><th>Risk Level</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td>Single maintainer package</td><td>🟡 Medium</td><td>One compromised account = all users affected</td></tr>
+          <tr><td>Package published &lt; 30 days ago</td><td>🟡 Medium</td><td>Insufficient time for community review</td></tr>
+          <tr><td>No public repository</td><td>🟠 High</td><td>Code cannot be audited independently</td></tr>
+          <tr><td>5+ versions in 24 hours</td><td>🔴 Critical</td><td>Classic typosquatting / takeover pattern</td></tr>
+          <tr><td>Abandoned (no update &gt;3 years)</td><td>🟠 High</td><td>Unpatched vulnerabilities accumulate</td></tr>
+          <tr><td>Recent maintainer change</td><td>🟠 High</td><td>Account takeover via package transfer</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Build-time blocking (Vite plugin)</h3>
+      <div class="code-title"><span>vite.config.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import { nexus, nexusSecurity } from '@nexus_js/vite-plugin-nexus';
+
+export default {
+  plugins: [
+    nexus(),
+    nexusSecurity({
+      mode: 'block',        // 'off' | 'warn' | 'block' | 'paranoid'
+      // 'block'    → throws build error on critical CVEs
+      // 'paranoid' → throws on critical + high + supply-chain risks
+    }),
+  ],
+};</code></pre>
+
+      <h3>OSV CVE scanning (offline-first)</h3>
+      <p>Nexus uses the <a href="https://osv.dev" style="color:var(--accent2)" target="_blank">Google OSV API</a> and caches results in <code>~/.nexus/cache/osv/</code> for 24 hours. Audits work fully offline after the first run.</p>
+      <pre><code class="language-bash"># Background audit runs silently when you start nexus dev
+$ nexus dev
+  ◆ Nexus v0.6.0 ready on http://localhost:3000
+
+  [Nexus Audit] Scanning 47 direct dependencies...
+  ⚠  lodash@4.17.20    HIGH   CVE-2025-3456 — Prototype Pollution
+     → Run `nexus fix` to update to 4.17.21</code></pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- NEXUS FIX (v0.6)                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="nexus-fix">
+      <div class="section-label">Security — v0.6</div>
+      <h2>🔧 nexus fix</h2>
+      <p class="lead">One command auto-remediates vulnerable dependencies. It reads OSV <code>fixedIn</code> data, updates only the affected packages, re-installs, and re-audits to confirm.</p>
+
+      <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
+      <pre><code class="language-bash">nexus fix                # Fix critical + high CVEs
+nexus fix --dry-run      # Preview what would change, no writes
+nexus fix --force        # Also fix medium + low severity</code></pre>
+
+      <h3>How it works</h3>
+      <div class="code-title"><span>automated remediation flow</span><span class="code-lang">bash</span></div>
+      <pre><code class="language-bash">$ nexus fix
+
+[Nexus Fix] Scanning for patchable vulnerabilities...
+
+  lodash@4.17.20  →  4.17.21  (CVE-2025-3456 fixed)
+  axios@0.21.1    →  1.6.0    (CVE-2025-7890 fixed)
+
+[Nexus Fix] Applying patches via pnpm...
+  pnpm add lodash@4.17.21 axios@1.6.0
+
+[Nexus Fix] Re-auditing...
+  ✅ 0 critical, 0 high vulnerabilities remaining.</code></pre>
+
+      <p>Nexus auto-detects your package manager (<code>pnpm</code>, <code>npm</code>, or <code>yarn</code>) and preserves your existing semver ranges when possible.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- CHANGELOG                                                         -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="changelog">
+      <div class="section-label">Reference</div>
+      <h2>📋 Changelog</h2>
+
+      <div style="border-left:3px solid var(--accent); padding-left:20px; margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:18px;font-weight:700">v0.6.0</span>
+          <span class="badge badge-purple">Latest</span>
+          <span style="color:var(--muted);font-size:13px">2026-04</span>
+        </div>
+        <p style="color:var(--muted);margin-bottom:12px">Integrated Dependency Auditing &amp; Supply Chain Guard</p>
+        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
+          <li>New package <code>@nexus_js/audit</code> — OSV CVE scanning with offline-first cache</li>
+          <li>Supply chain risk analysis (single maintainer, rapid versions, abandoned packages)</li>
+          <li><code>nexusSecurity</code> Vite plugin — build-time CVE blocking with 4 severity modes</li>
+          <li><code>nexus fix</code> CLI — automated one-command vulnerability remediation</li>
+          <li><code>allowVulnerable</code> override policy with mandatory <code>expires</code> date</li>
+          <li>Background CVE audit integrated into <code>nexus dev</code> startup</li>
+        </ul>
+      </div>
+
+      <div style="border-left:3px solid var(--accent2); padding-left:20px; margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:18px;font-weight:700">v0.5.0</span>
+          <span style="color:var(--muted);font-size:13px">2026-03</span>
+        </div>
+        <p style="color:var(--muted);margin-bottom:12px">Security by Compilation</p>
+        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
+          <li>Anti-CSRF &amp; Replay: HMAC-signed single-use action tokens per island render</li>
+          <li>Ghost Wall: compiler blocks builds when server secrets reach client bundles</li>
+          <li>XSS auto-encoding in <code>@nexus_js/serialize</code> for all server→client strings</li>
+          <li>Per-action rate limiting with sliding window &amp; RFC 6585 <code>Retry-After</code> headers</li>
+          <li><code>nexus audit</code> CLI — static code analysis + dependency CVE scanning</li>
+          <li>Hardened Mode: automatic security headers (CSP, HSTS, X-Frame-Options)</li>
+        </ul>
+      </div>
+
+      <div style="border-left:3px solid var(--green); padding-left:20px; margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:18px;font-weight:700">v0.4.0</span>
+          <span style="color:var(--muted);font-size:13px">2026-02</span>
+        </div>
+        <p style="color:var(--muted);margin-bottom:12px">Multi-Tenant, Local-First, Zero-Bundle</p>
+        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
+          <li>Native multi-tenant support in <code>@nexus_js/router</code> with typed <code>tenant</code> context</li>
+          <li><code>@nexus_js/sync</code> — <code>$localSync</code> rune with IndexedDB + background server sync</li>
+          <li><code>@nexus_js/ui</code> — 5 zero-JS CSS-only interactive components</li>
+          <li>Multi-Tenant Row Level Security warnings in <code>@nexus_js/db</code> adapter</li>
+        </ul>
+      </div>
+
+      <div style="border-left:3px solid var(--amber); padding-left:20px; margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:18px;font-weight:700">v0.3.0</span>
+          <span style="color:var(--muted);font-size:13px">2026-01</span>
+        </div>
+        <p style="color:var(--muted);margin-bottom:12px">Elite Observability, Edge-State Sync, AI Prefetch</p>
+        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
+          <li>Nexus Logger — ANSI terminal logs + browser DevTools bridge (Server→Client)</li>
+          <li>Nexus Connect — SSE pub/sub real-time state sync (<code>$socket</code> rune)</li>
+          <li>Nexus Guard — compiler-level secret leak detection</li>
+          <li>Nexus AI — micro-ML predictive prefetch with Network Information API awareness</li>
+          <li><code>nexus add</code> — Nexus Blocks marketplace CLI</li>
+          <li>Performance Score &amp; A11y Checker in browser console</li>
+        </ul>
+      </div>
+
+      <div style="border-left:3px solid var(--muted); padding-left:20px; margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:18px;font-weight:700">v0.2.0</span>
+          <span style="color:var(--muted);font-size:13px">2025-12</span>
+        </div>
+        <p style="color:var(--muted);margin-bottom:12px">HMR, Vite-style Logging, Pokédex Demo</p>
+        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
+          <li>Hot Module Replacement via Vite plugin</li>
+          <li>Colored ANSI server logs (○ static, λ dynamic, ▲ action)</li>
+          <li>Pokédex example project with Shield Cache, Evolution Chain streaming, Battle Mode</li>
+          <li><code>nexus studio</code> — local dev dashboard at <code>/_nexus</code></li>
+        </ul>
+      </div>
+
+      <div style="border-left:3px solid var(--muted); padding-left:20px; margin-bottom:32px; opacity:0.6">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:18px;font-weight:700">v0.1.0</span>
+          <span style="color:var(--muted);font-size:13px">2025-11</span>
+        </div>
+        <p style="color:var(--muted);margin-bottom:12px">Initial Architecture</p>
+        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
+          <li>Islands Architecture, Svelte 5 Runes, Server Actions, File-based Routing</li>
+          <li>PPR, Edge-Cache headers, Global State Store, SPA Navigation (Morphing)</li>
+          <li>BYOD Database adapters, <code>@nexus_js/serialize</code>, <code>@nexus_js/assets</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="comparison">
+      <div class="section-label">Reference</div>
+      <h2 data-i18n="cmp.title">Framework Comparison</h2>
+      <p class="lead" data-i18n="cmp.lead">How Nexus compares to mainstream full-stack and meta-frameworks — including B2B-style multi-tenancy, where Nexus is intentionally opinionated.</p>
+
+      <p style="font-size:14px;color:var(--muted);margin-bottom:16px">Legend: ✓ first-class · ✗ not a goal / not built-in · ⚠ partial or DIY · — varies by hosting</p>
+
+      <div class="cmp-scroll">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Nexus</th>
+            <th>Next.js 15</th>
+            <th>Astro 5</th>
+            <th>SvelteKit</th>
+            <th>Remix</th>
+            <th>Nuxt 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Islands Architecture</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="partial">⚠ islands module</span></td></tr>
+          <tr><td>Svelte 5 Runes</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Server Actions / mutations</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td><td><span class="partial">⚠ forms + actions</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>SPA Navigation (Morphing)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="partial">⚠ partial</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Streaming SSR</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Auto Edge-Cache Headers</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="partial">⚠</span></td><td><span class="partial">⚠</span></td></tr>
+          <tr><td>Global State Store</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="partial">⚠ Pinia</span></td></tr>
+          <tr><td>E2E Type Safety</td><td><span class="check">✓</span></td><td><span class="partial">⚠ partial</span></td><td><span class="cross">✗</span></td><td><span class="partial">⚠ partial</span></td><td><span class="partial">⚠ partial</span></td><td><span class="partial">⚠ partial</span></td></tr>
+          <tr><td>Bundle Budget Analyzer</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>BYOD Database</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Zero config (DX)</td><td><span class="check">✓</span></td><td><span class="partial">⚠</span></td><td><span class="check">✓</span></td><td><span class="partial">⚠</span></td><td><span class="partial">⚠</span></td><td><span class="partial">⚠</span></td></tr>
+          <tr><td>React / Vue default runtime</td><td><span class="cross">✗ (Svelte)</span></td><td><span class="check">React</span></td><td><span class="partial">agnostic</span></td><td><span class="cross">✗ (Svelte)</span></td><td><span class="check">React</span></td><td><span class="check">Vue</span></td></tr>
+          <tr><td><strong>Native multi-tenant (subdomain / domain)</strong></td><td><span class="check">✓</span></td><td><span class="cross">✗ DIY</span></td><td><span class="cross">✗ DIY</span></td><td><span class="cross">✗ DIY</span></td><td><span class="cross">✗ DIY</span></td><td><span class="cross">✗ DIY</span></td></tr>
+          <tr><td>Local-First Sync (IndexedDB)</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Zero-Bundle CSS UI primitives</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="partial">⚠ manual</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Anti-CSRF for mutations (built-in)</td><td><span class="check">✓</span></td><td><span class="partial">⚠</span></td><td><span class="cross">✗</span></td><td><span class="partial">⚠</span></td><td><span class="partial">⚠</span></td><td><span class="partial">⚠</span></td></tr>
+          <tr><td>Secret leak detection (build)</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Integrated CVE / supply-chain audit</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Predictive prefetch / edge state</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="partial">⚠ prefetch</span></td><td><span class="partial">⚠</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p style="font-size:14px;color:var(--text-secondary);margin-top:20px">
+        <strong>Takeaway:</strong> Next, Remix, Nuxt, and SvelteKit are excellent — but if you are standardizing on <em>tenant subdomains + custom domains + cache isolation</em> in one framework contract, Nexus documents and types that path explicitly. Other stacks can do multi-tenancy at the infrastructure layer; Nexus aims to make it a first-class routing and <code>ctx</code> concern.
+      </p>
+    </section>
+
+    <section id="packages">
+      <div class="section-label">Reference</div>
+      <h2 data-i18n="pkg.title">Package Reference</h2>
+
+      <table class="dir-table">
+        <thead><tr><th>Package</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>@nexus_js/compiler</code></td><td>.nx → JS transform, AOT CSS scoping, island preload scanner</td></tr>
+          <tr><td><code>@nexus_js/runtime</code></td><td>Runes, island hydration, store, navigation, cache, $optimistic, $sync</td></tr>
+          <tr><td><code>@nexus_js/server</code></td><td>HTTP server, SSR renderer, streaming SSR, Server Actions, error boundaries</td></tr>
+          <tr><td><code>@nexus_js/router</code></td><td>File-based route manifest builder</td></tr>
+          <tr><td><code>@nexus_js/cli</code></td><td><code>nexus</code> CLI + Nexus Studio dashboard + <code>create-nexus</code> scaffolder</td></tr>
+          <tr><td><code>@nexus_js/assets</code></td><td>AVIF/WebP image optimization, font preloading and inlining</td></tr>
+          <tr><td><code>@nexus_js/head</code></td><td><code>defineHead()</code> server-side + <code>useHead()</code> reactive client-side</td></tr>
+          <tr><td><code>@nexus_js/middleware</code></td><td>CORS, rate limit, auth, geo, security headers — Cloudflare/Vercel adapters</td></tr>
+          <tr><td><code>@nexus_js/serialize</code></td><td>SuperJSON-like: Date, Map, Set, BigInt, RegExp, URL, Uint8Array, Error</td></tr>
+          <tr><td><code>@nexus_js/types</code></td><td>E2E type generation for routes, params, and Server Actions</td></tr>
+          <tr><td><code>@nexus_js/testing</code></td><td><code>renderSSR</code>, <code>mountIsland</code>, <code>createActionTestHarness</code> for Vitest</td></tr>
+          <tr><td><code>@nexus_js/vite-plugin-nexus</code></td><td>Vite plugin for HMR, CSS preprocessing, island manifest emission, CVE blocking</td></tr>
+          <tr><td><code>@nexus_js/db</code></td><td>BYOD DB adapter: Prisma, Drizzle ORM, libSQL/Turso, or custom</td></tr>
+          <tr><td><code>@nexus_js/sync</code></td><td><code>$localSync</code> rune — IndexedDB offline writes + background server sync + conflict resolution</td></tr>
+          <tr><td><code>@nexus_js/ui</code></td><td>Zero-Bundle CSS-only interactive components (Accordion, Tabs, Modal, Tooltip, Progress Ring)</td></tr>
+          <tr><td><code>@nexus_js/audit</code></td><td>OSV CVE scanning, supply chain risk analysis, override policy with auto-expiry</td></tr>
+          <tr><td><code>@nexus_js/connect</code></td><td>SSE pub/sub real-time state sync — <code>$socket(topic)</code> rune</td></tr>
+          <tr><td><code>@nexus_js/ai</code></td><td>Micro-ML predictive prefetch with Network Information API awareness</td></tr>
+          <tr><td><code>@nexus_js/marketplace</code></td><td><code>nexus add &lt;block&gt;</code> — official Nexus Blocks installer</td></tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <p style="text-align:center; color: var(--muted); font-size:13px; margin-top:32px">
+        <strong style="color:var(--text)">Nexus</strong> — MIT License © 2026 Nexus Contributors ·
+        <a href="https://github.com/bierfor/nexus" style="color:var(--accent2); text-decoration:none">GitHub ↗</a>
+      </p>
+    </section>
+
+  </div><!-- /content -->
+</main>
+
+<button type="button" class="to-top" id="to-top" aria-label="Back to top">↑</button>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script>
+// ── Sidebar active link tracking ────────────────────────────────────────────
+const sections = document.querySelectorAll('section[id]');
+const navLinks  = document.querySelectorAll('#sidebar-nav a');
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`#sidebar-nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  },
+  { rootMargin: '-20% 0px -70% 0px' }
+);
+
+sections.forEach(s => observer.observe(s));
+
+// ── i18n ─────────────────────────────────────────────────────────────────────
+const translations = {
+  en: {
+    'hero.badge': 'Islands Architecture + Svelte 5 Runes + Server Actions',
+    'hero.title': 'The Definitive<br>Full-Stack Framework',
+    'hero.subtitle': 'Zero JS by default. Progressive hydration where you need it. Server Actions that are type-safe, race-condition-safe, and edge-ready.',
+    'hero.cta1': 'Get Started →', 'hero.cta2': 'GitHub ↗',
+    'hero.stat1': 'Packages', 'hero.stat2': 'JS by Default', 'hero.stat3': 'TypeScript', 'hero.stat4': 'Latest',
+    'nav.gettingStarted': 'Getting Started', 'nav.core': 'Core Concepts', 'nav.data': 'Data & Server',
+    'nav.advanced': 'Advanced', 'nav.tooling': 'Tooling', 'nav.reference': 'Reference',
+    'nav.install': '⚡ Installation', 'nav.quickStart': '🚀 Quick Start', 'nav.security': 'Security',
+    'install.title': 'Installation', 'install.lead': 'Nexus requires Node.js ≥ 22 and pnpm ≥ 9. It works on any OS.',
+    'install.prereq': 'Prerequisites',
+    'qs.title': 'Quick Start', 'qs.lead': 'Create a new Nexus project in seconds with the official scaffolder.',
+    'qs.step1': 'Scaffold a new project', 'qs.step2': 'Install dependencies', 'qs.step3': 'Start the dev server',
+    'struct.title': 'Project Structure', 'struct.lead': 'A typical Nexus app looks like this:',
+    'nx.title': 'The .nx Component Format', 'nx.lead': 'Every Nexus page and component is a .nx file with up to four sections.',
+    'routing.title': 'File-Based Routing', 'routing.lead': 'The file system is your router. No config required.',
+    'islands.title': 'Islands Architecture', 'islands.lead': 'Every component is static by default.',
+    'runes.title': 'Runes — Reactive Primitives', 'runes.lead': 'The most ergonomic reactivity system in JavaScript.',
+    'actions.title': 'Server Actions', 'actions.lead': 'Type-safe functions that run on the server, called like regular async functions.',
+    'cache.title': 'Cache & Revalidation', 'cache.lead': 'Stale-while-revalidate caching with tag-based invalidation.',
+    'db.title': 'Database — Bring Your Own', 'db.lead': "Nexus doesn't bundle an ORM.",
+    'streaming.title': 'Streaming SSR', 'streaming.lead': 'Send the HTML shell instantly, stream in slow parts as they resolve.',
+    'store.title': 'Global State Store', 'store.lead': 'Shared state across islands and pages. Hydration Miss = 0.',
+    'nav.title': 'SPA Navigation', 'nav.lead': 'Server-Driven DOM Morphing. No VDOM diff, no full page reload.',
+    'mw.title': 'Middleware', 'mw.lead': 'Web-standard middleware pipeline.',
+    'seo.title': 'SEO & Head Management', 'seo.lead': 'Server-side metadata injection with client-side reactive updates.',
+    'assets.title': 'Assets — Images & Fonts', 'assets.lead': 'Automatic AVIF/WebP conversion, responsive srcsets, blur placeholders.',
+    'cli.title': 'CLI Reference', 'cli.lead': 'All Nexus commands: nexus <command> [options]',
+    'studio.title': 'Nexus Studio', 'studio.lead': 'A real-time developer dashboard with zero external dependencies.',
+    'testing.title': 'Testing', 'testing.lead': 'First-class Vitest integration for SSR, islands, and Server Actions.',
+    'deploy.title': 'Deployment', 'deploy.lead': 'Any runtime that speaks Request/Response works.',
+    'cmp.title': 'Framework Comparison', 'cmp.lead': 'How Nexus compares to mainstream full-stack frameworks — including B2B-style multi-tenancy.',
+    'pkg.title': 'Package Reference',
+    'nav.enterprise': 'Enterprise & subdomains',
+    'nav.why': 'Why Nexus',
+    'why.label': 'Position',
+    'why.title': 'Technical courage, not bureaucracy',
+    'why.lead': 'What makes Nexus.js special is not only that it is fast or modern, but that it is an opinionated framework with courage. While other stacks have become giant bureaucracies (infinite cache layers and config), Nexus is born from technical purity that solves real problems in 2026.',
+    'why.card1t': 'Reactivity without the tax',
+    'why.card1d': 'Other frameworks punish you for interactivity: one animated button can mean tens of kilobytes of React or Vue runtime. With Runes (<code>$state</code>, <code>$derived</code>) and islands, JavaScript is surgical — only the code for that control ships. The rest is real HTML. SPA power with the weight of a 90s static site.',
+    'why.card2t': 'Pretext: security and speed together',
+    'why.card2d': 'Integrating pretext as a first-class entry means no “loading spinner hell”: data is ready when HTML arrives. Security is native — Nexus validates sessions and filters DB-shaped data before the browser even knows it exists, closing whole classes of accidental exposure bugs.',
+    'why.card3t': 'Hardened Mode: the framework as auditor',
+    'why.card3d': 'The compiler stops you from leaking API keys to the client or shipping known-vulnerable dependencies (CVEs). That is what separates toys from professional tools — Nexus helps you not ruin your week with a basic security mistake.',
+    'why.flowTitle': 'Why NexusFlow is the perfect showcase',
+    'why.flowBody': 'NexusFlow proves all three at once: the editor stays fluid with islands, auth leans on Hardened Mode, and the dashboard loads in milliseconds thanks to pretext.',
+    'why.closingTitle': 'The invisible effect',
+    'why.closingBody': 'The best part of Nexus is that you do not feel you are fighting the framework — no endless <code>useEffect</code>, memo wars, or webpack archaeology. You write HTML, CSS, and standard JavaScript; the compiler does the dirty work. Nexus is what developers would build for themselves if they had the time to do it right from scratch.',
+    'why.question': 'What excites you more: island speed or the peace of mind from Hardened Mode?',
+    'meta.title': 'Nexus.js — Full-stack framework | Islands, Runes, Server Actions & Hardened Mode',
+    'meta.description': 'Nexus.js: opinionated full-stack framework — Svelte 5 Runes, islands, server actions, pretext security, Hardened Mode. Technical purity without mega-framework bureaucracy.',
+    'meta.ogTitle': 'Nexus.js — Full-stack framework | Islands, Runes & Hardened Mode',
+    'meta.ogDesc': 'Opinionated framework with technical purity: surgical JS via islands, pretext for secure server data, and Hardened Mode as your build-time auditor.',
+    'meta.twTitle': 'Nexus.js — Full-stack framework',
+    'meta.twDesc': 'Islands + Runes + Server Actions + Hardened Mode. Built for real problems in 2026.',
+    'ent.label': 'Enterprise',
+    'ent.title': 'Built for multi-tenant products',
+    'ent.lead': 'Nexus treats <strong>tenant subdomains</strong> and <strong>custom domains</strong> as first-class routing concerns — not middleware glue. Ideal for B2B SaaS, agencies with white-label portals, and internal tools per company.',
+    'ent.c1t': 'Subdomain per tenant',
+    'ent.c1d': 'Serve <code>acme.yourplatform.com</code>, <code>globex.yourplatform.com</code>, and <code>staging--client.app.com</code> from one deployment. The router resolves the tenant from <code>Host</code> before your handlers run.',
+    'ent.c2t': 'Custom domains',
+    'ent.c2d': 'Map customer-owned DNS (CNAME) to your edge. <code>tenant.isCustomDomain</code> distinguishes branded URLs from shared subdomains for analytics and billing.',
+    'ent.c3t': 'Isolation by default',
+    'ent.c3d': 'Cache keys are prefixed per tenant, responses can carry <code>Vary: Host</code>, and the DB adapter warns when queries omit <code>tenantId</code> — reducing cross-tenant mistakes in production.',
+    'ent.c4t': 'Typed <code>ctx.tenant</code>',
+    'ent.c4d': 'Resolve branding, plan limits, and feature flags in <code>resolveMeta()</code> once; consume <code>tenant.meta</code> in every server block without parsing headers by hand.',
+    'ent.calloutTitle': 'Typical rollout',
+    'ent.calloutBody': 'Wildcard DNS <code>*.app.com</code> → your load balancer → Nexus with <code>tenant.mode: \'subdomain\'</code>. For enterprise customers, add a row in your DB and point their domain with a CNAME to your edge — same codebase, isolated context.',
+    'ent.link': 'Full multi-tenant API & configuration →',
+  },
+  es: {
+    'hero.badge': 'Arquitectura de Islas + Svelte 5 Runes + Server Actions',
+    'hero.title': 'El Framework Full-Stack<br>Definitivo',
+    'hero.subtitle': 'Cero JS por defecto. Hidratación progresiva donde la necesitas. Server Actions type-safe, sin race conditions, y listas para Edge.',
+    'hero.cta1': 'Empezar →', 'hero.cta2': 'GitHub ↗',
+    'hero.stat1': 'Paquetes', 'hero.stat2': 'JS por Defecto', 'hero.stat3': 'TypeScript', 'hero.stat4': 'Último',
+    'nav.gettingStarted': 'Primeros pasos', 'nav.core': 'Conceptos Core', 'nav.data': 'Datos y Servidor',
+    'nav.advanced': 'Avanzado', 'nav.tooling': 'Herramientas', 'nav.reference': 'Referencia',
+    'nav.install': '⚡ Instalación', 'nav.quickStart': '🚀 Inicio rápido', 'nav.security': 'Seguridad',
+    'install.title': 'Instalación', 'install.lead': 'Nexus requiere Node.js ≥ 22 y pnpm ≥ 9. Funciona en cualquier sistema operativo.',
+    'install.prereq': 'Requisitos previos',
+    'qs.title': 'Inicio rápido', 'qs.lead': 'Crea un proyecto Nexus en segundos con el scaffolder oficial.',
+    'qs.step1': 'Genera un nuevo proyecto', 'qs.step2': 'Instala las dependencias', 'qs.step3': 'Inicia el servidor de desarrollo',
+    'struct.title': 'Estructura del proyecto', 'struct.lead': 'Una app Nexus típica luce así:',
+    'nx.title': 'El formato de componente .nx', 'nx.lead': 'Cada página y componente es un archivo .nx con hasta cuatro secciones.',
+    'routing.title': 'Enrutamiento basado en archivos', 'routing.lead': 'El sistema de archivos es tu router. Sin configuración.',
+    'islands.title': 'Arquitectura de Islas', 'islands.lead': 'Cada componente es estático por defecto.',
+    'runes.title': 'Runes — Primitivas Reactivas', 'runes.lead': 'El sistema de reactividad más ergonómico en JavaScript.',
+    'actions.title': 'Server Actions', 'actions.lead': 'Funciones type-safe que corren en el servidor, llamadas como async functions normales.',
+    'cache.title': 'Caché y Revalidación', 'cache.lead': 'Caché stale-while-revalidate con invalidación por tags.',
+    'db.title': 'Base de Datos — Trae la Tuya', 'db.lead': 'Nexus no incluye un ORM. Envuelve tu cliente con caché e invalidación.',
+    'streaming.title': 'Streaming SSR', 'streaming.lead': 'Envía el HTML shell al instante, luego transmite las partes lentas.',
+    'store.title': 'Store Global de Estado', 'store.lead': 'Estado compartido entre islas y páginas. Hydration Miss = 0.',
+    'nav.title': 'Navegación SPA', 'nav.lead': 'Morphing DOM dirigido por el servidor. Sin VDOM diff, sin recarga completa.',
+    'mw.title': 'Middleware', 'mw.lead': 'Pipeline de middleware con APIs web estándar.',
+    'seo.title': 'SEO y gestión del Head', 'seo.lead': 'Inyección de metadatos del lado del servidor con actualizaciones reactivas.',
+    'assets.title': 'Assets — Imágenes y Fuentes', 'assets.lead': 'Conversión automática AVIF/WebP, srcsets responsivos, placeholders difuminados.',
+    'cli.title': 'Referencia del CLI', 'cli.lead': 'Todos los comandos Nexus: nexus <comando> [opciones]',
+    'studio.title': 'Nexus Studio', 'studio.lead': 'Un dashboard de desarrollo en tiempo real sin dependencias externas.',
+    'testing.title': 'Testing', 'testing.lead': 'Integración de primera clase con Vitest para SSR, islas y Server Actions.',
+    'deploy.title': 'Despliegue', 'deploy.lead': 'Cualquier runtime que hable Request/Response funciona.',
+    'cmp.title': 'Comparación de Frameworks', 'cmp.lead': 'Cómo Nexus se compara con frameworks full-stack — incluido el multi-tenant estilo B2B.',
+    'pkg.title': 'Referencia de Paquetes',
+    'nav.enterprise': 'Empresa y subdominios',
+    'nav.why': 'Por qué Nexus',
+    'why.label': 'Postura',
+    'why.title': 'Coraje técnico, no burocracia',
+    'why.lead': 'Lo que hace especial a Nexus.js no es solo que sea rápido o moderno, sino que es un framework con opinión y coraje. Mientras otros se han vuelto burocracias gigantes (capas infinitas de caché y configuración), Nexus nace con una pureza técnica que resuelve los problemas reales de 2026.',
+    'why.card1t': 'Reactividad sin impuestos',
+    'why.card1d': 'En otros frameworks la interactividad te castiga: un botón animado puede significar decenas de KB de runtime de React o Vue. Con Runes (<code>$state</code>, <code>$derived</code>) y las islas, el JavaScript es quirúrgico: solo baja el código de ese control. El resto es HTML de verdad. Potencia de SPA con la ligereza de un estático de los 90.',
+    'why.card2t': 'Pretext: seguridad y velocidad en un solo lugar',
+    'why.card2d': 'Integrar el pretext como entrada obligatoria evita el “infierno del spinner”: los datos ya están listos cuando llega el HTML. La seguridad es nativa: Nexus valida sesiones y filtra datos antes de que el navegador se entere, cerrando exposiciones accidentales.',
+    'why.card3t': 'Hardened Mode: el framework como auditor',
+    'why.card3d': 'El compilador te frena si filtras claves al cliente o si usas dependencias vulnerables (CVE). Eso separa juguetes de herramientas profesionales: Nexus te ayuda a no arruinar la semana con un fallo de seguridad básico.',
+    'why.flowTitle': 'Por qué NexusFlow es el showcase perfecto',
+    'why.flowBody': 'NexusFlow demuestra las tres cosas a la vez: el editor fluido con islas, la auth con Hardened Mode, y el dashboard en milisegundos gracias al pretext.',
+    'why.closingTitle': 'El efecto invisible',
+    'why.closingBody': 'Lo mejor de Nexus es que no sientes que peleas contra el framework: sin <code>useEffect</code> eterno, sin memos ni arqueología de webpack. Escribes HTML, CSS y JS estándar; el compilador hace el trabajo sucio. Nexus es lo que los desarrolladores escribirían para sí mismos si tuvieran tiempo y criterio para hacerlo bien desde cero.',
+    'why.question': '¿Qué te emociona más: la velocidad de las islas o la paz mental del Hardened Mode?',
+    'meta.title': 'Nexus.js — Framework full-stack | Islas, Runes, Server Actions y Hardened Mode',
+    'meta.description': 'Nexus.js: framework full-stack con criterio — Runes de Svelte 5, arquitectura de islas, server actions, pretext y Hardened Mode. Pureza técnica sin la burocracia de los mega-frameworks.',
+    'meta.ogTitle': 'Nexus.js — Framework full-stack | Islas, Runes y Hardened Mode',
+    'meta.ogDesc': 'Framework con pureza técnica: JS quirúrgico con islas, pretext para datos seguros en servidor y Hardened Mode como auditor en el build.',
+    'meta.twTitle': 'Nexus.js — Framework full-stack',
+    'meta.twDesc': 'Islas + Runes + Server Actions + Hardened Mode. Pensado para problemas reales en 2026.',
+    'ent.label': 'Empresa',
+    'ent.title': 'Pensado para productos multi-tenant',
+    'ent.lead': 'Nexus trata los <strong>subdominios por tenant</strong> y los <strong>dominios personalizados</strong> como parte del routing — no como capa de middleware. Ideal para SaaS B2B, agencias con portales white-label y herramientas internas por empresa.',
+    'ent.c1t': 'Subdominio por tenant',
+    'ent.c1d': 'Sirve <code>acme.tuplataforma.com</code>, <code>globex.tuplataforma.com</code>, etc. desde un solo despliegue. El router resuelve el tenant desde <code>Host</code> antes de tus handlers.',
+    'ent.c2t': 'Dominios personalizados',
+    'ent.c2d': 'Asocia DNS del cliente (CNAME) a tu edge. <code>tenant.isCustomDomain</code> separa URLs de marca de los subdominios compartidos.',
+    'ent.c3t': 'Aislamiento por defecto',
+    'ent.c3d': 'Claves de caché por tenant, <code>Vary: Host</code> donde aplica, y avisos en el adaptador de BD si falta <code>tenantId</code>.',
+    'ent.c4t': '<code>ctx.tenant</code> tipado',
+    'ent.c4d': 'Resuelve branding y límites de plan en <code>resolveMeta()</code> una vez; usa <code>tenant.meta</code> en cada bloque servidor.',
+    'ent.calloutTitle': 'Despliegue típico',
+    'ent.calloutBody': 'DNS comodín <code>*.app.com</code> → balanceador → Nexus con <code>tenant.mode: \'subdomain\'</code>. Para clientes enterprise, fila en BD y CNAME a tu edge — mismo código, contexto aislado.',
+    'ent.link': 'API multi-tenant y configuración completa →',
+  },
+  pt: {
+    'hero.badge': 'Arquitetura de Ilhas + Svelte 5 Runes + Server Actions',
+    'hero.title': 'O Framework Full-Stack<br>Definitivo',
+    'hero.subtitle': 'Zero JS por padrão. Hidratação progressiva onde você precisa. Server Actions com segurança de tipos, sem race conditions, prontas para Edge.',
+    'hero.cta1': 'Começar →', 'hero.cta2': 'GitHub ↗',
+    'hero.stat1': 'Pacotes', 'hero.stat2': 'JS por Padrão', 'hero.stat3': 'TypeScript', 'hero.stat4': 'Último',
+    'nav.gettingStarted': 'Primeiros passos', 'nav.core': 'Conceitos Core', 'nav.data': 'Dados e Servidor',
+    'nav.advanced': 'Avançado', 'nav.tooling': 'Ferramentas', 'nav.reference': 'Referência',
+    'nav.install': '⚡ Instalação', 'nav.quickStart': '🚀 Início rápido', 'nav.security': 'Segurança',
+    'install.title': 'Instalação', 'install.lead': 'Nexus requer Node.js ≥ 22 e pnpm ≥ 9. Funciona em qualquer sistema operacional.',
+    'install.prereq': 'Pré-requisitos',
+    'qs.title': 'Início rápido', 'qs.lead': 'Crie um projeto Nexus em segundos com o scaffold oficial.',
+    'qs.step1': 'Gere um novo projeto', 'qs.step2': 'Instale as dependências', 'qs.step3': 'Inicie o servidor de desenvolvimento',
+    'struct.title': 'Estrutura do projeto', 'struct.lead': 'Um app Nexus típico se parece com isso:',
+    'nx.title': 'O formato de componente .nx', 'nx.lead': 'Cada página e componente é um arquivo .nx com até quatro seções.',
+    'routing.title': 'Roteamento baseado em arquivos', 'routing.lead': 'O sistema de arquivos é seu router. Sem configuração.',
+    'islands.title': 'Arquitetura de Ilhas', 'islands.lead': 'Todo componente é estático por padrão.',
+    'runes.title': 'Runes — Primitivas Reativas', 'runes.lead': 'O sistema de reatividade mais ergonômico em JavaScript.',
+    'actions.title': 'Server Actions', 'actions.lead': 'Funções tipadas que rodam no servidor, chamadas como funções async normais.',
+    'cache.title': 'Cache e Revalidação', 'cache.lead': 'Cache stale-while-revalidate com invalidação por tags.',
+    'db.title': 'Banco de Dados — Traga o Seu', 'db.lead': 'Nexus não inclui um ORM. Envolve seu cliente com cache e invalidação.',
+    'streaming.title': 'Streaming SSR', 'streaming.lead': 'Envie o shell HTML instantaneamente, depois transmita as partes lentas.',
+    'store.title': 'Store Global de Estado', 'store.lead': 'Estado compartilhado entre ilhas e páginas. Hydration Miss = 0.',
+    'nav.title': 'Navegação SPA', 'nav.lead': 'Morphing DOM guiado pelo servidor. Sem VDOM diff, sem recarga completa.',
+    'mw.title': 'Middleware', 'mw.lead': 'Pipeline de middleware com APIs web padrão.',
+    'seo.title': 'SEO e gestão do Head', 'seo.lead': 'Injeção de metadados no servidor com atualizações reativas no cliente.',
+    'assets.title': 'Assets — Imagens e Fontes', 'assets.lead': 'Conversão automática AVIF/WebP, srcsets responsivos, placeholders desfocados.',
+    'cli.title': 'Referência do CLI', 'cli.lead': 'Todos os comandos Nexus: nexus <comando> [opções]',
+    'studio.title': 'Nexus Studio', 'studio.lead': 'Um dashboard de desenvolvimento em tempo real sem dependências externas.',
+    'testing.title': 'Testes', 'testing.lead': 'Integração de primeira classe com Vitest para SSR, ilhas e Server Actions.',
+    'deploy.title': 'Deploy', 'deploy.lead': 'Qualquer runtime que fale Request/Response funciona.',
+    'cmp.title': 'Comparação de Frameworks', 'cmp.lead': 'Como o Nexus se compara a frameworks full-stack — incluindo multi-tenant estilo B2B.',
+    'pkg.title': 'Referência de Pacotes',
+    'nav.enterprise': 'Empresa e subdomínios',
+    'nav.why': 'Por que Nexus',
+    'why.label': 'Posição',
+    'why.title': 'Coragem técnica, não burocracia',
+    'why.lead': 'O que torna o Nexus.js especial não é só ser rápido ou moderno: é um framework com opinião e coragem. Enquanto outras stacks viram burocracias gigantes (camadas infinitas de cache e config), o Nexus nasce de pureza técnica para problemas reais de 2026.',
+    'why.card1t': 'Reatividade sem imposto',
+    'why.card1d': 'Outros frameworks cobram caro pela interatividade: um botão pode puxar dezenas de KB de runtime React ou Vue. Com Runes (<code>$state</code>, <code>$derived</code>) e ilhas, o JavaScript é cirúrgico — só o código daquele controle. O resto é HTML de verdade.',
+    'why.card2t': 'Pretext: segurança e velocidade juntos',
+    'why.card2d': 'Pretext como entrada de primeira classe acaba com o “inferno do spinner”: os dados chegam prontos com o HTML. Segurança nativa — sessões e dados filtrados antes do browser saber que existem.',
+    'why.card3t': 'Hardened Mode: o framework como auditor',
+    'why.card3d': 'O compilador impede vazar chaves ao cliente ou dependências vulneráveis (CVE). Isso separa brinquedos de ferramentas profissionais.',
+    'why.flowTitle': 'Por que o NexusFlow é o showcase perfeito',
+    'why.flowBody': 'O NexusFlow mostra as três de uma vez: editor fluido com ilhas, auth com Hardened Mode, dashboard em milissegundos com pretext.',
+    'why.closingTitle': 'O efeito invisível',
+    'why.closingBody': 'O melhor do Nexus é não sentir que você luta contra o framework — sem <code>useEffect</code> infinito, sem guerra de memos. Você escreve HTML, CSS e JS padrão; o compilador faz o trabalho sujo.',
+    'why.question': 'O que te anima mais: a velocidade das ilhas ou a tranquilidade do Hardened Mode?',
+    'meta.title': 'Nexus.js — Framework full-stack | Ilhas, Runes, Server Actions e Hardened Mode',
+    'meta.description': 'Nexus.js: framework full-stack opinativo — Runes Svelte 5, ilhas, server actions, pretext e Hardened Mode.',
+    'meta.ogTitle': 'Nexus.js — Framework full-stack | Ilhas, Runes e Hardened Mode',
+    'meta.ogDesc': 'Pureza técnica: JS cirúrgico com ilhas, pretext seguro no servidor e Hardened Mode como auditor.',
+    'meta.twTitle': 'Nexus.js — Framework full-stack',
+    'meta.twDesc': 'Ilhas + Runes + Server Actions + Hardened Mode. Feito para 2026.',
+    'ent.label': 'Empresa',
+    'ent.title': 'Feito para produtos multi-tenant',
+    'ent.lead': 'O Nexus trata <strong>subdomínios por tenant</strong> e <strong>domínios customizados</strong> como roteamento de primeira classe — não como middleware. Ideal para SaaS B2B, agências white-label e ferramentas internas por empresa.',
+    'ent.c1t': 'Subdomínio por tenant',
+    'ent.c1d': 'Sirva <code>acme.suaplataforma.com</code>, <code>globex.suaplataforma.com</code> num único deploy. O router resolve o tenant pelo <code>Host</code>.',
+    'ent.c2t': 'Domínios próprios',
+    'ent.c2d': 'DNS do cliente (CNAME) para o edge. <code>tenant.isCustomDomain</code> separa URLs de marca.',
+    'ent.c3t': 'Isolamento por padrão',
+    'ent.c3d': 'Chaves de cache por tenant, <code>Vary: Host</code> onde aplicável, avisos no DB se faltar <code>tenantId</code>.',
+    'ent.c4t': '<code>ctx.tenant</code> tipado',
+    'ent.c4d': 'Branding e planos em <code>resolveMeta()</code>; use <code>tenant.meta</code> em todo server block.',
+    'ent.calloutTitle': 'Rollout típico',
+    'ent.calloutBody': 'DNS curinga <code>*.app.com</code> → load balancer → Nexus com <code>tenant.mode: \'subdomain\'</code>. Clientes enterprise: linha na BD e CNAME para o edge.',
+    'ent.link': 'API multi-tenant e configuração completa →',
+  },
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.innerHTML = t[key];
+  });
+  if (t['meta.title']) {
+    const titleEl = document.getElementById('page-title');
+    if (titleEl) titleEl.textContent = t['meta.title'];
+    document.getElementById('meta-desc')?.setAttribute('content', t['meta.description'] ?? '');
+    document.getElementById('og-title')?.setAttribute('content', t['meta.ogTitle'] ?? '');
+    document.getElementById('og-desc')?.setAttribute('content', t['meta.ogDesc'] ?? '');
+    document.getElementById('tw-title')?.setAttribute('content', t['meta.twTitle'] ?? '');
+    document.getElementById('tw-desc')?.setAttribute('content', t['meta.twDesc'] ?? '');
+  }
+  const ogLocale = lang === 'es' ? 'es_ES' : lang === 'pt' ? 'pt_BR' : 'en_US';
+  document.getElementById('og-locale')?.setAttribute('content', ogLocale);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const code = btn.textContent.trim().toLowerCase();
+    btn.classList.toggle('active', code === lang);
+  });
+  document.documentElement.lang = lang === 'en' ? 'en' : lang === 'es' ? 'es' : 'pt';
+}
+
+// ── Mobile drawer ───────────────────────────────────────────────────────────
+const mqMobile = window.matchMedia('(max-width: 900px)');
+function closeNav() {
+  document.body.classList.remove('nav-open');
+  const t = document.getElementById('nav-toggle');
+  if (t) {
+    t.setAttribute('aria-expanded', 'false');
+    t.setAttribute('aria-label', 'Open menu');
+  }
+}
+function openNav() {
+  document.body.classList.add('nav-open');
+  const t = document.getElementById('nav-toggle');
+  if (t) {
+    t.setAttribute('aria-expanded', 'true');
+    t.setAttribute('aria-label', 'Close menu');
+  }
+}
+function toggleNav() {
+  if (document.body.classList.contains('nav-open')) closeNav();
+  else openNav();
+}
+
+document.getElementById('nav-toggle')?.addEventListener('click', toggleNav);
+document.getElementById('nav-backdrop')?.addEventListener('click', closeNav);
+
+document.querySelectorAll('#sidebar-nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (mqMobile.matches) closeNav();
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.body.classList.contains('nav-open')) {
+    closeNav();
+  }
+});
+
+// ── Reading progress + back to top ──────────────────────────────────────────
+const progressBar = document.getElementById('read-progress-bar');
+const toTop = document.getElementById('to-top');
+
+function onScroll() {
+  const doc = document.documentElement;
+  const st = window.scrollY || doc.scrollTop;
+  const max = doc.scrollHeight - window.innerHeight;
+  const p = max > 0 ? Math.min(1, st / max) : 0;
+  if (progressBar) progressBar.style.transform = 'scaleX(' + p + ')';
+
+  if (toTop) {
+    toTop.classList.toggle('is-visible', st > 420);
+  }
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+toTop?.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ── Copy code blocks ────────────────────────────────────────────────────────
+document.querySelectorAll('pre[class*="language-"] > code').forEach(code => {
+  const pre = code.parentElement;
+  if (!pre || pre.querySelector('.copy-code-btn')) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'copy-code-btn';
+  btn.textContent = 'Copy';
+  btn.addEventListener('click', async () => {
+    const text = code.textContent || '';
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = 'Copied';
+      btn.classList.add('is-copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('is-copied');
+      }, 2000);
+    } catch {
+      btn.textContent = 'Failed';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    }
+  });
+  pre.appendChild(btn);
+});
+
+// ── Sidebar filter ────────────────────────────────────────────────────────────
+const navFilter = document.getElementById('nav-filter');
+const sidebarNav = document.getElementById('sidebar-nav');
+
+function applyNavFilter() {
+  if (!sidebarNav || !navFilter) return;
+  const term = navFilter.value.trim().toLowerCase();
+  const links = sidebarNav.querySelectorAll('a[href^="#"]');
+  const navSections = sidebarNav.querySelectorAll('.nav-section');
+
+  if (!term) {
+    links.forEach(a => { a.style.display = ''; });
+    navSections.forEach(s => { s.style.display = ''; });
+    return;
+  }
+
+  links.forEach(a => {
+    a.style.display = a.textContent.toLowerCase().includes(term) ? '' : 'none';
+  });
+
+  navSections.forEach(section => {
+    let el = section.nextElementSibling;
+    let any = false;
+    while (el && !el.classList.contains('nav-section')) {
+      if (el.tagName === 'A' && el.style.display !== 'none') any = true;
+      el = el.nextElementSibling;
+    }
+    section.style.display = any ? '' : 'none';
+  });
+}
+
+navFilter?.addEventListener('input', applyNavFilter);
+</script>
+</body>
+</html>
