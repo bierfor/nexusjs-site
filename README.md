@@ -1,6 +1,7 @@
 # nexusjs.dev
 
-Marketing and landing page for **Nexus.js** — deployed on **Cloudflare Pages**.
+**This repository** is only the **static marketing site** for Nexus (Cloudflare Pages).  
+The **framework** you install from npm is developed in **[github.com/bierfor/nexus](https://github.com/bierfor/nexus)** — source code, CLI, packages, and changelog live there. This site **points visitors to that repo** and explains the product.
 
 ## Files
 
