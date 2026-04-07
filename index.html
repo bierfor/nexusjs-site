@@ -1097,8 +1097,8 @@
     <h1 data-i18n="hero.title">The Definitive<br>Full-Stack Framework</h1>
     <p data-i18n="hero.subtitle">Zero JS by default. Progressive hydration where you need it. Server Actions that are type-safe, race-condition-safe, and edge-ready.</p>
     <div class="hero-actions">
-      <a href="#quickstart" class="btn btn-primary" data-i18n="hero.cta1">Get Started →</a>
-      <a href="https://github.com/bierfor/nexus" class="btn btn-outline" target="_blank" rel="noopener noreferrer" data-i18n="hero.cta2">Framework on GitHub ↗</a>
+      <a href="/learn.html" class="btn btn-primary" data-i18n="hero.cta1">Interactive Tutorial →</a>
+      <a href="#quickstart" class="btn btn-outline" data-i18n="hero.cta2">Quick Start ↗</a>
     </div>
     <p class="hero-repo-note" style="margin-top:14px;font-size:13px;line-height:1.6;color:var(--muted);max-width:520px">
       <span data-i18n="hero.siteExplainer">This page at nexusjs.dev is the marketing site; the product you install is the open-source framework</span>
@@ -1110,7 +1110,7 @@
       <div class="stat"><div class="stat-num">18</div><div class="stat-label" data-i18n="hero.stat1">Packages</div></div>
       <div class="stat"><div class="stat-num">0kb</div><div class="stat-label" data-i18n="hero.stat2">JS by Default</div></div>
       <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-i18n="hero.stat3">TypeScript</div></div>
-      <div class="stat"><div class="stat-num">v0.8.0</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
+      <div class="stat"><div class="stat-num">v0.9.1</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
     </div>
   </div>
 
@@ -2533,7 +2533,7 @@ async function remove(id) {
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
     <section id="security">
-      <div class="section-label">Security — v0.5+ (actions v0.7.5+)</div>
+      <div class="section-label">Security — v0.9.1 (actions v0.7.5+)</div>
       <h2>🛡️ Security by Default</h2>
       <p class="lead">Nexus treats security as a compilation concern, not a runtime afterthought. Compiler guardrails, action hardening, and optional Hardened Mode headers stack with zero ceremony for the basics.</p>
 
@@ -2579,8 +2579,11 @@ await validateActionToken(token, sessionId, secretKey);
 });
 // 429 response with Retry-After header is automatic on limit breach</code></pre>
 
-      <h3>5 — Hardened Mode (Security Headers)</h3>
-      <p style="color:var(--text-secondary);font-size:15px;margin-bottom:12px">With <code>security.hardened: true</code>, the server adds baseline headers (X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, HSTS in production). There is no per-field <code>security.headers</code> map on <code>NexusConfig</code> yet — add extra headers in your host or middleware if you need a custom CSP.</p>
+      <h3>5 — Hardened Mode (Security Headers + CSP Nonces)</h3>
+      <p style="color:var(--text-secondary);font-size:15px;margin-bottom:12px">With <code>security.hardened: true</code>, the server adds baseline headers (X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, HSTS in production) <strong>and generates a per-request CSP nonce</strong> for inline scripts. Custom inline scripts in your layouts can use <code>ctx.cspNonce</code>.</p>
+      
+      <h4>Configurable CSP directives (v0.9.1+)</h4>
+      <p>Extend the default Content-Security-Policy to allow external resources like Google Fonts, CDN scripts, or external APIs:</p>
       <div class="code-title"><span>nexus.config.ts</span><span class="code-lang">typescript</span></div>
       <pre><code class="language-typescript">import type { NexusConfig } from '@nexus_js/cli';
 
@@ -2588,8 +2591,44 @@ export default {
   security: {
     hardened: true,
     shieldLite: false,
+    csp: {
+      // Allow Google Fonts stylesheets and font files
+      additionalStyleSrc: ['https://fonts.googleapis.com'],
+      additionalFontSrc: ['https://fonts.gstatic.com'],
+      // Allow external scripts (e.g., analytics)
+      additionalScriptSrc: ['https://cdn.example.com'],
+      // Allow fetch/XHR to external APIs
+      additionalConnectSrc: ['https://api.example.com'],
+      // Allow external images
+      additionalImgSrc: ['https://cdn.example.com'],
+    },
   },
 } satisfies NexusConfig;</code></pre>
+
+      <h4>Using CSP nonce in custom inline scripts (v0.9.1+)</h4>
+      <p>When <code>security.hardened</code> is enabled, Nexus automatically injects nonces into all framework-generated inline scripts. For custom inline scripts in your layouts, use <code>ctx.cspNonce</code>:</p>
+      <div class="code-title"><span>src/routes/+layout.nx</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">---
+export async function load(ctx) {
+  return {
+    // Expose the nonce so your template can use it
+    cspNonce: ctx.cspNonce,
+    ...otherData,
+  };
+}
+---
+
+&lt;template&gt;
+  &lt;script nonce="{pretext.cspNonce}"&gt;
+    // Your custom inline script (e.g., analytics, form interceptors)
+    console.log('Custom script with CSP nonce');
+  &lt;/script&gt;
+&lt;/template&gt;</code></pre>
+      
+      <div class="callout tip">
+        <div class="callout-title">🔒 Why nonces?</div>
+        <p>CSP nonces are single-use tokens that allow specific inline scripts to execute while blocking all others. This prevents XSS attacks even if an attacker injects malicious <code>&lt;script&gt;</code> tags — without a valid nonce, the browser refuses to execute them.</p>
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
