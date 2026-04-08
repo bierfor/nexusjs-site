@@ -4,916 +4,463 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Learn Nexus.js — Interactive Tutorial</title>
-  <meta name="description" content="Learn Nexus.js with interactive examples: islands, runes, server actions, and security. Build real apps step by step.">
+  <meta name="description" content="Learn Nexus.js with interactive code examples. Master islands architecture, server actions, and reactive state with Svelte 5 runes.">
+  <link rel="canonical" href="https://nexusjs.dev/learn">
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
-  <!-- Monaco Editor -->
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/editor/editor.main.css">
+  <!-- Monaco Editor CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
+  
+  <!-- Learn page styles -->
+  <link rel="stylesheet" href="/nexus-site.css">
   
   <style>
-    :root {
-      --bg: #fafafa;
-      --bg2: #ffffff;
-      --surface: #f4f4f5;
-      --border: #e4e4e7;
-      --accent: #18181b;
-      --accent-soft: #3b82f6;
-      --text: #18181b;
-      --text-secondary: #52525b;
-      --muted: #71717a;
-      --green: #15803d;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
-      --header-h: 64px;
-      --sidebar-w: 280px;
-    }
+    body { margin: 0; padding: 0; overflow: hidden; }
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+    .learn-shell {
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      background: #0a0a0a;
     }
     
-    /* Header */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: var(--header-h);
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
+    .learn-topbar {
+      background: #18181b;
+      border-bottom: 1px solid #27272a;
+      padding: 1rem 2rem;
+      flex-shrink: 0;
+    }
+    
+    .learn-topbar__inner {
+      max-width: 1400px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
-      padding: 0 clamp(16px, 4vw, 32px);
-      gap: 24px;
+      justify-content: space-between;
+      gap: 2rem;
     }
     
-    .logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
-      text-decoration: none;
+    .learn-topbar__titles {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 1rem;
     }
     
-    .logo-mark {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, var(--accent-soft), #2563eb);
-      border-radius: 6px;
-    }
-    
-    .header-title {
-      font-size: 15px;
+    .learn-badge {
+      background: #7c3aed;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
       font-weight: 600;
-      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     
-    .header-spacer {
+    .learn-topbar__title {
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .learn-topbar__hint {
+      color: #a1a1aa;
+      font-size: 0.875rem;
+      margin: 0;
       flex: 1;
     }
     
-    .header-link {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-secondary);
+    .learn-topbar__link {
+      color: #7c3aed;
       text-decoration: none;
-      transition: color 0.2s;
+      font-weight: 600;
+      white-space: nowrap;
     }
     
-    .header-link:hover {
-      color: var(--accent);
+    .learn-topbar__link:hover {
+      color: #9333ea;
     }
     
-    /* Layout */
-    .learn-layout {
+    .learn-root {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
     
-    /* Sidebar */
-    .sidebar {
-      width: var(--sidebar-w);
-      background: var(--bg2);
-      border-right: 1px solid var(--border);
+    .learn-sidebar {
+      width: 280px;
+      background: #18181b;
+      border-right: 1px solid #27272a;
       overflow-y: auto;
-      padding: 24px 0;
+      flex-shrink: 0;
     }
     
-    .sidebar-section {
-      margin-bottom: 24px;
-      padding: 0 20px;
+    .ls-header {
+      padding: 1.5rem 1rem;
+      border-bottom: 1px solid #27272a;
     }
     
-    .sidebar-heading {
-      font-size: 11px;
+    .ls-header__label {
+      color: white;
+      font-size: 0.875rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      margin: 0 0 1rem 0;
     }
     
-    .lesson-list {
-      list-style: none;
+    .ls-progress {
+      height: 4px;
+      background: #27272a;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
     }
     
-    .lesson-item {
-      margin-bottom: 4px;
+    .ls-progress__bar {
+      height: 100%;
+      background: linear-gradient(to right, #7c3aed, #9333ea);
+      width: 0%;
+      transition: width 0.3s ease;
     }
     
-    .lesson-link {
+    .ls-progress__label {
+      color: #71717a;
+      font-size: 0.75rem;
+      margin: 0;
+    }
+    
+    .ls-nav {
+      padding: 1rem 0;
+    }
+    
+    .ls-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .ls-group h3 {
+      color: #71717a;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 1rem 0.5rem 1rem;
+    }
+    
+    .ls-item {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: none;
+      border: none;
+      color: #a1a1aa;
+      text-align: left;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      text-decoration: none;
+      gap: 0.75rem;
+      font-family: inherit;
+      font-size: 0.875rem;
       transition: all 0.2s;
     }
     
-    .lesson-link:hover {
-      background: var(--surface);
-      color: var(--accent);
-    }
-    
-    .lesson-link.active {
-      background: var(--accent);
+    .ls-item:hover {
+      background: #27272a;
       color: white;
     }
     
-    .lesson-number {
-      width: 24px;
-      height: 24px;
-      background: var(--surface);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      font-family: var(--mono);
-    }
-    
-    .lesson-link.active .lesson-number {
-      background: rgba(255,255,255,0.2);
+    .ls-item.active {
+      background: #7c3aed;
       color: white;
     }
     
-    .lesson-link.completed .lesson-number {
-      background: var(--green);
-      color: white;
+    .ls-num {
+      color: #71717a;
+      font-size: 0.75rem;
+      font-weight: 600;
     }
     
-    /* Main Content */
-    .main-content {
+    .ls-item.active .ls-num {
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .ls-check {
+      margin-left: auto;
+      color: #22c55e;
+    }
+    
+    .learn-main {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
     
-    .lesson-header {
-      padding: 24px clamp(20px, 4vw, 40px);
-      border-bottom: 1px solid var(--border);
-      background: var(--bg2);
-    }
-    
-    .lesson-meta {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent-soft);
-      margin-bottom: 8px;
-    }
-    
-    .lesson-title {
-      font-size: clamp(24px, 4vw, 32px);
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    
-    .lesson-desc {
-      font-size: 15px;
-      color: var(--text-secondary);
-      max-width: 60ch;
-    }
-    
-    /* Lesson Body */
-    .lesson-body {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-    }
-    
-    .instruction-panel {
-      width: 40%;
+    .learn-desc {
+      background: #18181b;
+      border-bottom: 1px solid #27272a;
+      padding: 1.5rem 2rem;
       overflow-y: auto;
-      padding: clamp(20px, 4vw, 32px);
-      background: var(--bg);
+      flex-shrink: 0;
+      max-height: 300px;
     }
     
-    .instruction-panel h3 {
-      font-size: 18px;
+    .ld-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .ld-breadcrumb {
+      color: #71717a;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .ld-sep {
+      margin: 0 0.5rem;
+    }
+    
+    .ld-title {
+      color: white;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 12px;
+      margin: 0 0 1rem 0;
     }
     
-    .instruction-panel p {
-      margin-bottom: 16px;
-      color: var(--text-secondary);
+    .ld-body {
+      color: #d4d4d8;
       line-height: 1.7;
     }
     
-    .instruction-panel code {
-      font-family: var(--mono);
-      font-size: 13px;
-      background: var(--surface);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: var(--accent);
+    .ld-body p {
+      margin: 0 0 1rem 0;
     }
     
-    .instruction-panel pre {
-      background: var(--surface);
-      padding: 16px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin-bottom: 16px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-    
-    .tip {
-      background: #eff6ff;
-      border-left: 3px solid var(--accent-soft);
-      padding: 12px 16px;
-      border-radius: 4px;
-      margin-bottom: 16px;
-      font-size: 14px;
-    }
-    
-    .tip-title {
-      font-weight: 700;
-      color: var(--accent-soft);
-      margin-bottom: 4px;
-    }
-    
-    /* Code Panel */
-    .code-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid var(--border);
-    }
-    
-    .code-tabs {
-      display: flex;
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      padding: 0 12px;
-    }
-    
-    .code-tab {
-      padding: 12px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: var(--mono);
-      color: var(--text-secondary);
-      border: none;
-      background: none;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-    }
-    
-    .code-tab:hover {
-      color: var(--accent);
-    }
-    
-    .code-tab.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent-soft);
-    }
-    
-    .editor-container {
-      flex: 1;
-      position: relative;
-    }
-    
-    #editor {
-      width: 100%;
-      height: 100%;
-    }
-    
-    /* Footer Actions */
-    .lesson-footer {
-      padding: 16px clamp(20px, 4vw, 40px);
-      background: var(--bg2);
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .btn {
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-    
-    .btn-primary:hover {
+    .ld-body code {
       background: #27272a;
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875em;
     }
     
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--accent);
+    .ld-nav {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
     }
     
-    .btn-secondary:hover {
-      background: var(--border);
+    .ld-btn {
+      padding: 0.5rem 1rem;
+      background: #27272a;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
     }
     
-    .btn:disabled {
+    .ld-btn:hover:not(:disabled) {
+      background: #3f3f46;
+    }
+    
+    .ld-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
     
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .sidebar {
-        display: none;
-      }
-      
-      .lesson-body {
-        flex-direction: column;
-      }
-      
-      .instruction-panel {
-        width: 100%;
-        max-height: 300px;
-      }
+    .ld-btn--next {
+      background: #7c3aed;
+    }
+    
+    .ld-btn--next:hover:not(:disabled) {
+      background: #9333ea;
+    }
+    
+    .learn-workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+    
+    .editor-pane,
+    .preview-pane {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .editor-pane {
+      border-right: 1px solid #27272a;
+    }
+    
+    .pane-header {
+      background: #18181b;
+      border-bottom: 1px solid #27272a;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    
+    .pane-header__file {
+      color: #a1a1aa;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+    }
+    
+    .pane-header__actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .pane-btn {
+      padding: 0.375rem 0.75rem;
+      background: #27272a;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .pane-btn:hover {
+      background: #3f3f46;
+    }
+    
+    .pane-btn--run {
+      background: #7c3aed;
+    }
+    
+    .pane-btn--run:hover {
+      background: #9333ea;
+    }
+    
+    .monaco-host {
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    .preview-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <a href="/" class="logo">
-      <div class="logo-mark"></div>
-      <span>Nexus.js</span>
-    </a>
-    <span class="header-title">Interactive Tutorial</span>
-    <div class="header-spacer"></div>
-    <a href="/index.html" class="header-link">Docs</a>
-    <a href="https://github.com/bierfor/nexus" class="header-link" target="_blank">GitHub</a>
+
+<div class="learn-shell">
+  <header class="learn-topbar">
+    <div class="learn-topbar__inner">
+      <div class="learn-topbar__titles">
+        <span class="learn-badge">Interactive</span>
+        <p class="learn-topbar__title">Learn Nexus.js</p>
+      </div>
+      <p class="learn-topbar__hint">Edit code on the left — <strong>Run</strong> updates the preview</p>
+      <a href="/" class="learn-topbar__link">← Back to Docs</a>
+    </div>
   </header>
 
-  <div class="learn-layout">
+  <div class="learn-root">
     <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-section">
-        <h2 class="sidebar-heading">Basics</h2>
-        <ul class="lesson-list" id="lesson-list">
-          <!-- Lessons injected by JS -->
-        </ul>
+    <aside class="learn-sidebar">
+      <div class="ls-header">
+        <h2 class="ls-header__label">Lessons</h2>
+        <div class="ls-progress">
+          <div class="ls-progress__bar" id="progress-bar"></div>
+        </div>
+        <p class="ls-progress__label" id="progress-label">0 / 12</p>
       </div>
+      <nav class="ls-nav">
+        <div class="ls-group">
+          <h3>Foundations</h3>
+          <button class="ls-item active" data-lesson="0"><span class="ls-num">01</span><span>Your First Page</span><span class="ls-check" id="chk-0"></span></button>
+          <button class="ls-item" data-lesson="1"><span class="ls-num">02</span><span>Server Frontmatter</span><span class="ls-check" id="chk-1"></span></button>
+          <button class="ls-item" data-lesson="2"><span class="ls-num">03</span><span>File-based Routing</span><span class="ls-check" id="chk-2"></span></button>
+        </div>
+        <div class="ls-group">
+          <h3>Interactivity</h3>
+          <button class="ls-item" data-lesson="3"><span class="ls-num">04</span><span>Islands Architecture</span><span class="ls-check" id="chk-3"></span></button>
+          <button class="ls-item" data-lesson="4"><span class="ls-num">05</span><span>Reactive State</span><span class="ls-check" id="chk-4"></span></button>
+          <button class="ls-item" data-lesson="5"><span class="ls-num">06</span><span>Computed Values</span><span class="ls-check" id="chk-5"></span></button>
+        </div>
+        <div class="ls-group">
+          <h3>Server & Data</h3>
+          <button class="ls-item" data-lesson="6"><span class="ls-num">07</span><span>Server Actions</span><span class="ls-check" id="chk-6"></span></button>
+          <button class="ls-item" data-lesson="7"><span class="ls-num">08</span><span>Form Validation</span><span class="ls-check" id="chk-7"></span></button>
+          <button class="ls-item" data-lesson="8"><span class="ls-num">09</span><span>Authentication</span><span class="ls-check" id="chk-8"></span></button>
+        </div>
+        <div class="ls-group">
+          <h3>Advanced</h3>
+          <button class="ls-item" data-lesson="9"><span class="ls-num">10</span><span>Pretext & Data</span><span class="ls-check" id="chk-9"></span></button>
+          <button class="ls-item" data-lesson="10"><span class="ls-num">11</span><span>Layouts</span><span class="ls-check" id="chk-10"></span></button>
+          <button class="ls-item" data-lesson="11"><span class="ls-num">12</span><span>Navigation</span><span class="ls-check" id="chk-11"></span></button>
+        </div>
+      </nav>
     </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- Lesson Header -->
-      <div class="lesson-header">
-        <div class="lesson-meta" id="lesson-meta">Lesson 1</div>
-        <h1 class="lesson-title" id="lesson-title">Hello Nexus</h1>
-        <p class="lesson-desc" id="lesson-desc">Create your first Nexus page</p>
-      </div>
-
-      <!-- Lesson Body -->
-      <div class="lesson-body">
-        <!-- Instructions -->
-        <div class="instruction-panel" id="instructions">
-          <!-- Content injected by JS -->
-        </div>
-
-        <!-- Code Editor -->
-        <div class="code-panel">
-          <div class="code-tabs">
-            <button class="code-tab active">+page.nx</button>
+    <!-- Main -->
+    <div class="learn-main">
+      <div class="learn-desc">
+        <div class="ld-inner">
+          <div class="ld-breadcrumb">
+            <span>Tutorial</span>
+            <span class="ld-sep">›</span>
+            <span id="lesson-step">01 / 12</span>
           </div>
-          <div class="editor-container">
-            <div id="editor"></div>
+          <h1 id="lesson-title" class="ld-title">Your First Page</h1>
+          <div id="lesson-body" class="ld-body"></div>
+          <div class="ld-nav">
+            <button class="ld-btn ld-btn--prev" id="btn-prev">← Prev</button>
+            <button class="ld-btn ld-btn--next" id="btn-next">Next →</button>
           </div>
         </div>
       </div>
 
-      <!-- Footer -->
-      <div class="lesson-footer">
-        <button class="btn btn-secondary" id="prev-btn">
-          ← Previous
-        </button>
-        <div>
-          <button class="btn btn-secondary" id="reset-btn">Reset Code</button>
+      <div class="learn-workspace">
+        <div class="editor-pane">
+          <div class="pane-header">
+            <span class="pane-header__file" id="editor-filename">+page.nx</span>
+            <div class="pane-header__actions">
+              <button class="pane-btn" id="btn-reset">Reset</button>
+              <button class="pane-btn pane-btn--run" id="btn-run">▶ Run</button>
+            </div>
+          </div>
+          <div id="monaco-editor" class="monaco-host"></div>
         </div>
-        <button class="btn btn-primary" id="next-btn">
-          Next Lesson →
-        </button>
+        <div class="preview-pane">
+          <div class="pane-header">
+            <span>Preview</span>
+            <button class="pane-btn" id="btn-refresh">⟳</button>
+          </div>
+          <iframe id="preview-iframe" class="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
       </div>
-    </main>
-  </div>
-
-  <!-- Monaco Editor -->
-  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
-  
-  <script>
-    // Lessons data
-    const lessons = [
-      {
-        id: 1,
-        title: 'Hello Nexus',
-        description: 'Create your first .nx page with server-side HTML',
-        instructions: `
-          <h3>Welcome to Nexus!</h3>
-          <p>Let's start with the simplest Nexus page possible. A <code>.nx</code> file is like a Svelte component, but with server-side rendering built in.</p>
-          
-          <h3>The <code>&lt;template&gt;</code> block</h3>
-          <p>Everything inside <code>&lt;template&gt;</code> is your HTML markup. It renders on the server first, then hydrates on the client if needed.</p>
-          
-          <div class="tip">
-            <div class="tip-title">💡 Try it</div>
-            <p>Change the greeting message and see it update instantly. Nexus has hot module reloading built in!</p>
-          </div>
-          
-          <h3>No JavaScript needed</h3>
-          <p>This page works without any client-side JavaScript. That's the beauty of server-first architecture.</p>
-        `,
-        code: `<template>
-  <h1>Hello from Nexus!</h1>
-  <p>Welcome to your first .nx page.</p>
-  <p>This HTML is rendered on the server.</p>
-</template>
-
-<style>
-  h1 {
-    color: #3b82f6;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  p {
-    color: #52525b;
-    line-height: 1.6;
-  }
-</style>`,
-      },
-      {
-        id: 2,
-        title: 'Server Data (Pretext)',
-        description: 'Load data on the server with the load() function',
-        instructions: `
-          <h3>Server-side data loading</h3>
-          <p>The <code>---</code> frontmatter block runs on the server <strong>only</strong>. Use it to fetch data, query databases, or call APIs.</p>
-          
-          <h3>The <code>load()</code> function</h3>
-          <p>Export a <code>load</code> function to fetch data. It receives a <code>ctx</code> object with request details.</p>
-          
-          <pre><code>export async function load(ctx) {
-  const data = await fetch('...');
-  return { data };
-}</code></pre>
-          
-          <h3>Access with <code>pretext</code></h3>
-          <p>Data returned from <code>load()</code> is available as <code>pretext.propertyName</code> in your template.</p>
-          
-          <div class="tip">
-            <div class="tip-title">🔒 Security First</div>
-            <p>Code in the frontmatter never reaches the browser. Your API keys and secrets are safe.</p>
-          </div>
-        `,
-        code: `---
-// nexus:pretext
-export async function load(ctx) {
-  const now = new Date().toLocaleTimeString();
-  const message = "Data loaded on the server!";
-  
-  return {
-    serverTime: now,
-    message,
-  };
-}
----
-
-<template>
-  <h1>{pretext.message}</h1>
-  <p>Current server time: <strong>{pretext.serverTime}</strong></p>
-  <p>This data was fetched during server-side rendering.</p>
-</template>
-
-<style>
-  h1 {
-    color: #3b82f6;
-  }
-  strong {
-    color: #18181b;
-    font-weight: 700;
-  }
-</style>`,
-      },
-      {
-        id: 3,
-        title: 'Client Islands',
-        description: 'Add interactivity with client-side JavaScript',
-        instructions: `
-          <h3>The Islands Architecture</h3>
-          <p>Nexus uses "islands" of interactivity. Most of your page is static HTML, and only specific parts become interactive.</p>
-          
-          <h3>The <code>&lt;script&gt;</code> block</h3>
-          <p>Code inside <code>&lt;script&gt;</code> runs in the browser. Use it for click handlers, forms, and dynamic UI.</p>
-          
-          <h3>Hydration strategies</h3>
-          <ul>
-            <li><code>client:load</code> — Hydrate immediately</li>
-            <li><code>client:visible</code> — Hydrate when scrolled into view</li>
-            <li><code>client:idle</code> — Hydrate when browser is idle</li>
-          </ul>
-          
-          <div class="tip">
-            <div class="tip-title">⚡ Performance</div>
-            <p>Wrap only interactive parts in <code>client:*</code> divs. Static content stays HTML-only.</p>
-          </div>
-        `,
-        code: `<script>
-  let count = $state(0);
-  
-  function increment() {
-    count++;
-  }
-</script>
-
-<template>
-  <h1>Interactive Counter</h1>
-  
-  <div client:load>
-    <p>Count: <strong>{count}</strong></p>
-    <button onclick={increment}>
-      Click me!
-    </button>
-  </div>
-  
-  <p>This text below is static HTML (no JS).</p>
-</template>
-
-<style>
-  button {
-    padding: 10px 20px;
-    background: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  button:hover {
-    background: #2563eb;
-  }
-  strong {
-    color: #3b82f6;
-    font-size: 1.5rem;
-  }
-</style>`,
-      },
-      {
-        id: 4,
-        title: 'Reactive State ($state)',
-        description: 'Svelte 5 runes for reactive variables',
-        instructions: `
-          <h3>Svelte 5 Runes</h3>
-          <p>Nexus uses Svelte 5's runes syntax for reactivity. It's simpler and more explicit than Svelte 4.</p>
-          
-          <h3><code>$state()</code></h3>
-          <p>Declare reactive variables with <code>$state()</code>. When they change, the UI updates automatically.</p>
-          
-          <pre><code>let count = $state(0);
-let name = $state('World');</code></pre>
-          
-          <h3><code>$derived()</code></h3>
-          <p>Compute values from state. They update automatically when dependencies change.</p>
-          
-          <pre><code>let doubled = $derived(count * 2);</code></pre>
-          
-          <div class="tip">
-            <div class="tip-title">🎯 Best Practice</div>
-            <p>Use <code>$state</code> for values that change. Use <code>$derived</code> for computed values. Nexus will optimize reactivity for you.</p>
-          </div>
-        `,
-        code: `<script>
-  let name = $state('');
-  let count = $state(0);
-  
-  let greeting = $derived(
-    name ? \`Hello, \${name}!\` : 'Enter your name'
-  );
-  
-  let doubled = $derived(count * 2);
-</script>
-
-<template>
-  <h1>Reactive State Demo</h1>
-  
-  <div client:load>
-    <div>
-      <label>Your name:</label>
-      <input 
-        type="text" 
-        bind:value={name}
-        placeholder="Type here..."
-      />
-    </div>
-    
-    <p><strong>{greeting}</strong></p>
-    
-    <div>
-      <button onclick={() => count++}>
-        Count: {count}
-      </button>
-      <p>Doubled: {doubled}</p>
     </div>
   </div>
-</template>
+</div>
 
-<style>
-  input {
-    padding: 8px 12px;
-    border: 1px solid #e4e4e7;
-    border-radius: 6px;
-    font-size: 14px;
-  }
-  button {
-    padding: 10px 20px;
-    background: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  strong {
-    color: #3b82f6;
-    font-size: 1.2rem;
-  }
-</style>`,
-      },
-      {
-        id: 5,
-        title: 'Server Actions',
-        description: 'Handle forms securely with server-side logic',
-        instructions: `
-          <h3>Server Actions</h3>
-          <p>Server Actions let you handle form submissions securely on the server. No need to build a separate API.</p>
-          
-          <h3>Create an action</h3>
-          <pre><code>import { createAction } from '@nexus_js/server';
+<!-- Monaco Editor AMD Loader -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 
-export const submit = createAction({
-  async handler(data, ctx) {
-    // Process form data
-    return { success: true };
-  },
-});</code></pre>
-          
-          <h3>Progressive Enhancement</h3>
-          <p>Forms work without JavaScript! Nexus intercepts the submit and handles it via fetch, but if JS fails, the native form POST works too.</p>
-          
-          <div class="tip">
-            <div class="tip-title">🔒 Built-in Security</div>
-            <p>CSRF protection is automatic. Nexus validates tokens, origins, and prevents replay attacks for you.</p>
-          </div>
-        `,
-        code: `---
-import { createAction, registerAction } from '@nexus_js/server';
+<!-- Learn page logic -->
+<script src="/learn.js"></script>
 
-const submitForm = createAction({
-  async handler(data, ctx) {
-    const name = String(data.name || '');
-    console.log('Form submitted:', name);
-    return { success: true, name };
-  },
-});
-
-registerAction('submit', submitForm);
----
-
-<script>
-  let result = $state('');
-  
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    
-    const res = await fetch(form.action, {
-      method: 'POST',
-      headers: { 'x-nexus-action': '1' },
-      credentials: 'include',
-      body: fd,
-    });
-    
-    const json = await res.json();
-    result = \`Submitted: \${json.data.name}\`;
-  }
-</script>
-
-<template>
-  <h1>Server Action Demo</h1>
-  
-  <div client:load>
-    <form 
-      action="/_nexus/action/submit"
-      method="post"
-      onsubmit={handleSubmit}
-    >
-      <input 
-        type="text" 
-        name="name" 
-        placeholder="Your name"
-        required
-      />
-      <button type="submit">Submit</button>
-    </form>
-    
-    {#if result}
-      <p class="result">{result}</p>
-    {/if}
-  </div>
-</template>
-
-<style>
-  form {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  input {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1px solid #e4e4e7;
-    border-radius: 8px;
-  }
-  button {
-    padding: 10px 24px;
-    background: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .result {
-    color: #15803d;
-    font-weight: 600;
-  }
-</style>`,
-      },
-    ];
-
-    // State
-    let currentLesson = 0;
-    let editor = null;
-    let completed = new Set(JSON.parse(localStorage.getItem('nexus-learn-progress') || '[]'));
-
-    // Initialize Monaco Editor
-    require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
-    require(['vs/editor/editor.main'], function () {
-      editor = monaco.editor.create(document.getElementById('editor'), {
-        value: lessons[0].code,
-        language: 'html',
-        theme: 'vs',
-        fontSize: 14,
-        minimap: { enabled: false },
-        scrollBeyondLastLine: false,
-        lineNumbers: 'on',
-        renderWhitespace: 'selection',
-        tabSize: 2,
-      });
-      
-      // Auto-resize
-      window.addEventListener('resize', () => editor.layout());
-    });
-
-    // Render lesson list
-    function renderLessonList() {
-      const list = document.getElementById('lesson-list');
-      list.innerHTML = lessons.map((lesson, i) => `
-        <li class="lesson-item">
-          <a 
-            href="#lesson-${lesson.id}" 
-            class="lesson-link ${i === currentLesson ? 'active' : ''} ${completed.has(lesson.id) ? 'completed' : ''}"
-            data-lesson="${i}"
-          >
-            <div class="lesson-number">${lesson.id}</div>
-            <span>${lesson.title}</span>
-          </a>
-        </li>
-      `).join('');
-      
-      // Add click handlers
-      list.querySelectorAll('.lesson-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const lessonIndex = parseInt(link.dataset.lesson);
-          loadLesson(lessonIndex);
-        });
-      });
-    }
-
-    // Load lesson
-    function loadLesson(index) {
-      if (index < 0 || index >= lessons.length) return;
-      
-      currentLesson = index;
-      const lesson = lessons[index];
-      
-      // Update header
-      document.getElementById('lesson-meta').textContent = `Lesson ${lesson.id}`;
-      document.getElementById('lesson-title').textContent = lesson.title;
-      document.getElementById('lesson-desc').textContent = lesson.description;
-      
-      // Update instructions
-      document.getElementById('instructions').innerHTML = lesson.instructions;
-      
-      // Update editor
-      if (editor) {
-        editor.setValue(lesson.code);
-      }
-      
-      // Update buttons
-      document.getElementById('prev-btn').disabled = index === 0;
-      document.getElementById('next-btn').disabled = index === lessons.length - 1;
-      
-      // Update sidebar
-      renderLessonList();
-      
-      // Mark as completed
-      completed.add(lesson.id);
-      localStorage.setItem('nexus-learn-progress', JSON.stringify([...completed]));
-      
-      // Scroll to top
-      document.querySelector('.instruction-panel').scrollTop = 0;
-    }
-
-    // Navigation
-    document.getElementById('prev-btn').addEventListener('click', () => {
-      loadLesson(currentLesson - 1);
-    });
-    
-    document.getElementById('next-btn').addEventListener('click', () => {
-      loadLesson(currentLesson + 1);
-    });
-    
-    document.getElementById('reset-btn').addEventListener('click', () => {
-      const lesson = lessons[currentLesson];
-      if (editor) {
-        editor.setValue(lesson.code);
-      }
-    });
-
-    // Initialize
-    renderLessonList();
-    loadLesson(0);
-  </script>
 </body>
 </html>
