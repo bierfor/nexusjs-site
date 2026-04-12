@@ -1,4 +1,4 @@
-// ─── Learn page: Monaco Editor + 10 interactive lessons ─────────────────────
+// ─── Learn page: Monaco Editor + interactive lessons ───────────────────────
 
 var LESSONS = [
   {
@@ -8,7 +8,7 @@ var LESSONS = [
       '<p>Welcome to Nexus.js! Every <strong>.nx file</strong> has an optional frontmatter block',
       '(between <code>---</code>) that runs on the server, followed by HTML that becomes the response.</p>',
       '<p><code>&lt;style&gt;</code> in a page is <strong>scoped</strong> to that route (it does not redefine global <code>body</code> for the whole app).',
-      'For site-wide CSS, use <code>public/*.css</code> and a <code>&lt;link&gt;</code> in your layout — see the <a href="/docs#css-styles">docs</a>.</p>',
+      'For site-wide CSS, use <code>public/*.css</code> and a <code>&lt;link&gt;</code> in your layout — see <a href="/#assets">Assets</a>.</p>',
       '<p>Try editing the <code>h1</code> and click <strong>Run</strong> to refresh the preview.</p>'
     ].join(''),
     lang: 'html',
@@ -20,11 +20,11 @@ var LESSONS = [
       '<div class="page">',
       '  <h1>Hello from Nexus!</h1>',
       '  <p>Edit this text and click Run to see changes.</p>',
-      '  <a href="/about">Go to About</a>',
+      '  <a href="#" onclick="return false">Go to About</a>',
       '</div>',
       '',
       '<style>',
-      '  body { font-family: system-ui; padding: 2rem; background: #fafafa; }',
+      '  .page { font-family: system-ui; padding: 2rem; background: #fafafa; border-radius: 12px; }',
       '  h1 { color: #7c3aed; font-size: 2rem; margin-bottom: 0.5rem; }',
       '  p  { color: #52525b; margin-bottom: 1rem; }',
       '  a  { color: #7c3aed; font-weight: 600; }',
@@ -34,6 +34,7 @@ var LESSONS = [
   {
     title:    'Server Frontmatter',
     filename: 'src/routes/+page.nx',
+    previewSimulate: 'frontmatter',
     desc: [
       '<p>The frontmatter block (between <code>---</code>) is <strong>server-only</strong>.',
       'Variables defined there are available in the HTML template via <code>{curly braces}</code>.</p>',
@@ -247,6 +248,7 @@ var LESSONS = [
     title:    'Server Actions',
     filename: 'src/routes/contact/+page.nx',
     lang: 'html',
+    previewSimulate: 'server-action',
     desc: [
       '<p><strong>Server Actions</strong> are async functions in the frontmatter that run on the server.',
       'Called via HTML forms with automatic CSRF tokens.</p>',
@@ -296,6 +298,7 @@ var LESSONS = [
     title:    'Form Validation with Zod',
     filename: 'src/routes/register/+page.nx',
     lang: 'html',
+    previewSimulate: 'validation',
     desc: [
       '<p>Nexus integrates with <strong>Zod</strong> for type-safe server-side validation.',
       'Return <code>fieldErrors</code> to show per-field error messages on the client.</p>'
@@ -361,6 +364,7 @@ var LESSONS = [
     title:    'Authentication & Sessions',
     filename: 'src/routes/login/+page.nx',
     lang: 'html',
+    previewSimulate: 'auth',
     desc: [
       '<p>Use <code>ctx.setCookie()</code> to set httpOnly session cookies. They are merged into',
       'the response automatically — even JSON responses.</p>'
@@ -419,6 +423,7 @@ var LESSONS = [
     title:    'Pretext & Data Loading',
     filename: 'src/routes/blog/+page.nx',
     lang: 'html',
+    previewSimulate: 'pretext',
     desc: [
       '<p><strong>Pretext</strong> is Nexus\'s data-loading system. Export a <code>load()</code>',
       'function that returns data available as <code>{pretext.key}</code> in your template.</p>',
@@ -468,6 +473,7 @@ var LESSONS = [
     title:    'Layouts (+layout.nx)',
     filename: 'src/routes/+layout.nx',
     lang:     'html',
+    previewSimulate: 'layout',
     desc: [
       '<p>A <strong>layout</strong> wraps child routes. Put shared chrome (nav, footer) in <code>+layout.nx</code> and render the active page with <code>&lt;slot /&gt;</code>.</p>',
       '<p>Layouts can nest: <code>routes/+layout.nx</code> applies to every route under <code>routes/</code>.</p>'
@@ -835,6 +841,149 @@ function buildSimulatedIslandPreviewHtml(kind) {
       '</div>' +
       '<p class="learn-sim-note">Preview in plain JavaScript (CSP-safe). In your <code>.nx</code> sample, use <code>$derived</code> for the filtered list and for <code>filtered.length</code>.</p>' +
       '<script>(function(){var items=["Apple","Banana","Cherry","Date"];var inp=document.getElementById("nx-search"),ul=document.getElementById("nx-ul"),meta=document.getElementById("nx-meta");function f(){var q=(inp.value||"").toLowerCase();return items.filter(function(i){return i.toLowerCase().indexOf(q)!==-1;});}function r(){var list=f();meta.textContent=list.length+" result"+(list.length===1?"":"s");ul.innerHTML="";if(list.length===0){var li=document.createElement("li");li.className="empty";li.textContent="No results";ul.appendChild(li);return;}list.forEach(function(t){var li=document.createElement("li");li.textContent=t;ul.appendChild(li);});}inp.addEventListener("input",r);inp.addEventListener("keyup",r);r();})();<\/script>' +
+      '</body></html>'
+    );
+  }
+
+  if (kind === 'frontmatter') {
+    return (
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+      baseCss +
+      'h1{font-size:1.8rem;color:#18181b;margin:0 0 .5rem}' +
+      'p{color:#52525b;margin:.25rem 0 1rem}' +
+      'ul{padding-left:1.25rem;margin:.5rem 0}' +
+      'li{margin:.25rem 0;color:#374151}' +
+      '.badge{display:inline-flex;align-items:center;gap:.5rem;padding:.25rem .6rem;border-radius:999px;background:#f4f4f5;border:1px solid #e4e4e7;color:#52525b;font-size:.8rem}' +
+      '</style></head><body>' +
+      '<div class="page">' +
+      '<h1>Welcome, Alice!</h1>' +
+      '<p>Role: <strong>Admin</strong> — ' + new Date().getFullYear() + '</p>' +
+      '<div class="badge">Server-only frontmatter → compiled HTML</div>' +
+      '<ul><li>Server Actions</li><li>Islands</li><li>CSRF Protection</li></ul>' +
+      '</div>' +
+      '<p class="learn-sim-note">Simulated render of <code>{user.name}</code> and <code>{#each}</code>. In Nexus, the compiler evaluates the server block and emits HTML.</p>' +
+      '</body></html>'
+    );
+  }
+
+  if (kind === 'server-action') {
+    return (
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+      baseCss +
+      '.form{max-width:520px;display:flex;flex-direction:column;gap:.75rem}' +
+      'h2{color:#18181b;font-size:1.5rem;margin:0 0 .25rem}' +
+      'input,textarea{padding:.65rem .85rem;border:1px solid #e4e4e7;border-radius:10px;font-size:.95rem;font-family:inherit}' +
+      'textarea{min-height:110px;resize:vertical}' +
+      'button{padding:.75rem .9rem;background:#7c3aed;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer}' +
+      'button:hover{background:#9333ea}' +
+      '.toast{display:none;margin-top:.75rem;border-radius:12px;padding:.7rem .85rem;border:1px solid #bbf7d0;background:#f0fdf4;color:#166534;font-weight:600}' +
+      '.toast.bad{border-color:#fecaca;background:#fef2f2;color:#991b1b}' +
+      '</style></head><body>' +
+      '<form class="form" id="f">' +
+      '<h2>Contact Us</h2>' +
+      '<input name="name" placeholder="Your name" required />' +
+      '<input name="email" type="email" placeholder="Email" required />' +
+      '<textarea name="message" placeholder="Message" required></textarea>' +
+      '<button type="submit">Send Message</button>' +
+      '<div class="toast" id="t"></div>' +
+      '</form>' +
+      '<p class="learn-sim-note">This preview simulates a Server Action. In a real app, the form posts to <code>/_nexus/action/contactAction</code> and Nexus applies CSRF + rate limiting.</p>' +
+      '<script>(function(){var f=document.getElementById("f"),t=document.getElementById("t");f.addEventListener("submit",function(e){e.preventDefault();var fd=new FormData(f);var name=String(fd.get("name")||"").trim();var email=String(fd.get("email")||"").trim();var msg=String(fd.get("message")||"").trim();if(!name||!email||!msg){t.className="toast bad";t.textContent="All fields are required.";t.style.display="block";return;}t.className="toast";t.textContent="Sent! (simulated server response)";t.style.display="block";});})();<\/script>' +
+      '</body></html>'
+    );
+  }
+
+  if (kind === 'validation') {
+    return (
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+      baseCss +
+      '.form{max-width:420px;display:flex;flex-direction:column;gap:1rem}' +
+      'h2{margin:0;color:#18181b}' +
+      'label{font-size:.85rem;font-weight:700;color:#374151}' +
+      'input{padding:.65rem .85rem;border:1px solid #e4e4e7;border-radius:10px;font-size:.95rem;font-family:inherit}' +
+      '.field{display:flex;flex-direction:column;gap:.35rem}' +
+      '.err{min-height:1em;color:#ef4444;font-size:.82rem}' +
+      'button{padding:.75rem .9rem;background:#7c3aed;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer}' +
+      '.ok{display:none;border:1px solid #bbf7d0;background:#f0fdf4;color:#166534;border-radius:12px;padding:.7rem .85rem;font-weight:600}' +
+      '</style></head><body>' +
+      '<form class="form" id="f">' +
+      '<h2>Create Account</h2>' +
+      '<div class="field"><label>Username</label><input name="username" required /><div class="err" data-err="username"></div></div>' +
+      '<div class="field"><label>Email</label><input name="email" type="email" required /><div class="err" data-err="email"></div></div>' +
+      '<div class="field"><label>Password</label><input name="password" type="password" required /><div class="err" data-err="password"></div></div>' +
+      '<button type="submit">Register</button>' +
+      '<div class="ok" id="ok">Valid! (simulated) → redirect to /dashboard</div>' +
+      '</form>' +
+      '<p class="learn-sim-note">In Nexus you validate on the server (e.g. Zod) inside the action, returning <code>fieldErrors</code> for the UI.</p>' +
+      '<script>(function(){var f=document.getElementById("f"),ok=document.getElementById("ok");function setErr(k,msg){var el=document.querySelector("[data-err=\""+k+"\"]");if(el) el.textContent=msg||"";}f.addEventListener("submit",function(e){e.preventDefault();ok.style.display="none";var fd=new FormData(f);var u=String(fd.get("username")||"").trim();var em=String(fd.get("email")||"").trim();var p=String(fd.get("password")||"");setErr("username",u.length<3?"At least 3 characters":"");setErr("email",/^[^@]+@[^@]+\.[^@]+$/.test(em)?"":"Invalid email address");setErr("password",p.length<8?"At least 8 characters":"");if(u.length>=3&&/^[^@]+@[^@]+\.[^@]+$/.test(em)&&p.length>=8){ok.style.display="block";}});})();<\/script>' +
+      '</body></html>'
+    );
+  }
+
+  if (kind === 'auth') {
+    return (
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+      baseCss +
+      'body{display:grid;place-items:center;min-height:100vh;padding:0}' +
+      '.card{width:380px;border:1px solid #e4e4e7;border-radius:16px;background:#fff;padding:1.5rem;box-shadow:0 10px 40px rgba(0,0,0,.08)}' +
+      'h2{margin:0 0 .75rem;color:#18181b}' +
+      'input{width:100%;padding:.65rem .85rem;border:1px solid #e4e4e7;border-radius:10px;font-size:.95rem;margin:.4rem 0;font-family:inherit}' +
+      'button{width:100%;margin-top:.75rem;padding:.75rem .9rem;background:#7c3aed;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer}' +
+      '.note{display:none;margin-top:.75rem;border-radius:12px;padding:.7rem .85rem;border:1px solid #bfdbfe;background:#eff6ff;color:#1e40af;font-weight:600}' +
+      '</style></head><body>' +
+      '<div class="card">' +
+      '<form id="f">' +
+      '<h2>Sign In</h2>' +
+      '<input name="email" type="email" placeholder="Email" required />' +
+      '<input name="password" type="password" placeholder="Password" required />' +
+      '<button type="submit">Sign In</button>' +
+      '<div class="note" id="n"></div>' +
+      '</form>' +
+      '<p class="learn-sim-note" style="margin-top:1rem">Simulated auth. In Nexus, <code>ctx.setCookie()</code> sets httpOnly cookies on the server response.</p>' +
+      '</div>' +
+      '<script>(function(){var f=document.getElementById("f"),n=document.getElementById("n");f.addEventListener("submit",function(e){e.preventDefault();n.style.display="block";n.textContent="Session set (simulated). Redirect to /dashboard";});})();<\/script>' +
+      '</body></html>'
+    );
+  }
+
+  if (kind === 'pretext') {
+    return (
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+      baseCss +
+      'h1{font-size:1.75rem;margin:0 0 1rem;color:#18181b}' +
+      '.card{border:1px solid #e4e4e7;border-radius:14px;background:#fff;padding:1rem 1.1rem;margin:.75rem 0}' +
+      '.card h2{margin:0;font-size:1rem;color:#18181b}' +
+      '.views{margin:.25rem 0 0;color:#71717a;font-size:.85rem}' +
+      'a{text-decoration:none}' +
+      '</style></head><body>' +
+      '<div class="page">' +
+      '<h1>Blog (3 posts)</h1>' +
+      '<div class="card"><a href="#" onclick="return false"><h2>Getting started with Nexus</h2></a><p class="views">1240 views</p></div>' +
+      '<div class="card"><a href="#" onclick="return false"><h2>Islands vs SSR: a comparison</h2></a><p class="views">890 views</p></div>' +
+      '<div class="card"><a href="#" onclick="return false"><h2>Server Actions deep dive</h2></a><p class="views">2100 views</p></div>' +
+      '</div>' +
+      '<p class="learn-sim-note">Simulated <code>load()</code> output. In Nexus, pretext runs on the server before HTML rendering.</p>' +
+      '</body></html>'
+    );
+  }
+
+  if (kind === 'layout') {
+    return (
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+      baseCss +
+      'body{padding:0;background:#fafafa}' +
+      '.shell-nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:#18181b;color:#fafafa}' +
+      '.shell-nav a{color:#c4b5fd;margin-left:1rem;text-decoration:none;font-weight:700}' +
+      '.shell-main{padding:1.5rem;max-width:760px;margin:0 auto}' +
+      '.slot{border:1px dashed #d4d4d8;background:#fff;border-radius:14px;padding:1rem}' +
+      '.slot h3{margin:0 0 .4rem;color:#18181b}' +
+      '.slot p{margin:0;color:#52525b}' +
+      '</style></head><body>' +
+      '<header class="shell-nav"><strong>My App</strong><nav><a href="#" onclick="return false">Home</a><a href="#" onclick="return false">About</a></nav></header>' +
+      '<main class="shell-main">' +
+      '<div class="slot"><h3>&lt;slot /&gt;</h3><p>Child route content renders here.</p></div>' +
+      '<p class="learn-sim-note">Layouts compose. In Nexus, <code>+layout.nx</code> wraps all child routes and <code>&lt;slot /&gt;</code> renders the active page.</p>' +
+      '</main>' +
       '</body></html>'
     );
   }

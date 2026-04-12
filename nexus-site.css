@@ -1,0 +1,93 @@
+:root{
+  --nx-bg:#0a0a0a;
+  --nx-panel:#18181b;
+  --nx-panel-2:#111113;
+  --nx-border:#27272a;
+  --nx-text:#ffffff;
+  --nx-text-2:#d4d4d8;
+  --nx-muted:#a1a1aa;
+  --nx-muted-2:#71717a;
+  --nx-accent:#7c3aed;
+  --nx-accent-2:#9333ea;
+  --nx-good:#22c55e;
+  --nx-warn:#f59e0b;
+  --nx-bad:#ef4444;
+  --nx-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;
+  --nx-sans:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+}
+
+*{box-sizing:border-box}
+
+body{
+  font-family:var(--nx-sans);
+}
+
+.ld-preview-note{
+  display:inline-flex;
+  gap:.5rem;
+  align-items:flex-start;
+  background:rgba(124,58,237,.12);
+  border:1px solid rgba(124,58,237,.35);
+  border-radius:10px;
+  padding:.6rem .75rem;
+  color:var(--nx-text-2);
+  margin:0 0 1rem 0;
+}
+
+.ld-preview-note::before{
+  content:'◆';
+  color:var(--nx-accent);
+  font-family:var(--nx-mono);
+  font-weight:700;
+  line-height:1.2;
+  margin-top:.05rem;
+}
+
+.learn-editor-loading{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--nx-muted);
+  font-weight:600;
+  background:var(--nx-panel-2);
+  border:1px solid var(--nx-border);
+  border-radius:12px;
+  margin:16px;
+}
+
+.learn-fallback-banner{
+  margin:16px 16px 10px;
+  padding:.6rem .75rem;
+  border-radius:10px;
+  border:1px solid rgba(245,158,11,.45);
+  background:rgba(245,158,11,.12);
+  color:var(--nx-text-2);
+  font-size:.85rem;
+  line-height:1.45;
+}
+
+.learn-fallback-editor{
+  width:calc(100% - 32px);
+  height:calc(100% - 32px);
+  margin:0 16px 16px;
+  padding:16px;
+  border-radius:12px;
+  border:1px solid var(--nx-border);
+  background:#08080a;
+  color:#e4e4e7;
+  font-family:var(--nx-mono);
+  font-size:13px;
+  line-height:1.7;
+  outline:none;
+  resize:none;
+}
+
+.learn-fallback-editor:focus{
+  border-color:rgba(124,58,237,.65);
+  box-shadow:0 0 0 3px rgba(124,58,237,.15);
+}
+
+code,kbd,samp{
+  font-family:var(--nx-mono);
+}
