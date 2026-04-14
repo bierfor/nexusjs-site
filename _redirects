@@ -4,9 +4,11 @@
 # Redirect bare /index.html to root (canonical)
 /index.html / 301
 
-# Canonical Learn URL
-/learn /learn.html 301
-/learn/ /learn.html 301
+# Legacy Learn URLs (removed)
+/learn / 301
+/learn/ / 301
+/learn.html / 410
+/learn.js / 410
 
 # Redirect old docs paths if any (add as needed)
 # /docs/* / 301

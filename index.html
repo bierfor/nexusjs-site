@@ -1027,7 +1027,7 @@
   <a href="#top" class="sidebar-logo">
     <div class="logo-mark">N</div>
     <span class="logo-text">Nexus</span>
-    <span class="logo-version">v0.9.2</span>
+    <span class="logo-version">v0.9.8</span>
   </a>
   <nav id="sidebar-nav">
     <div class="nav-filter-wrap">
@@ -1097,8 +1097,8 @@
     <h1 data-i18n="hero.title">The Definitive<br>Full-Stack Framework</h1>
     <p data-i18n="hero.subtitle">Zero JS by default. Progressive hydration where you need it. Server Actions that are type-safe, race-condition-safe, and edge-ready.</p>
     <div class="hero-actions">
-      <a href="/learn" class="btn btn-primary" data-i18n="hero.cta1">Interactive Tutorial →</a>
-      <a href="#quickstart" class="btn btn-outline" data-i18n="hero.cta2">Quick Start ↗</a>
+      <a href="#quickstart" class="btn btn-primary" data-i18n="hero.cta1">Get Started →</a>
+      <a href="https://github.com/bierfor/nexus" class="btn btn-outline" target="_blank" rel="noopener noreferrer" data-i18n="hero.cta2">Framework on GitHub ↗</a>
     </div>
     <p class="hero-repo-note" style="margin-top:14px;font-size:13px;line-height:1.6;color:var(--muted);max-width:520px">
       <span data-i18n="hero.siteExplainer">This page at nexusjs.dev is the marketing site; the product you install is the open-source framework</span>
@@ -1107,10 +1107,10 @@
       <a href="https://github.com/bierfor/nexusjs-site" target="_blank" rel="noopener noreferrer" style="color:var(--accent2)">bierfor/nexusjs-site ↗</a>.
     </p>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-num">18</div><div class="stat-label" data-i18n="hero.stat1">Packages</div></div>
+      <div class="stat"><div class="stat-num">25</div><div class="stat-label" data-i18n="hero.stat1">Packages</div></div>
       <div class="stat"><div class="stat-num">0kb</div><div class="stat-label" data-i18n="hero.stat2">JS by Default</div></div>
       <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-i18n="hero.stat3">TypeScript</div></div>
-      <div class="stat"><div class="stat-num">v0.9.2</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
+      <div class="stat"><div class="stat-num">v0.9.8</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
     </div>
   </div>
 
@@ -2612,7 +2612,7 @@ async function remove(id) {
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
     <section id="security">
-      <div class="section-label">Security — v0.9.2 (GraphQL + Legacy Bridge)</div>
+      <div class="section-label">Security — v0.9.8 (Bridge + Tenancy + Vault namespaces)</div>
       <h2>🛡️ Security by Default</h2>
       <p class="lead">Nexus treats security as a compilation concern, not a runtime afterthought. Compiler guardrails, action hardening, and optional Hardened Mode headers stack with zero ceremony for the basics.</p>
 
@@ -2847,18 +2847,18 @@ nexus fix --force        # Also fix medium + low severity</code></pre>
 
       <div style="border-left:3px solid var(--accent); padding-left:20px; margin-bottom:32px">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.9.2</span>
+          <span style="font-size:18px;font-weight:700">v0.9.8</span>
           <span class="badge badge-purple">Latest</span>
-          <span style="color:var(--muted);font-size:13px">2026-04-08</span>
+          <span style="color:var(--muted);font-size:13px">2026-04-14</span>
         </div>
-        <p style="color:var(--muted);margin-bottom:12px">GraphQL Integration + Legacy Bridge + Deployment Infrastructure</p>
+        <p style="color:var(--muted);margin-bottom:12px">Bridge v1 (Postgres discovery → canonical model), JWT tenancy resolver, Vault namespaces</p>
         <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li><strong>NEW:</strong> <code>@nexus_js/graphql</code> — Production-ready GraphQL with Shield security (complexity analysis, depth limiting, field masking)</li>
-          <li>JWT with Vault-backed key rotation (hot-reload, zero downtime); DataLoader for N+1 prevention; CORS handling built-in</li>
-          <li><strong>Legacy Bridge:</strong> Remote GraphQL executor, schema stitching, HTTP fallback proxy, Express wrapper, Vault import from .env/AWS/GCP</li>
-          <li><strong>Deployment:</strong> Multi-stage Dockerfile, docker-compose with PostgreSQL+Redis+Nginx, deploy/rollback/migrate scripts, GitHub Actions CI/CD</li>
-          <li><strong>Example:</strong> PayLinks SaaS — Full production app with Stripe, QR codes, Prisma, Vault UI, GraphQL API</li>
-          <li><code>NexusMountDef</code> for custom HTTP handlers; <code>wrapExpressMiddleware</code> and <code>wrapExpressHandler</code> for gradual migration</li>
+          <li><strong>NEW:</strong> <code>nexus bridge</code> — discover DB schema, generate <code>canonical-model.json</code>, security report, and starter mounts</li>
+          <li><strong>NEW:</strong> <code>@nexus_js/bridge</code> + <code>@nexus_js/bridge-postgres</code> — security-first discovery via <code>information_schema</code></li>
+          <li><strong>NEW:</strong> tenancy resolver: <code>subdomain</code>, <code>header</code>, <code>jwt</code>, <code>path</code>, <code>custom-domain</code> (JWT avoids edge spoofing)</li>
+          <li><strong>NEW:</strong> Vault namespaces: <code>GLOBAL/*</code>, <code>TENANT/&lt;id&gt;/*</code>, <code>ENCRYPTED/*</code> — zero-leak policy for secrets</li>
+          <li><strong>NEW:</strong> Bridge helper generator (<code>withTenant</code>) with configurable tenant key (industry default: <code>account_id</code>)</li>
+          <li><strong>NEW:</strong> Bridge-lint: <code>@nexus_js/eslint-plugin-bridge</code> enforces <code>withTenant(ctx,...)</code> on DB calls</li>
         </ul>
       </div>
 
