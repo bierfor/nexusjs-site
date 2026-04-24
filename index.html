@@ -770,6 +770,54 @@
     }
     .step-content h4 { margin: 0 0 6px; color: var(--text); }
 
+    .pm-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 20px 0 16px;
+    }
+    .pm-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg2);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .pm-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .pm-head strong {
+      font-size: 13px;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .pm-badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(22, 163, 74, .25);
+      color: var(--green);
+      background: rgba(22, 163, 74, .1);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .pm-card pre[class*="language-"] {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
     hr {
       border: none;
       border-top: 1px solid var(--border);
@@ -1225,33 +1273,40 @@ pnpm --version   # Must be ≥ 9.0.0</code></pre>
       <h2 data-i18n="qs.title">Quick Start</h2>
       <p class="lead" data-i18n="qs.lead">Create a new Nexus project in seconds with the official scaffolder.</p>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h4 data-i18n="qs.step1">Scaffold a new project</h4>
-            <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
-            <pre><code class="language-bash">pnpm create nexus@latest my-app
-cd my-app</code></pre>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h4 data-i18n="qs.step2">Install dependencies</h4>
-            <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
-            <pre><code class="language-bash">pnpm install</code></pre>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h4 data-i18n="qs.step3">Start the dev server</h4>
-            <div class="code-title"><span>terminal</span><span class="code-lang">bash</span></div>
-            <pre><code class="language-bash">pnpm dev
-# → http://localhost:3000</code></pre>
-          </div>
-        </div>
+      <div class="pm-grid">
+        <article class="pm-card">
+          <div class="pm-head"><strong>pnpm</strong><span class="pm-badge">recommended</span></div>
+          <pre><code class="language-bash">pnpm dlx --package=@nexus_js/cli@latest create-nexus my-app
+cd my-app
+pnpm install
+pnpm dev</code></pre>
+        </article>
+        <article class="pm-card">
+          <div class="pm-head"><strong>npm</strong></div>
+          <pre><code class="language-bash">npm exec --package=@nexus_js/cli@latest -- create-nexus my-app
+cd my-app
+npm install
+npm run dev</code></pre>
+        </article>
+        <article class="pm-card">
+          <div class="pm-head"><strong>bun</strong></div>
+          <pre><code class="language-bash">bunx --package=@nexus_js/cli@latest create-nexus my-app
+cd my-app
+bun install
+bun run dev</code></pre>
+        </article>
+        <article class="pm-card">
+          <div class="pm-head"><strong>yarn</strong></div>
+          <pre><code class="language-bash">yarn dlx --package=@nexus_js/cli@latest create-nexus my-app
+cd my-app
+yarn install
+yarn dev</code></pre>
+        </article>
+      </div>
+
+      <div class="callout tip">
+        <strong>✅ Official scaffolder path</strong>
+        Use <code>create-nexus</code> via <code>pnpm dlx</code>, <code>npm exec</code>, <code>bunx</code>, or <code>yarn dlx</code>. Avoid legacy <code>pnpm create nexus@latest</code> commands.
       </div>
 
       <div class="callout tip">
