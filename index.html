@@ -770,18 +770,13 @@
     }
     .step-content h4 { margin: 0 0 6px; color: var(--text); }
 
-    .pm-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+    .pm-switcher {
       margin: 20px 0 16px;
-    }
-    .pm-card {
       border: 1px solid var(--border);
       border-radius: 12px;
+      overflow: hidden;
       background: var(--bg2);
       box-shadow: var(--shadow-sm);
-      overflow: hidden;
     }
     .pm-head {
       display: flex;
@@ -791,10 +786,11 @@
       border-bottom: 1px solid var(--border);
       background: var(--surface);
     }
-    .pm-head strong {
+    .pm-head .pm-title {
       font-size: 13px;
       color: var(--text);
       letter-spacing: -0.01em;
+      font-weight: 700;
     }
     .pm-badge {
       display: inline-flex;
@@ -809,7 +805,30 @@
       letter-spacing: .03em;
       text-transform: uppercase;
     }
-    .pm-card pre[class*="language-"] {
+    .pm-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+    .pm-tab {
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-family: var(--mono);
+      cursor: pointer;
+    }
+    .pm-tab.is-active {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      background: var(--accent-muted);
+    }
+    .pm-command {
       margin: 0;
       border: 0;
       border-radius: 0;
@@ -817,6 +836,7 @@
       font-size: 12px;
       line-height: 1.65;
     }
+    .pm-command[hidden] { display: none; }
 
     hr {
       border: none;
@@ -1273,35 +1293,33 @@ pnpm --version   # Must be ≥ 9.0.0</code></pre>
       <h2 data-i18n="qs.title">Quick Start</h2>
       <p class="lead" data-i18n="qs.lead">Create a new Nexus project in seconds with the official scaffolder.</p>
 
-      <div class="pm-grid">
-        <article class="pm-card">
-          <div class="pm-head"><strong>pnpm</strong><span class="pm-badge">recommended</span></div>
-          <pre><code class="language-bash">pnpm dlx --package=@nexus_js/cli@latest create-nexus my-app
+      <div class="pm-switcher" id="pm-switcher">
+        <div class="pm-head">
+          <span class="pm-title">Install with your package manager</span>
+          <span class="pm-badge" id="pm-reco-badge">pnpm recommended</span>
+        </div>
+        <div class="pm-tabs" role="tablist" aria-label="Package manager">
+          <button type="button" class="pm-tab is-active" role="tab" aria-selected="true" data-pm="pnpm">pnpm</button>
+          <button type="button" class="pm-tab" role="tab" aria-selected="false" data-pm="npm">npm</button>
+          <button type="button" class="pm-tab" role="tab" aria-selected="false" data-pm="bun">bun</button>
+          <button type="button" class="pm-tab" role="tab" aria-selected="false" data-pm="yarn">yarn</button>
+        </div>
+        <pre class="pm-command" data-pm="pnpm"><code class="language-bash">pnpm dlx --package=@nexus_js/cli@latest create-nexus my-app
 cd my-app
 pnpm install
 pnpm dev</code></pre>
-        </article>
-        <article class="pm-card">
-          <div class="pm-head"><strong>npm</strong></div>
-          <pre><code class="language-bash">npm exec --package=@nexus_js/cli@latest -- create-nexus my-app
+        <pre class="pm-command" data-pm="npm" hidden><code class="language-bash">npm exec --package=@nexus_js/cli@latest -- create-nexus my-app
 cd my-app
 npm install
 npm run dev</code></pre>
-        </article>
-        <article class="pm-card">
-          <div class="pm-head"><strong>bun</strong></div>
-          <pre><code class="language-bash">bunx --package=@nexus_js/cli@latest create-nexus my-app
+        <pre class="pm-command" data-pm="bun" hidden><code class="language-bash">bunx --package=@nexus_js/cli@latest create-nexus my-app
 cd my-app
 bun install
 bun run dev</code></pre>
-        </article>
-        <article class="pm-card">
-          <div class="pm-head"><strong>yarn</strong></div>
-          <pre><code class="language-bash">yarn dlx --package=@nexus_js/cli@latest create-nexus my-app
+        <pre class="pm-command" data-pm="yarn" hidden><code class="language-bash">yarn dlx --package=@nexus_js/cli@latest create-nexus my-app
 cd my-app
 yarn install
 yarn dev</code></pre>
-        </article>
       </div>
 
       <div class="callout tip">
@@ -3417,6 +3435,30 @@ function applyNavFilter() {
 }
 
 navFilter?.addEventListener('input', applyNavFilter);
+
+// ── Package manager switcher ────────────────────────────────────────────────
+const pmSwitcher = document.getElementById('pm-switcher');
+if (pmSwitcher) {
+  const tabs = pmSwitcher.querySelectorAll('.pm-tab');
+  const panels = pmSwitcher.querySelectorAll('.pm-command');
+  const badge = document.getElementById('pm-reco-badge');
+
+  function setPm(pm) {
+    tabs.forEach((tab) => {
+      const active = tab.getAttribute('data-pm') === pm;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    panels.forEach((panel) => {
+      panel.hidden = panel.getAttribute('data-pm') !== pm;
+    });
+    if (badge) badge.textContent = pm === 'pnpm' ? 'pnpm recommended' : `${pm} mode`;
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => setPm(tab.getAttribute('data-pm')));
+  });
+}
 </script>
 
 <!-- Buy Me a Coffee Widget -->
