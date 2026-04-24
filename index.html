@@ -1027,7 +1027,7 @@
   <a href="#top" class="sidebar-logo">
     <div class="logo-mark">N</div>
     <span class="logo-text">Nexus</span>
-    <span class="logo-version">v0.9.8</span>
+    <span class="logo-version">v0.9.20</span>
   </a>
   <nav id="sidebar-nav">
     <div class="nav-filter-wrap">
@@ -1110,7 +1110,7 @@
       <div class="stat"><div class="stat-num">25</div><div class="stat-label" data-i18n="hero.stat1">Packages</div></div>
       <div class="stat"><div class="stat-num">0kb</div><div class="stat-label" data-i18n="hero.stat2">JS by Default</div></div>
       <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-i18n="hero.stat3">TypeScript</div></div>
-      <div class="stat"><div class="stat-num">v0.9.8</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
+      <div class="stat"><div class="stat-num">v0.9.20</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
     </div>
   </div>
 
@@ -2612,7 +2612,7 @@ async function remove(id) {
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
     <section id="security">
-      <div class="section-label">Security — v0.9.8 (Bridge + Tenancy + Vault namespaces)</div>
+      <div class="section-label">Security — v0.9.20 (Actions + CSP + Build/Runtime Hardening)</div>
       <h2>🛡️ Security by Default</h2>
       <p class="lead">Nexus treats security as a compilation concern, not a runtime afterthought. Compiler guardrails, action hardening, and optional Hardened Mode headers stack with zero ceremony for the basics.</p>
 
@@ -2844,157 +2844,43 @@ nexus fix --force        # Also fix medium + low severity</code></pre>
     <section id="changelog">
       <div class="section-label">Reference</div>
       <h2>📋 Changelog</h2>
+      <p class="lead">Complete <code>0.9.0 → 0.9.20</code> line, documented per version. Full notes: <a href="/docs/RELEASES_0.9.x.md" style="color:var(--accent2)">ES</a> · <a href="/docs/RELEASES_0.9.x.en.md" style="color:var(--accent2)">EN</a> · <a href="/docs/RELEASES_0.9.x.pt.md" style="color:var(--accent2)">PT</a>.</p>
 
-      <div style="border-left:3px solid var(--accent); padding-left:20px; margin-bottom:32px">
+      <div style="border-left:3px solid var(--accent); padding-left:20px; margin-bottom:28px">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.9.8</span>
+          <span style="font-size:18px;font-weight:700">v0.9.20</span>
           <span class="badge badge-purple">Latest</span>
-          <span style="color:var(--muted);font-size:13px">2026-04-14</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Bridge v1 (Postgres discovery → canonical model), JWT tenancy resolver, Vault namespaces</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li><strong>NEW:</strong> <code>nexus bridge</code> — discover DB schema, generate <code>canonical-model.json</code>, security report, and starter mounts</li>
-          <li><strong>NEW:</strong> <code>@nexus_js/bridge</code> + <code>@nexus_js/bridge-postgres</code> — security-first discovery via <code>information_schema</code></li>
-          <li><strong>NEW:</strong> tenancy resolver: <code>subdomain</code>, <code>header</code>, <code>jwt</code>, <code>path</code>, <code>custom-domain</code> (JWT avoids edge spoofing)</li>
-          <li><strong>NEW:</strong> Vault namespaces: <code>GLOBAL/*</code>, <code>TENANT/&lt;id&gt;/*</code>, <code>ENCRYPTED/*</code> — zero-leak policy for secrets</li>
-          <li><strong>NEW:</strong> Bridge helper generator (<code>withTenant</code>) with configurable tenant key (industry default: <code>account_id</code>)</li>
-          <li><strong>NEW:</strong> Bridge-lint: <code>@nexus_js/eslint-plugin-bridge</code> enforces <code>withTenant(ctx,...)</code> on DB calls</li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--green); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.9.0</span>
-          <span style="color:var(--muted);font-size:13px">2026-04-07</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Smart prefetching, LQIP images, streaming SSR fixes, type-safe router</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li><code>data-nx-prefetch="load"</code> — immediate prefetch on DOMContentLoaded; <code>visible</code> mode with 200px rootMargin</li>
-          <li>Real LQIP placeholders: <code>generateBlurDataURL()</code> via Sharp (10×10 blurred JPEG as base64 data URI)</li>
-          <li>Streaming SSR: fallback HTML rendered on first paint; functional <code>errorFallback</code>; <code>&lt;/script&gt;</code> injection fix</li>
-          <li>Type-safe router: <code>@nexus_js/runtime/router</code> with generated <code>navigate&lt;R&gt;()</code> and <code>prefetch&lt;R&gt;()</code></li>
-          <li>Security: tainted modules (<code>*.server.ts</code>), <code>NEXUS_PUBLIC_</code> prefix enforced, CSP nonce, metadata XSS escaping</li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--accent2); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.8.0</span>
-          <span style="color:var(--muted);font-size:13px">2026-04-06</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Build ID contract, production error masking, layout/page output split</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li><code>.nexus/build-id.json</code> on every <code>nexus build</code>; optional <code>NEXUS_BUILD_ID</code> in CI</li>
-          <li>Server actions: <code>x-nexus-build-id</code> must match → else <strong>412</strong> <code>BUILD_MISMATCH</code>; <code>callAction</code> reloads on mismatch</li>
-          <li><code>window.__NEXUS_BUILD_ID__</code> injected in HTML; stale tabs recover after deploy</li>
-          <li>Production: masked action errors with <code>errorId</code> unless <code>NEXUS_EXPOSE_ERRORS=true</code></li>
-          <li>CSRF token clock-skew guard; JSON body complexity limits before parse; <code>isSafeUrl()</code> for SSRF-safe fetch wrappers</li>
-          <li>Root <code>+layout</code> vs <code>+page</code> → <code>index._layout.js</code> / <code>index.js</code> (no overwrite)</li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--green); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.7.5</span>
           <span style="color:var(--muted);font-size:13px">2026-04</span>
         </div>
-        <p style="color:var(--muted);margin-bottom:12px">Server action security &amp; production path fixes</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li>Dual-tier CSRF: <code>x-nexus-action</code> header + optional HMAC token; compiler no longer disables CSRF on sidecars</li>
-          <li>Rate limit registry (persistent sliding window); <code>USED_TOKENS</code> TTL map; <code>NEXUS_SECRET</code> prod warning</li>
-          <li><code>Origin: null</code> rejected; action name allowlist; max body size (10 MB default); <code>Vary</code> on public HTML</li>
-          <li>Dev endpoints restricted to loopback <code>Origin</code>; <code>compileLib</code> + <code>.nexus/lib</code> for production <code>$lib</code></li>
-        </ul>
+        <p style="color:var(--muted);margin-bottom:12px">Runtime navigation stylesheet reinjection deduplication (FOUC reduction on SPA navigation).</p>
       </div>
 
-      <div style="border-left:3px solid var(--accent2); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.6.0</span>
-          <span style="color:var(--muted);font-size:13px">2026-04</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Integrated Dependency Auditing &amp; Supply Chain Guard</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li>New package <code>@nexus_js/audit</code> — OSV CVE scanning with offline-first cache</li>
-          <li>Supply chain risk analysis (single maintainer, rapid versions, abandoned packages)</li>
-          <li><code>nexusSecurity</code> Vite plugin — build-time CVE blocking with 4 severity modes</li>
-          <li><code>nexus fix</code> CLI — automated one-command vulnerability remediation</li>
-          <li><code>allowVulnerable</code> override policy with mandatory <code>expires</code> date</li>
-          <li>Background CVE audit integrated into <code>nexus dev</code> startup</li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--amber); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.5.0</span>
-          <span style="color:var(--muted);font-size:13px">2026-03</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Security by Compilation</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li>Action security foundation: HMAC tokens + compiler guardrails; dual-tier CSRF (custom header + optional token) shipped in v0.7.5</li>
-          <li>Ghost Wall: compiler blocks builds when server secrets reach client bundles</li>
-          <li>XSS auto-encoding in <code>@nexus_js/serialize</code> for all server→client strings</li>
-          <li>Per-action rate limiting with sliding window &amp; RFC 6585 <code>Retry-After</code> headers</li>
-          <li><code>nexus audit</code> CLI — static code analysis + dependency CVE scanning</li>
-          <li>Hardened Mode: automatic security headers (CSP, HSTS, X-Frame-Options)</li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--green); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.4.0</span>
-          <span style="color:var(--muted);font-size:13px">2026-02</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Multi-Tenant, Local-First, Zero-Bundle</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li>Native multi-tenant support in <code>@nexus_js/router</code> with typed <code>tenant</code> context</li>
-          <li><code>@nexus_js/sync</code> — <code>$localSync</code> rune with IndexedDB + background server sync</li>
-          <li><code>@nexus_js/ui</code> — 5 zero-JS CSS-only interactive components</li>
-          <li>Multi-Tenant Row Level Security warnings in <code>@nexus_js/db</code> adapter</li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--amber); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.3.0</span>
-          <span style="color:var(--muted);font-size:13px">2026-01</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Elite Observability, Edge-State Sync, AI Prefetch</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li>Nexus Logger — ANSI terminal logs + browser DevTools bridge (Server→Client)</li>
-          <li>Nexus Connect — SSE pub/sub real-time state sync (<code>$socket</code> rune)</li>
-          <li>Nexus Guard — compiler-level secret leak detection</li>
-          <li>Nexus AI — micro-ML predictive prefetch with Network Information API awareness</li>
-          <li><code>nexus add</code> — Nexus Blocks marketplace CLI</li>
-          <li>Performance Score &amp; A11y Checker in browser console</li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--muted); padding-left:20px; margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.2.0</span>
-          <span style="color:var(--muted);font-size:13px">2025-12</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">HMR, Vite-style Logging, Pokédex Demo</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li>Hot Module Replacement via Vite plugin</li>
-          <li>Colored ANSI server logs (○ static, λ dynamic, ▲ action)</li>
-          <li>Pokédex example project with Shield Cache, Evolution Chain streaming, Battle Mode</li>
-          <li><code>nexus studio</code> — local dev dashboard at <code>/_nexus</code></li>
-        </ul>
-      </div>
-
-      <div style="border-left:3px solid var(--muted); padding-left:20px; margin-bottom:32px; opacity:0.6">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.1.0</span>
-          <span style="color:var(--muted);font-size:13px">2025-11</span>
-        </div>
-        <p style="color:var(--muted);margin-bottom:12px">Initial Architecture</p>
-        <ul style="color:var(--text);line-height:2;list-style:disc;padding-left:16px">
-          <li>Islands Architecture, Svelte 5 Runes, Server Actions, File-based Routing</li>
-          <li>PPR, Edge-Cache headers, Global State Store, SPA Navigation (Morphing)</li>
-          <li>BYOD Database adapters, <code>@nexus_js/serialize</code>, <code>@nexus_js/assets</code></li>
-        </ul>
-      </div>
+      <table class="dir-table">
+        <thead><tr><th>Version</th><th>Primary improvement(s)</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><code>0.9.20</code></td><td>Runtime navigation: skip reinjecting already-present stylesheets in <code>&lt;head&gt;</code></td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.19</code></td><td>Static asset cache validators + SSR stylesheet dedup on server</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.18</code></td><td>0.9.x package publish/alignment step</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.17</code></td><td>Dev CSS pre-warm before HMR reload broadcast</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.16</code></td><td>Aggregated CSS build recovery after transient file compile errors</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.15</code></td><td><code>/_nexus/styles.css</code>: <code>ETag + no-cache</code> to reduce hard-refresh FOUC</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.14</code></td><td>Framework package line alignment after version drift</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.13</code></td><td>Compiler/CLI bug-fix release line publish</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.12</code></td><td>Compiler <code>collectLibUsage</code> fix for mixed runtime + <code>$lib</code> import parsing</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.11</code></td><td>Compiler transitive <code>$lib</code> chunks + output manifest rewrite fixes</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.10</code></td><td>Compiler <code>$lib</code> rewrite to <code>/_nexus/lib/*</code> + tree-shaken hashed island bundles</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.9</code></td><td>Patch release in the bridge/tenancy hardening sequence</td><td>⚠ limited public notes</td></tr>
+          <tr><td><code>0.9.8</code></td><td>Tenancy resolver + vault namespace/bridge isolation progression</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.7</code></td><td>Intermediate bridge/tenancy stabilization release</td><td>⚠ limited public notes</td></tr>
+          <tr><td><code>0.9.6</code></td><td>Secure bridge discovery / canonical model progression</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.5</code></td><td>Intermediate stabilization release after 0.9.4</td><td>⚠ limited public notes</td></tr>
+          <tr><td><code>0.9.4</code></td><td>Early post-0.9.3 hardening release</td><td>✅ documented</td></tr>
+          <tr><td><code>0.9.3</code></td><td>GraphQL + Legacy Bridge + Deployment Stack</td><td>✅ detailed release notes</td></tr>
+          <tr><td><code>0.9.2</code></td><td>Pre-0.9.3 maintenance step (no separate public changelog entry found)</td><td>⚠ limited public notes</td></tr>
+          <tr><td><code>0.9.1</code></td><td>Pre-0.9.3 maintenance step (no separate public changelog entry found)</td><td>⚠ limited public notes</td></tr>
+          <tr><td><code>0.9.0</code></td><td>Baseline 0.9 line milestone before GraphQL/Bridge expansion</td><td>✅ documented</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section id="comparison">
