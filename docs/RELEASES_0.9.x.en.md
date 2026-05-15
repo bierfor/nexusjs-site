@@ -1,14 +1,14 @@
-# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.20)
+# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.21)
 
 Consolidated notes for the `0.9.x` line, version by version, using verifiable public evidence.
 
 ## Verified sources
 
 - npm published versions: `@nexus_js/cli`, `@nexus_js/server`, `@nexus_js/compiler`, `@nexus_js/graphql`
-- GitHub tags: `v0.9.20` down to `v0.9.12`, plus `v0.9.3`
+- GitHub tags: `v0.9.21` down to `v0.9.12`, plus `v0.9.3`
 - Official `CHANGELOG.md` entries (explicit for `0.9.0` and `0.9.3`)
 - `RELEASE_NOTES_0.9.3.md`
-- GitHub compare: `v0.9.3...v0.9.20`
+- GitHub compare: `v0.9.3...v0.9.21`
 
 > Note: several intermediate versions (`0.9.1`, `0.9.2`, `0.9.5`, `0.9.7`, `0.9.9`) do not have detailed public release notes. They are marked as **limited public notes** to avoid guessing.
 
@@ -18,6 +18,7 @@ Consolidated notes for the `0.9.x` line, version by version, using verifiable pu
 
 | Version | Evidence status | Documented improvements |
 |---|---|---|
+| `0.9.21` | High | Global CSS / Tailwind / PostCSS support in dev mode via `/_nexus/global.css` endpoint + `css.entry` config. |
 | `0.9.20` | High | Runtime navigation skips re-injecting stylesheets already present in `<head>`. |
 | `0.9.19` | High | Static asset cache validators (`ETag`, `Last-Modified`) + SSR stylesheet dedup on server. |
 | `0.9.18` | Medium | 0.9.x package publish/alignment step. |
@@ -45,6 +46,6 @@ Consolidated notes for the `0.9.x` line, version by version, using verifiable pu
 ## Upgrade recommendation
 
 ```bash
-npm install @nexus_js/cli@0.9.20 @nexus_js/server@0.9.20 @nexus_js/compiler@0.9.20 @nexus_js/graphql@0.9.20
+npm install @nexus_js/cli@0.9.21 @nexus_js/server@0.9.21 @nexus_js/compiler@0.9.21 @nexus_js/graphql@0.9.21
 ```
 

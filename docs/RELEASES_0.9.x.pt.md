@@ -1,14 +1,14 @@
-# Notas de release Nexus 0.9.x (0.9.0 -> 0.9.20)
+# Notas de release Nexus 0.9.x (0.9.0 -> 0.9.21)
 
 Consolidado da linha `0.9.x`, versão por versão, usando apenas evidência pública verificável.
 
 ## Fontes verificadas
 
 - Versões publicadas no npm: `@nexus_js/cli`, `@nexus_js/server`, `@nexus_js/compiler`, `@nexus_js/graphql`
-- Tags no GitHub: `v0.9.20` até `v0.9.12`, além de `v0.9.3`
+- Tags no GitHub: `v0.9.21` até `v0.9.12`, além de `v0.9.3`
 - `CHANGELOG.md` oficial (entradas explícitas para `0.9.0` e `0.9.3`)
 - `RELEASE_NOTES_0.9.3.md`
-- Comparação GitHub: `v0.9.3...v0.9.20`
+- Comparação GitHub: `v0.9.3...v0.9.21`
 
 > Observação: algumas versões intermediárias (`0.9.1`, `0.9.2`, `0.9.5`, `0.9.7`, `0.9.9`) não possuem release notes públicas detalhadas. Foram marcadas como **notas públicas limitadas** para evitar suposições.
 
@@ -18,6 +18,7 @@ Consolidado da linha `0.9.x`, versão por versão, usando apenas evidência púb
 
 | Versão | Status de evidência | Melhorias documentadas |
 |---|---|---|
+| `0.9.21` | Alta | Suporte CSS global / Tailwind / PostCSS em dev: endpoint `/_nexus/global.css` + config `css.entry`. |
 | `0.9.20` | Alta | Navegação runtime evita reinjetar stylesheets já presentes em `<head>`. |
 | `0.9.19` | Alta | Validadores de cache de assets estáticos (`ETag`, `Last-Modified`) + deduplicação de stylesheet SSR no servidor. |
 | `0.9.18` | Média | Etapa de publicação/alinhamento de pacotes 0.9.x. |
@@ -45,6 +46,6 @@ Consolidado da linha `0.9.x`, versão por versão, usando apenas evidência púb
 ## Recomendação de atualização
 
 ```bash
-npm install @nexus_js/cli@0.9.20 @nexus_js/server@0.9.20 @nexus_js/compiler@0.9.20 @nexus_js/graphql@0.9.20
+npm install @nexus_js/cli@0.9.21 @nexus_js/server@0.9.21 @nexus_js/compiler@0.9.21 @nexus_js/graphql@0.9.21
 ```
 

@@ -9,6 +9,8 @@
   <meta name="author" content="Nexus Contributors">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#fafafa">
+  <meta name="generator" content="Nexus.js v0.9.21">
+  <link rel="icon" href="/assets/nexus-logo.svg" type="image/svg+xml">
   <link rel="canonical" href="https://nexusjs.dev/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://nexusjs.dev/">
@@ -16,7 +18,11 @@
   <meta id="og-desc" property="og:description" content="Opinionated framework with technical purity: surgical JS via islands, pretext for secure server data, and Hardened Mode as your build-time auditor.">
   <meta property="og:site_name" content="Nexus.js">
   <meta property="og:locale" id="og-locale" content="en_US">
+  <meta property="og:image" content="https://nexusjs.dev/assets/nexus-logo.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:alt" content="Nexus.js logo">
   <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://nexusjs.dev/assets/nexus-logo.svg">
   <meta id="tw-title" name="twitter:title" content="Nexus.js — Full-stack framework">
   <meta id="tw-desc" name="twitter:description" content="Islands + Runes + Server Actions + Hardened Mode. Built for real problems in 2026.">
   <link rel="alternate" hreflang="en" href="https://nexusjs.dev/">
@@ -27,7 +33,7 @@
   {"@context":"https://schema.org","@graph":[
     {"@type":"WebSite","@id":"https://nexusjs.dev/#website","name":"Nexus.js","url":"https://nexusjs.dev/","description":"Full-stack JavaScript framework: islands, Svelte 5 Runes, server actions, pretext, Hardened Mode.","inLanguage":["en","es","pt"],"publisher":{"@id":"https://nexusjs.dev/#org"}},
     {"@type":"Organization","@id":"https://nexusjs.dev/#org","name":"Nexus.js","url":"https://nexusjs.dev/","sameAs":["https://github.com/bierfor/nexus","https://github.com/bierfor/nexusjs-site"]},
-    {"@type":"SoftwareApplication","name":"Nexus.js","applicationCategory":"DeveloperApplication","operatingSystem":"Cross-platform","license":"https://opensource.org/licenses/MIT","url":"https://github.com/bierfor/nexus","description":"Opinionated full-stack framework with islands architecture, Runes reactivity, and security-first compiler & audit tooling."}
+    {"@type":"SoftwareApplication","name":"Nexus.js","softwareVersion":"0.9.21","applicationCategory":"DeveloperApplication","operatingSystem":"Cross-platform","license":"https://opensource.org/licenses/MIT","url":"https://github.com/bierfor/nexus","description":"Opinionated full-stack framework with islands architecture, Runes reactivity, and security-first compiler & audit tooling."}
   ]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1095,7 +1101,7 @@
   <a href="#top" class="sidebar-logo">
     <div class="logo-mark">N</div>
     <span class="logo-text">Nexus</span>
-    <span class="logo-version">v0.9.20</span>
+    <span class="logo-version">v0.9.21</span>
   </a>
   <nav id="sidebar-nav">
     <div class="nav-filter-wrap">
@@ -1129,6 +1135,7 @@
     <a href="#middleware">🔒 Middleware</a>
     <a href="#seo">🔍 SEO & Head</a>
     <a href="#assets">🖼️ Assets</a>
+    <a href="#css">🎨 Stylesheets</a>
     <a href="#multitenant">🏢 Multi-Tenant</a>
     <a href="#local-first">📴 Local-First Sync</a>
     <a href="#zero-bundle">✨ Zero-Bundle UI</a>
@@ -1178,7 +1185,7 @@
       <div class="stat"><div class="stat-num">25</div><div class="stat-label" data-i18n="hero.stat1">Packages</div></div>
       <div class="stat"><div class="stat-num">0kb</div><div class="stat-label" data-i18n="hero.stat2">JS by Default</div></div>
       <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-i18n="hero.stat3">TypeScript</div></div>
-      <div class="stat"><div class="stat-num">v0.9.20</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
+      <div class="stat"><div class="stat-num">v0.9.21</div><div class="stat-label" data-i18n="hero.stat4">Latest</div></div>
     </div>
   </div>
 
@@ -2225,6 +2232,71 @@ const heroImg = renderImage({
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- STYLESHEETS — TAILWIND & POSTCSS (v0.9.21)                          -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <section id="css">
+      <div class="section-label">Advanced</div>
+      <h2 data-i18n="css.title">Stylesheets — Tailwind &amp; PostCSS</h2>
+      <p class="lead" data-i18n="css.lead">Global CSS with automatic PostCSS/Tailwind compilation in dev mode.</p>
+
+      <p>Nexus auto-discovers a global CSS entry in dev mode, compiles it through PostCSS when available, and serves it at <code>/_nexus/global.css</code> with ETag caching. In production, styles are handled by the standard build pipeline.</p>
+
+      <h3>Auto-discovery</h3>
+      <p>The dev server looks for the first existing file in this order:</p>
+      <div class="code-title"><span>search order</span><span class="code-lang">paths</span></div>
+      <pre><code class="language-text">src/app.css
+src/global.css
+src/index.css
+src/styles.css</code></pre>
+
+      <h3>PostCSS / Tailwind support</h3>
+      <p>If <code>postcss</code> is installed and a config file exists (<code>postcss.config.mjs</code>, <code>.cjs</code>, or <code>.js</code>), the global entry is compiled through PostCSS automatically. Tailwind CSS, Autoprefixer, and any other PostCSS plugin work out of the box.</p>
+
+      <div class="code-title"><span>src/app.css</span><span class="code-lang">css</span></div>
+      <pre><code class="language-css">@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --color-nexus-900: #18181b;
+  --color-nexus-500: #3b82f6;
+}
+
+body {
+  background: var(--bg, #fafafa);
+}</code></pre>
+
+      <h3>Custom entry path</h3>
+      <p>If your project uses a non-conventional filename, set <code>css.entry</code> in <code>nexus.config.ts</code>:</p>
+      <div class="code-title"><span>nexus.config.ts</span><span class="code-lang">typescript</span></div>
+      <pre><code class="language-typescript">import type { NexusConfig } from '@nexus_js/cli';
+
+export default {
+  css: {
+    entry: 'src/my-styles.css',   // relative to app root
+  },
+} satisfies NexusConfig;</code></pre>
+
+      <div class="callout tip">
+        <strong>Security guard</strong>
+        If <code>css.entry</code> escapes the app root (e.g. <code>../../../etc/passwd</code>), Nexus ignores it with a startup warning. This prevents path-traversal attacks through configuration.
+      </div>
+
+      <h3>SSR injection</h3>
+      <p>In dev mode, the server automatically injects <code>&lt;link rel="stylesheet" href="/_nexus/global.css"&gt;</code> into the rendered <code>&lt;head&gt;</code>, <strong>before</strong> the scoped <code>/_nexus/styles.css</code>. If your layout already declares the stylesheet, Nexus skips the duplicate to avoid redundant fetches.</p>
+
+      <h3>Cache behaviour</h3>
+      <ul>
+        <li><strong>ETag</strong> — computed from compiled output; conditional <code>GET</code> returns <code>304 Not Modified</code> on hard refresh.</li>
+        <li><strong>Cache busting</strong> — every file change invalidates the cache and rebuilds the sheet before broadcasting HMR.</li>
+        <li><strong>Pre-warm</strong> — the sheet is built on <code>server.listen()</code> and re-built on <code>server.reload()</code> so the browser never waits.</li>
+      </ul>
+
+      <h3>Performance note</h3>
+      <p>File-watcher debounce was reduced from <strong>120 ms → 50 ms</strong> in v0.9.21 so style updates reach the browser faster after saving.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
     <!-- TOOLING                                                             -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
@@ -2262,6 +2334,10 @@ const heroImg = renderImage({
 
 export default {
   defaultHydration: 'client:visible',
+
+  css: {
+    entry: 'src/app.css',          // optional: overrides auto-discovery
+  },
 
   images: {
     formats: ['avif', 'webp'],
@@ -2685,7 +2761,7 @@ async function remove(id) {
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
     <section id="security">
-      <div class="section-label">Security — v0.9.20 (Actions + CSP + Build/Runtime Hardening)</div>
+      <div class="section-label">Security — v0.9.21 (Actions + CSP + Build/Runtime Hardening)</div>
       <h2>🛡️ Security by Default</h2>
       <p class="lead">Nexus treats security as a compilation concern, not a runtime afterthought. Compiler guardrails, action hardening, and optional Hardened Mode headers stack with zero ceremony for the basics.</p>
 
@@ -2917,20 +2993,21 @@ nexus fix --force        # Also fix medium + low severity</code></pre>
     <section id="changelog">
       <div class="section-label">Reference</div>
       <h2>📋 Changelog</h2>
-      <p class="lead">Complete <code>0.9.0 → 0.9.20</code> line, documented per version. Full notes: <a href="/docs/RELEASES_0.9.x.md" style="color:var(--accent2)">ES</a> · <a href="/docs/RELEASES_0.9.x.en.md" style="color:var(--accent2)">EN</a> · <a href="/docs/RELEASES_0.9.x.pt.md" style="color:var(--accent2)">PT</a>.</p>
+      <p class="lead">Complete <code>0.9.0 → 0.9.21</code> line, documented per version. Full notes: <a href="/docs/RELEASES_0.9.x.md" style="color:var(--accent2)">ES</a> · <a href="/docs/RELEASES_0.9.x.en.md" style="color:var(--accent2)">EN</a> · <a href="/docs/RELEASES_0.9.x.pt.md" style="color:var(--accent2)">PT</a>.</p>
 
       <div style="border-left:3px solid var(--accent); padding-left:20px; margin-bottom:28px">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-          <span style="font-size:18px;font-weight:700">v0.9.20</span>
+          <span style="font-size:18px;font-weight:700">v0.9.21</span>
           <span class="badge badge-purple">Latest</span>
-          <span style="color:var(--muted);font-size:13px">2026-04</span>
+          <span style="color:var(--muted);font-size:13px">2026-05-15</span>
         </div>
-        <p style="color:var(--muted);margin-bottom:12px">Runtime navigation stylesheet reinjection deduplication (FOUC reduction on SPA navigation).</p>
+        <p style="color:var(--muted);margin-bottom:12px">Global CSS / Tailwind / PostCSS support in dev mode. <code>/_nexus/global.css</code> endpoint with SSR injection, ETag caching, and configurable <code>css.entry</code>.</p>
       </div>
 
       <table class="dir-table">
         <thead><tr><th>Version</th><th>Primary improvement(s)</th><th>Status</th></tr></thead>
         <tbody>
+          <tr><td><code>0.9.21</code></td><td>Global CSS / Tailwind / PostCSS in dev: <code>/_nexus/global.css</code> + <code>css.entry</code> config</td><td>✅ documented</td></tr>
           <tr><td><code>0.9.20</code></td><td>Runtime navigation: skip reinjecting already-present stylesheets in <code>&lt;head&gt;</code></td><td>✅ documented</td></tr>
           <tr><td><code>0.9.19</code></td><td>Static asset cache validators + SSR stylesheet dedup on server</td><td>✅ documented</td></tr>
           <tr><td><code>0.9.18</code></td><td>0.9.x package publish/alignment step</td><td>✅ documented</td></tr>
@@ -3103,6 +3180,7 @@ const translations = {
     'mw.title': 'Middleware', 'mw.lead': 'Web-standard middleware pipeline.',
     'seo.title': 'SEO & Head Management', 'seo.lead': 'Server-side metadata injection with client-side reactive updates.',
     'assets.title': 'Assets — Images & Fonts', 'assets.lead': 'Automatic AVIF/WebP conversion, responsive srcsets, blur placeholders.',
+    'css.title': 'Stylesheets — Tailwind & PostCSS', 'css.lead': 'Global CSS with automatic PostCSS/Tailwind compilation in dev mode.',
     'cli.title': 'CLI Reference', 'cli.lead': 'All Nexus commands: nexus <command> [options]',
     'studio.title': 'Nexus Studio', 'studio.lead': 'A real-time developer dashboard with zero external dependencies.',
     'testing.title': 'Testing', 'testing.lead': 'First-class Vitest integration for SSR, islands, and Server Actions.',
@@ -3174,6 +3252,7 @@ const translations = {
     'mw.title': 'Middleware', 'mw.lead': 'Pipeline de middleware con APIs web estándar.',
     'seo.title': 'SEO y gestión del Head', 'seo.lead': 'Inyección de metadatos del lado del servidor con actualizaciones reactivas.',
     'assets.title': 'Assets — Imágenes y Fuentes', 'assets.lead': 'Conversión automática AVIF/WebP, srcsets responsivos, placeholders difuminados.',
+    'css.title': 'Hojas de Estilo — Tailwind y PostCSS', 'css.lead': 'CSS global con compilación automática de PostCSS/Tailwind en desarrollo.',
     'cli.title': 'Referencia del CLI', 'cli.lead': 'Todos los comandos Nexus: nexus <comando> [opciones]',
     'studio.title': 'Nexus Studio', 'studio.lead': 'Un dashboard de desarrollo en tiempo real sin dependencias externas.',
     'testing.title': 'Testing', 'testing.lead': 'Integración de primera clase con Vitest para SSR, islas y Server Actions.',
@@ -3245,6 +3324,7 @@ const translations = {
     'mw.title': 'Middleware', 'mw.lead': 'Pipeline de middleware com APIs web padrão.',
     'seo.title': 'SEO e gestão do Head', 'seo.lead': 'Injeção de metadados no servidor com atualizações reativas no cliente.',
     'assets.title': 'Assets — Imagens e Fontes', 'assets.lead': 'Conversão automática AVIF/WebP, srcsets responsivos, placeholders desfocados.',
+    'css.title': 'Folhas de Estilo — Tailwind e PostCSS', 'css.lead': 'CSS global com compilação automática PostCSS/Tailwind em modo dev.',
     'cli.title': 'Referência do CLI', 'cli.lead': 'Todos os comandos Nexus: nexus <comando> [opções]',
     'studio.title': 'Nexus Studio', 'studio.lead': 'Um dashboard de desenvolvimento em tempo real sem dependências externas.',
     'testing.title': 'Testes', 'testing.lead': 'Integração de primeira classe com Vitest para SSR, ilhas e Server Actions.',

@@ -1,14 +1,14 @@
-# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.20)
+# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.21)
 
 Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evidencia verificable.
 
 ## Fuentes verificadas
 
 - npm (versiones publicadas): `@nexus_js/cli`, `@nexus_js/server`, `@nexus_js/compiler`, `@nexus_js/graphql`
-- Tags en GitHub: `v0.9.20` ... `v0.9.12`, `v0.9.3`
+- Tags en GitHub: `v0.9.21` ... `v0.9.12`, `v0.9.3`
 - `CHANGELOG.md` oficial (entradas explícitas para `0.9.0` y `0.9.3`)
 - `RELEASE_NOTES_0.9.3.md`
-- Comparativa GitHub `v0.9.3...v0.9.20` (commits de release/fix/feat)
+- Comparativa GitHub `v0.9.3...v0.9.21` (commits de release/fix/feat)
 
 > Nota importante: para varias versiones intermedias (`0.9.1`, `0.9.2`, `0.9.5`, `0.9.7`, `0.9.9`) no hay release notes públicas detalladas en el repo; se marcan como **notas limitadas** para evitar inventar cambios.
 
@@ -18,6 +18,7 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 
 | Versión | Estado de evidencia | Mejoras documentadas |
 |---|---|---|
+| `0.9.21` | Alta | Soporte CSS global / Tailwind / PostCSS en dev: endpoint `/_nexus/global.css` + config `css.entry`. |
 | `0.9.20` | Alta | Runtime navigation: evita reinyectar stylesheets ya presentes en `<head>` (menos FOUC en SPA). |
 | `0.9.19` | Alta | Cache de assets estáticos (`ETag`, `Last-Modified`) + deduplicación de stylesheets inyectados por SSR. |
 | `0.9.18` | Media | Publicación de la línea `0.9.x` (release publish). |
@@ -42,7 +43,15 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 
 ---
 
-## Detalle por versión (0.9.20 -> 0.9.0)
+## Detalle por versión (0.9.21 -> 0.9.0)
+
+### v0.9.21
+- Endpoint `/_nexus/global.css` en dev: descubre automáticamente `src/app.css|global.css|index.css|styles.css`.
+- Compila a través de PostCSS si está instalado (Tailwind, Autoprefixer, etc.).
+- SSR inyecta el link automáticamente en `<head>`; deduplica si ya está declarado.
+- Config `css.entry` para override de ruta personalizada.
+- ETag + 304 caching; cache bust en cada cambio de archivo.
+- Guard de path-traversal en `css.entry` personalizado.
 
 ### v0.9.20
 - Runtime navigation: `applyHeadUpdate` evita reinsertar hojas de estilo ya presentes.
@@ -121,6 +130,6 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 Para adoptar todas las mejoras acumuladas de la rama:
 
 ```bash
-npm install @nexus_js/cli@0.9.20 @nexus_js/server@0.9.20 @nexus_js/compiler@0.9.20 @nexus_js/graphql@0.9.20
+npm install @nexus_js/cli@0.9.21 @nexus_js/server@0.9.21 @nexus_js/compiler@0.9.21 @nexus_js/graphql@0.9.21
 ```
 
