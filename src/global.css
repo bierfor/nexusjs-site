@@ -1,0 +1,192 @@
+@layer nexus.global {
+  :root {
+    --bg: #fafafa;
+    --bg2: #ffffff;
+    --surface: #f4f4f5;
+    --surface-elevated: #ffffff;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --accent: #18181b;
+    --accent-soft: #3b82f6;
+    --accent2: #2563eb;
+    --accent-muted: rgba(37, 99, 235, 0.08);
+    --green: #15803d;
+    --amber: #b45309;
+    --red: #b91c1c;
+    --text: #18181b;
+    --text-secondary: #52525b;
+    --muted: #71717a;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --sidebar-w: 272px;
+    --radius: 12px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 24px rgba(0,0,0,.06);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.875em;
+    background: var(--surface);
+    padding: 0.15em 0.4em;
+    border-radius: 6px;
+    color: var(--accent);
+  }
+
+  pre {
+    background: #0f0f11;
+    color: #e4e4e7;
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: var(--text);
+  }
+
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 1.75rem; margin-top: 2.5rem; margin-bottom: 1rem; }
+  h3 { font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.75rem; }
+
+  p { margin-bottom: 1rem; color: var(--text-secondary); }
+  p.lead { font-size: 1.125rem; color: var(--muted); line-height: 1.7; }
+
+  ul, ol { margin-left: 1.25rem; margin-bottom: 1rem; color: var(--text-secondary); }
+  li { margin-bottom: 0.35rem; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+  }
+  th, td {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  th {
+    background: var(--surface);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+
+  blockquote {
+    border-left: 3px solid var(--accent2);
+    background: var(--accent-muted);
+    padding: 1rem 1.25rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Docs prose styles - Nexus friendly documentation rendering */
+  .prose {
+    max-width: 100%;
+    line-height: 1.7;
+  }
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .prose p {
+    margin-bottom: 1rem;
+  }
+  .prose ul, .prose ol {
+    margin: 1rem 0 1rem 1.5rem;
+  }
+  .prose li {
+    margin-bottom: 0.25rem;
+  }
+  .prose pre {
+    background: #0f0f11;
+    color: #e4e4e7;
+    padding: 1rem;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  .prose code {
+    font-family: var(--mono);
+    background: var(--surface);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.95rem;
+  }
+  .prose th, .prose td {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+  .prose th {
+    background: var(--surface);
+    font-weight: 600;
+  }
+}

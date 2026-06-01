@@ -1,0 +1,176 @@
+---
+import { resolveLocale, createT } from '$lib/i18n.ts';
+import { getDocBySlug } from '$lib/docs.ts';
+import { findDocBySlug } from '$lib/nav.ts';
+import { marked } from 'marked';
+
+export async function load(ctx) {
+  const locale = resolveLocale(ctx);
+  const slug = ctx.params.slug;
+  const doc = getDocBySlug(slug);
+  const navItem = findDocBySlug(slug);
+
+  if (!doc) {
+    return ctx.notFound();
+  }
+
+  const t = createT(locale);
+  const title = t(doc.titleKey) || doc.titleKey;
+
+  // Render Markdown to HTML on server (trusted content from .md files loaded in load())
+  let renderedHTML = marked.parse(doc.body || '');
+  // Sanitize: strip any <script> tags from the rendered content.
+  // This prevents example code in docs from becoming live <script src="..."> tags in the page (which was causing the index.js 404).
+  renderedHTML = renderedHTML
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<script\b[^>]*\/>/gi, '');
+
+  return {
+    locale,
+    slug,
+    doc,
+    title,
+    navItem,
+    renderedHTML,
+  };
+}
+---
+
+<div class="doc-page">
+  <div class="doc-header">
+    <h1 class="doc-title">{pretext.title}</h1>
+    {#if pretext.navItem}
+      <div class="doc-meta">
+        <span class="doc-section">{pretext.t('docs.section')}: {pretext.t('nav.' + pretext.navItem.section) || pretext.navItem.section}</span>
+      </div>
+    {/if}
+  </div>
+
+  <div class="doc-content">
+    <!-- Server-rendered Markdown (trusted content) output directly in the template text position.
+         In .nx, text content expressions insert the string raw (no auto-escape for body, only attrs use __ssrAttr).
+         This makes the doc body visible immediately in the initial HTML response, no client JS delay or blank area. -->
+    <div class="prose">
+      {pretext.renderedHTML}
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <a href="/docs" class="back-link">← {pretext.t('docs.backToIndex')}</a>
+    <a href="https://github.com/bierfor/nexusjs-site/edit/main/src/content/docs/{pretext.slug}.md" target="_blank" class="edit-link">Edit this page ↗</a>
+  </div>
+</div>
+
+<style>
+  .doc-page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .doc-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .doc-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.5rem;
+  }
+
+  .doc-meta {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .doc-content {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .doc-content h2 {
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .doc-content h3 {
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .doc-content pre {
+    background: #0f0f11;
+    color: #e4e4e7;
+    padding: 1rem;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .doc-content code {
+    font-family: var(--mono);
+    background: var(--surface);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.92em;
+  }
+
+  .doc-content pre code {
+    background: transparent;
+    padding: 0;
+  }
+
+  .doc-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  .doc-content th,
+  .doc-content td {
+    border: 1px solid var(--border);
+    padding: 0.6rem 0.9rem;
+    text-align: left;
+  }
+
+  .doc-content th {
+    background: var(--surface);
+    font-weight: 600;
+  }
+
+  .doc-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back-link, .edit-link {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .back-link:hover, .edit-link:hover {
+    text-decoration: underline;
+  }
+
+  .edit-link {
+    margin-left: 1.5rem;
+    opacity: 0.85;
+  }
+</style>
+
+<script>
+  // Optional: enhance code blocks or add copy buttons later
+  // For now the content is static + server rendered
+</script>

@@ -1,0 +1,95 @@
+---
+import { resolveLocale, createT } from '$lib/i18n.ts';
+import { NAV_SECTIONS } from '$lib/nav.ts';
+
+export async function load(ctx) {
+  const locale = resolveLocale(ctx);
+  const t = createT(locale);
+  return { locale, t, navSections: NAV_SECTIONS };
+}
+---
+
+<div class="docs-index">
+  <h1>{pretext.t('docs.indexTitle')}</h1>
+  <p class="lead">{pretext.t('docs.lead')}</p>
+
+  <div class="docs-grid">
+    {#each pretext.navSections as section}
+      <div class="docs-section">
+        <div class="section-title">{pretext.t(section.labelKey)}</div>
+        {#each section.items as item}
+          <a href="/docs/{item.slug}{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="doc-link">
+            <span class="emoji">{item.emoji}</span>
+            <span>{pretext.t(item.labelKey)}</span>
+          </a>
+        {/each}
+      </div>
+    {/each}
+  </div>
+
+  <div class="extra-links">
+    <a href="/releases{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}">📋 Releases</a>
+  </div>
+</div>
+
+<style>
+  .docs-index {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .docs-index h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .docs-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+
+  .section-title {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .doc-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .doc-link:hover {
+    background: var(--surface);
+  }
+
+  .doc-link .emoji {
+    font-size: 1.1em;
+    width: 1.6em;
+    display: inline-block;
+  }
+
+  .extra-links {
+    margin-top: 2.5rem;
+    font-size: 1rem;
+  }
+</style>

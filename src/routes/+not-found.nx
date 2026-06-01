@@ -1,0 +1,59 @@
+---
+import { resolveLocale, createT } from '$lib/i18n.ts';
+
+export async function load(ctx) {
+  const locale = resolveLocale(ctx);
+  const t = createT(locale);
+  return { locale, t };
+}
+---
+
+<div class="not-found">
+  <div class="not-found-content">
+    <div class="error-code">404</div>
+    <h1>{pretext.t('notFound.title')}</h1>
+    <p class="lead">{pretext.t('notFound.lead')}</p>
+
+    <div class="not-found-actions">
+      <a href="/" class="btn btn-primary">Go to homepage</a>
+      <a href="/docs" class="btn btn-outline">Browse documentation</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .not-found {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .not-found-content {
+    max-width: 420px;
+  }
+
+  .error-code {
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent2);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.05em;
+  }
+
+  .not-found h1 {
+    font-size: 1.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .not-found-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+</style>

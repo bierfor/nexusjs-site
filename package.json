@@ -1,0 +1,16 @@
+{
+  "name": "nexusjs-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nexus dev --port 3000",
+    "build": "nexus build",
+    "start": "node .nexus/output/server.js"
+  },
+  "dependencies": {
+    "@nexus_js/cli": "^0.9.22",
+    "@nexus_js/server": "^0.9.22",
+    "marked": "^18.0.4"
+  }
+}

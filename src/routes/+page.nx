@@ -1,0 +1,305 @@
+---
+import { resolveLocale, createT, langHref } from '$lib/i18n.ts';
+
+export async function load(ctx) {
+  const locale = resolveLocale(ctx);
+  const t = createT(locale);
+  const langLinks = {
+    en: langHref(ctx.url, 'en'),
+    es: langHref(ctx.url, 'es'),
+    pt: langHref(ctx.url, 'pt'),
+  };
+  return { locale, t, langLinks };
+}
+---
+
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-diamond">◆</span>
+    <span>{pretext.t('hero.badge')}</span>
+  </div>
+  <h1 class="hero-title">{pretext.t('hero.title')}</h1>
+  <p class="hero-subtitle">{pretext.t('hero.subtitle')}</p>
+  <div class="hero-actions">
+    <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn btn-primary">{pretext.t('hero.cta1')} →</a>
+    <a href="https://github.com/bierfor/nexus" class="btn btn-outline" target="_blank" rel="noopener noreferrer">{pretext.t('hero.cta2')} ↗</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><strong>25</strong><span>Packages</span></div>
+    <div class="stat"><strong>0 KB</strong><span>JS by Default</span></div>
+    <div class="stat"><strong>100%</strong><span>TypeScript</span></div>
+    <div class="stat"><strong>v0.9.22</strong><span>Latest</span></div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="section-label">{pretext.t('why.label')}</div>
+  <h2>{pretext.t('why.title')}</h2>
+  <p class="lead">{pretext.t('why.lead')}</p>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">⚡</div>
+      <h3>{pretext.t('why.card1t')}</h3>
+      <p>{pretext.t('why.card1d')}</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🛡️</div>
+      <h3>{pretext.t('why.card2t')}</h3>
+      <p>{pretext.t('why.card2d')}</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🔍</div>
+      <h3>{pretext.t('why.card3t')}</h3>
+      <p>{pretext.t('why.card3d')}</p>
+    </div>
+  </div>
+</section>
+
+<section class="enterprise">
+  <div class="section-label">{pretext.t('ent.label')}</div>
+  <h2>{pretext.t('ent.title')}</h2>
+  <p class="lead">{pretext.t('ent.lead')}</p>
+  <div class="enterprise-grid">
+    <div class="enterprise-card">
+      <div class="enterprise-emoji">🏢</div>
+      <h3>{pretext.t('ent.c1t')}</h3>
+      <p>{pretext.t('ent.c1d')}</p>
+    </div>
+    <div class="enterprise-card">
+      <div class="enterprise-emoji">🌐</div>
+      <h3>{pretext.t('ent.c2t')}</h3>
+      <p>{pretext.t('ent.c2d')}</p>
+    </div>
+    <div class="enterprise-card">
+      <div class="enterprise-emoji">🔒</div>
+      <h3>{pretext.t('ent.c3t')}</h3>
+      <p>{pretext.t('ent.c3d')}</p>
+    </div>
+    <div class="enterprise-card">
+      <div class="enterprise-emoji">📋</div>
+      <h3>{pretext.t('ent.c4t')}</h3>
+      <p>{pretext.t('ent.c4d')}</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to build?</h2>
+  <p>Start with the docs or scaffold a project in 30 seconds.</p>
+  <div class="cta-actions">
+    <a href="/docs/install{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn btn-primary">Read the Docs →</a>
+    <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn btn-outline">Quick Start →</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-lang">
+      <a href="{pretext.langLinks.en}" class="{pretext.locale === 'en' ? 'active' : ''}">English</a>
+      <a href="{pretext.langLinks.es}" class="{pretext.locale === 'es' ? 'active' : ''}">Español</a>
+      <a href="{pretext.langLinks.pt}" class="{pretext.locale === 'pt' ? 'active' : ''}">Português</a>
+    </div>
+    <p>© 2026 {pretext.t('footer.copy')}</p>
+  </div>
+</footer>
+
+<style>
+  .hero {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 3rem;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+  .hero-diamond { color: var(--accent2); }
+  .hero-title {
+    font-size: 3.25rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: 1.125rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 1.75rem;
+    line-height: 1.7;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #27272a; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--border-strong);
+  }
+  .btn-outline:hover { border-color: var(--text); background: var(--surface); }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .stat strong {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .stat span {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .why, .enterprise {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent2);
+    margin-bottom: 0.5rem;
+  }
+  .why h2, .enterprise h2 { margin-top: 0; }
+  .why-grid, .enterprise-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  .why-card, .enterprise-card {
+    padding: 1.75rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .why-card:hover, .enterprise-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .why-icon, .enterprise-emoji {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .why-card h3, .enterprise-card h3 {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+  .why-card p, .enterprise-card p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  .enterprise { background: #0f0f11; color: #e4e4e7; }
+  .enterprise .section-label { color: #60a5fa; }
+  .enterprise h2 { color: #fff; }
+  .enterprise .lead { color: #a1a1aa; }
+  .enterprise-card {
+    background: #18181b;
+    border-color: #27272a;
+  }
+  .enterprise-card h3 { color: #fff; }
+  .enterprise-card p { color: #a1a1aa; }
+
+  .cta {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+  .cta h2 { margin-top: 0; }
+  .cta-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.25rem;
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .footer-lang {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .footer-lang a {
+    padding: 0.25rem 0.6rem;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .footer-lang a:hover { color: var(--text); background: var(--surface); }
+  .footer-lang a.active { background: var(--accent); color: #fff; }
+  .site-footer p { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+  @media (max-width: 768px) {
+    .hero { padding-top: 4rem; }
+    .hero-title { font-size: 2.25rem; }
+    .why-grid, .enterprise-grid { grid-template-columns: 1fr; }
+    .hero-actions, .cta-actions { flex-direction: column; align-items: center; }
+    .btn { width: 100%; max-width: 280px; justify-content: center; }
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+import { resolveLocale, createT } from '$lib/i18n.ts';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
+export async function load(ctx) {
+  const locale = resolveLocale(ctx);
+  const t = createT(locale);
+
+  // Try to load the appropriate release notes file
+  let releaseNotes = '';
+  const langSuffix = locale === 'en' ? '.en' : locale === 'pt' ? '.pt' : '';
+  const releaseFile = join(process.cwd(), 'docs', `RELEASES_0.9.x${langSuffix}.md`);
+
+  try {
+    releaseNotes = await readFile(releaseFile, 'utf-8');
+  } catch {
+    releaseNotes = 'Release notes not available for this language yet.';
+  }
+
+  return { locale, t, releaseNotes };
+}
+---
+
+<div class="releases-page">
+  <div class="releases-header">
+    <h1>{pretext.t('releases.title')}</h1>
+    <p class="lead">{pretext.t('releases.lead')}</p>
+  </div>
+
+  <div class="releases-content">
+    <pre class="release-notes"><code>{pretext.releaseNotes}</code></pre>
+  </div>
+
+  <div class="releases-footer">
+    <p>Full source available in the <a href="https://github.com/bierfor/nexus" target="_blank">GitHub repository</a>.</p>
+  </div>
+</div>
+
+<style>
+  .releases-page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .releases-header {
+    margin-bottom: 2rem;
+  }
+
+  .releases-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .releases-content {
+    background: #0f0f11;
+    color: #e4e4e7;
+    padding: 1.5rem;
+    border-radius: 12px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .releases-content pre {
+    margin: 0;
+    white-space: pre-wrap;
+    font-family: var(--mono);
+  }
+
+  .releases-footer {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>
