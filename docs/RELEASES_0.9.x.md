@@ -1,6 +1,8 @@
-# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.21)
+# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.23)
 
 Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evidencia verificable.
+
+**0.9.23** (current): Major DX + Content + SEO improvements. See detailed sections below + packages.md in the docs site.
 
 ## Fuentes verificadas
 
@@ -43,7 +45,17 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 
 ---
 
-## Detalle por versión (0.9.21 -> 0.9.0)
+## Detalle por versión (0.9.23 -> 0.9.0)
+
+### v0.9.23
+- **@nexus_js/content** maduro y documentado: `loadContent` con fallback i18n, `defineCollection.list()` (auto-discovery + filter/sort), `renderMarkdownAsync` + Shiki opcional (fallback silencioso), ICU plurals en `defineI18n` (parser robusto con conteo de llaves), `watchContent` + `stopAllWatchers`, `formatDate`/`formatRelative` localizado.
+- 55 tests para el paquete. Dogfooding completo en este sitio (migración de `docs.ts`, releases via content, headings para TOC auto).
+- **Head / SEO request-scoped + auto-injection**: `load()` puede devolver `{ head: { title, description, og, ... } }`. El renderer (en `mergeRoutePretext`) lo intercepta, usa `defineHead(ctx)` (stack por-request), `flushHead` + `renderHeadToString`, e inyecta (soporta `<!--nexus:head-->`). Layouts + páginas mergean (hijo gana). `defineHead(meta, ctx?)` y `flushHead(ctx?)` para control explícito.
+- **Compiler DX**: Errores estructurados `CompileError` (code NX-101/103/104, loc, hint, frame) para `{#if}`/`{#each}` malformados. Warnings con loc para parser + guards de seguridad (NX-GUARD-*). `formatCompileError`/`formatCompileWarning` + `extractFrame`/`offsetToLineColumn` producen output ANSI bonito con snippets y ^. Integrado en CLI (build) y server (load-module, islands, error pages).
+- Nuevos tests en `packages/compiler/src/index.test.ts` (13 tests) + `head-renderer.test.ts`, `renderer.test.ts`.
+- Mejoras en wiring: CLI atrapa CompileError y usa formatter; server hace lo mismo + páginas de error especiales para compile issues.
+- Site (nexusjs-site) actualizado a 0.9.23, migraciones a patrones puros (releases via content, TOC desde headings, i18n full, start script fix).
+- Todas las mejoras publicadas y empujadas.
 
 ### v0.9.21
 - Endpoint `/_nexus/global.css` en dev: descubre automáticamente `src/app.css|global.css|index.css|styles.css`.

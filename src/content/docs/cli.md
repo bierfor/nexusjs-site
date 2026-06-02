@@ -12,6 +12,8 @@ All Nexus commands: `nexus <command> [options]`
 | `nexus studio` | Launch developer dashboard |
 | `nexus test` | Run Vitest tests |
 
+During `nexus dev` and `nexus build`, the compiler now surfaces rich structured errors (CompileError with code like NX-101 for unclosed `{#if}`, loc, hint) using `formatCompileError` / `formatCompileWarning`. You get ANSI-colored output with source frames and carets automatically. See the compiler DX section in packages.md.
+
 ## nexus.config.ts
 
 ```ts

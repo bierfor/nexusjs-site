@@ -41,6 +41,16 @@ export async function load(ctx) {
 <button onclick={() => count++}>Clicks: {count}</button>
 ```
 
+## Compile-time DX (0.9.23+)
+
+The compiler produces structured `CompileError` (with `code` like `NX-101`, `file`, `loc`, `hint`, optional `frame`) for common template problems such as unclosed `{#if}` or malformed `{#each}` (missing `as item` alias).
+
+`compile()` returns `warnings[]` (each with `loc`) for parser issues and security guard findings (e.g. `process.env.*` used inside `<script>` islands).
+
+`formatCompileError(err, source?)` and `formatCompileWarning(warn, file, source?)` (plus `extractFrame`, `offsetToLineColumn`) produce beautiful ANSI-colored terminal output with source context and carets. The CLI and dev server use them automatically.
+
+See the Package Reference (packages.md) for full error codes and examples.
+
 ## Rules
 
 - Only `+layout.nx` should emit `<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`

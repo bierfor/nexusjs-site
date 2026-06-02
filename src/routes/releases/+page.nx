@@ -1,24 +1,32 @@
 ---
 import { resolveLocale, createT } from '$lib/i18n.ts';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { loadContent } from '@nexus_js/content';
 
 export async function load(ctx) {
   const locale = resolveLocale(ctx);
   const t = createT(locale);
 
-  // Try to load the appropriate release notes file
-  let releaseNotes = '';
+  // Load via @nexus_js/content (modo correcto: consistent with docs, uses frontmatter/render/sanitize if needed)
   const langSuffix = locale === 'en' ? '.en' : locale === 'pt' ? '.pt' : '';
-  const releaseFile = join(process.cwd(), 'docs', `RELEASES_0.9.x${langSuffix}.md`);
+  const baseSlug = `RELEASES_0.9.x${langSuffix}`;
+  const releaseItem = loadContent(baseSlug, {
+    contentDir: 'docs',
+    locale,
+    includeRaw: true,
+    sanitize: 'permissive', // release notes are trusted source; keep formatting
+  });
 
-  try {
-    releaseNotes = await readFile(releaseFile, 'utf-8');
-  } catch {
-    releaseNotes = 'Release notes not available for this language yet.';
-  }
+  const releaseNotes = releaseItem.raw || releaseItem.html || 'Release notes not available for this language yet.';
+  const renderedRelease = releaseItem.html || releaseNotes;
 
-  return { locale, t, releaseNotes };
+  // head for the releases page
+  const head = {
+    title: `${t('releases.title')} — Nexus.js`,
+    description: t('releases.lead'),
+    canonical: `https://nexusjs.dev/releases${locale !== 'en' ? '?lang=' + locale : ''}`,
+  };
+
+  return { locale, t, releaseNotes, renderedRelease, head };
 }
 ---
 
@@ -29,7 +37,15 @@ export async function load(ctx) {
   </div>
 
   <div class="releases-content">
-    <pre class="release-notes"><code>{pretext.releaseNotes}</code></pre>
+    <!-- Rendered via @nexus_js/content (modo correcto) for nice HTML (headings, lists). -->
+    <div class="prose release-notes">
+      {pretext.renderedRelease}
+    </div>
+
+    <details class="raw-source">
+      <summary>View raw Markdown source</summary>
+      <pre><code>{pretext.releaseNotes}</code></pre>
+    </details>
   </div>
 
   <div class="releases-footer">
@@ -73,5 +89,26 @@ export async function load(ctx) {
     margin-top: 2rem;
     font-size: 0.9rem;
     color: var(--muted);
+  }
+
+  .raw-source {
+    margin-top: 1.5rem;
+    border-top: 1px solid #333;
+    padding-top: 1rem;
+  }
+
+  .raw-source summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 0.85rem;
+  }
+
+  .raw-source pre {
+    background: #0a0a0c;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-top: 0.5rem;
+    overflow: auto;
   }
 </style>

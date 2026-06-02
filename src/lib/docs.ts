@@ -1,11 +1,12 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { defineCollection } from '@nexus_js/content';
+import type { CollectionItem } from '@nexus_js/content';
 
 export interface DocEntry {
   slug: string;
   titleKey: string;
   section: string;
   body: string;
+  headings?: Array<{ level: number; text: string; id: string }>;
 }
 
 const DOCS_METADATA: Array<Omit<DocEntry, 'body'>> = [
@@ -36,21 +37,34 @@ const DOCS_METADATA: Array<Omit<DocEntry, 'body'>> = [
   { slug: 'packages', titleKey: 'pkg.title', section: 'reference' },
 ];
 
-const CONTENT_DIR = join(process.cwd(), 'src/content/docs');
+const docsCollection = defineCollection({
+  name: 'docs',
+  dir: 'src/content/docs',
+  defaultLocale: 'en',
+  locales: ['en', 'es', 'pt'],
+});
 
-function loadDocBody(slug: string): string {
-  try {
-    return readFileSync(join(CONTENT_DIR, `${slug}.md`), 'utf-8');
-  } catch {
-    return `# ${slug}\n\nDocumentation content for **${slug}** is not available yet.`;
-  }
+/** Load a single doc by slug, with i18n locale fallback. */
+export function getDocBySlug(slug: string, locale?: string): DocEntry | undefined {
+  const meta = DOCS_METADATA.find(d => d.slug === slug);
+  if (!meta) return undefined;
+
+  const item = docsCollection.get(slug, { locale, contentDir: 'src/content/docs' });
+
+  return {
+    ...meta,
+    body: item.html,
+    headings: item.headings || [],
+  };
 }
 
-export const DOCS: DocEntry[] = DOCS_METADATA.map(meta => ({
-  ...meta,
-  body: loadDocBody(meta.slug),
-}));
-
-export function getDocBySlug(slug: string): DocEntry | undefined {
-  return DOCS.find(d => d.slug === slug);
+/** List all docs (for index page or sitemap). Uses collection auto-discovery. */
+export function listDocs(locale?: string): CollectionItem[] {
+  return docsCollection.list({ locale, contentDir: 'src/content/docs' });
 }
+
+/** Static list of all docs with default locale (used by nav). */
+export const DOCS: DocEntry[] = DOCS_METADATA.map(meta => {
+  const item = docsCollection.get(meta.slug, { contentDir: 'src/content/docs' });
+  return { ...meta, body: item.html, headings: item.headings || [] };
+});

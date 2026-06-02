@@ -1,7 +1,11 @@
+import { defineI18n, formatDate, formatRelative } from '@nexus_js/content';
+
+export { formatDate, formatRelative };
+
 export const LOCALES = ['en', 'es', 'pt'] as const;
 export type Locale = (typeof LOCALES)[number];
 
-const EN = {
+const EN: Record<string, string> = {
   'hero.badge': 'Islands Architecture + Svelte 5 Runes + Server Actions',
   'hero.title': 'The Definitive Full-Stack Framework',
   'hero.subtitle': 'Zero JS by default. Progressive hydration where you need it. Server Actions that are type-safe, race-condition-safe, and edge-ready.',
@@ -100,6 +104,8 @@ const EN = {
   'notFound.title': 'Page not found',
   'notFound.lead': 'The page you are looking for does not exist.',
   'notFound.back': 'Back to docs',
+  'notFound.home': 'Go to homepage',
+  'notFound.browse': 'Browse documentation',
   'lang.en': 'English',
   'lang.es': 'Español',
   'lang.pt': 'Português',
@@ -204,6 +210,8 @@ const ES: Record<string, string> = {
   'notFound.title': 'Página no encontrada',
   'notFound.lead': 'La página que buscas no existe.',
   'notFound.back': 'Volver a docs',
+  'notFound.home': 'Ir al inicio',
+  'notFound.browse': 'Explorar documentación',
   'lang.en': 'English',
   'lang.es': 'Español',
   'lang.pt': 'Português',
@@ -297,43 +305,33 @@ const PT: Record<string, string> = {
   'ent.c4d': 'Use extractTenant() e anexe ao contexto.',
   'meta.title': 'Nexus.js — Framework full-stack | Ilhas, Runes, Server Actions e Hardened Mode',
   'meta.description': 'Nexus.js: framework full-stack opinativo — Runes Svelte 5, ilhas, server actions, pretext e Hardened Mode.',
-  'docs.title': 'Documentação',
+  'docs.title': 'Documentación',
   'docs.lead': 'Tudo o que você precisa para construir com Nexus.',
   'docs.indexTitle': 'Explore todos os tópicos',
   'docs.section': 'Seção',
   'docs.backToIndex': 'Voltar para docs',
-  'releases.title': 'Lançamentos',
+  'releases.title': 'Lanzamentos',
   'releases.lead': 'Notas de versão do Nexus 0.9.x.',
   'footer.copy': 'Nexus.js Contributors. Licença MIT.',
   'notFound.title': 'Página não encontrada',
   'notFound.lead': 'A página que você procura não existe.',
   'notFound.back': 'Voltar para docs',
+  'notFound.home': 'Ir para a página inicial',
+  'notFound.browse': 'Navegar na documentação',
   'lang.en': 'English',
   'lang.es': 'Español',
   'lang.pt': 'Português',
 };
 
-const DICTS: Record<Locale, Record<string, string>> = { en: EN, es: ES, pt: PT };
+export const i18n = defineI18n({
+  locales: LOCALES as unknown as string[],
+  defaultLocale: 'en',
+  messages: { en: EN, es: ES, pt: PT },
+  strategy: 'querystring',
+  cookieName: 'nx_lang',
+  queryParam: 'lang',
+});
 
-export function resolveLocale(ctx: any): Locale {
-  const url = new URL(ctx.url || 'http://localhost', 'http://localhost');
-  const param = url.searchParams.get('lang');
-  if (param && LOCALES.includes(param as Locale)) return param as Locale;
-  const cookie = ctx.getCookie?.('nx_lang');
-  if (cookie && LOCALES.includes(cookie as Locale)) return cookie as Locale;
-  const accept = ctx.req?.headers?.['accept-language'] || '';
-  const preferred = accept.split(',')[0]?.trim().slice(0, 2);
-  if (preferred && LOCALES.includes(preferred as Locale)) return preferred as Locale;
-  return 'en';
-}
-
-export function createT(locale: Locale) {
-  const dict = DICTS[locale] || DICTS.en;
-  return (key: string, fallback?: string) => dict[key] ?? fallback ?? key;
-}
-
-export function langHref(urlStr: string, locale: Locale): string {
-  const url = new URL(urlStr, 'http://localhost');
-  url.searchParams.set('lang', locale);
-  return url.pathname + url.search;
-}
+export const resolveLocale = i18n.resolveLocale;
+export const createT = i18n.tFn;
+export const langHref = i18n.langHref;

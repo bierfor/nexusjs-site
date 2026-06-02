@@ -17,7 +17,25 @@ export async function load(ctx) {
     es: langHref(ctx.url, 'es'),
     pt: langHref(ctx.url, 'pt'),
   };
-  return { locale, t, langLinks, navSections: NAV_SECTIONS };
+
+  // Auto-injected head metadata via the renderer
+  const head = {
+    title: t('meta.title'),
+    description: t('meta.description'),
+    canonical: `https://nexusjs.dev${ctx.url.pathname}`,
+    og: {
+      type: 'website',
+      url: `https://nexusjs.dev${ctx.url.pathname}`,
+      siteName: 'Nexus.js',
+      image: 'https://nexusjs.dev/nexus-logo.svg',
+    },
+    twitter: {
+      card: 'summary',
+      site: '@nexusjs',
+    },
+  };
+
+  return { locale, t, langLinks, navSections: NAV_SECTIONS, head };
 }
 ---
 
@@ -26,19 +44,8 @@ export async function load(ctx) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{pretext.t('meta.title')}</title>
-  <meta name="description" content="{pretext.t('meta.description')}">
   <meta name="theme-color" content="#fafafa">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://nexusjs.dev/">
-  <meta property="og:title" content="{pretext.t('meta.title')}">
-  <meta property="og:description" content="{pretext.t('meta.description')}">
-  <meta property="og:site_name" content="Nexus.js">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Nexus.js — Full-stack framework">
-  <meta name="twitter:description" content="Islands + Runes + Server Actions + Hardened Mode. Built for real problems in 2026.">
   <link rel="icon" href="/nexus-logo.svg" type="image/svg+xml">
-  <link rel="canonical" href="https://nexusjs.dev/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -56,7 +63,7 @@ export async function load(ctx) {
     <a href="/" class="sidebar-logo">
       <div class="logo-mark">N</div>
       <span class="logo-text">Nexus</span>
-      <span class="logo-version">v0.9.22</span>
+      <span class="logo-version">v0.9.23</span>
     </a>
     <div class="lang-bar">
       <a href="{pretext.langLinks.en}" class="lang-btn {pretext.locale === 'en' ? 'active' : ''}">EN</a>
@@ -90,6 +97,13 @@ export async function load(ctx) {
   </main>
 
   <button type="button" class="to-top" id="to-top" aria-label="Back to top">↑</button>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <span>Built with Nexus v0.9.23 • Docs in modo correcto (load + pretext + @nexus_js/content)</span>
+      <a href="https://github.com/bierfor/nexus" target="_blank">GitHub</a>
+    </div>
+  </footer>
 
   <nexus-island client:idle src="$lib/islands/nav.ts"></nexus-island>
   <nexus-island client:idle src="$lib/islands/progress.ts"></nexus-island>
@@ -315,6 +329,28 @@ export async function load(ctx) {
   }
   .to-top.is-visible { opacity: 1; transform: translateY(0); }
   .to-top:hover { color: var(--text); background: var(--surface); }
+
+  .site-footer {
+    margin-top: 4rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-content a {
+    color: var(--accent2);
+    text-decoration: none;
+  }
 
   @media (max-width: 900px) {
     .nav-toggle { display: flex; }

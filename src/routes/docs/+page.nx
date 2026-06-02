@@ -1,11 +1,13 @@
 ---
 import { resolveLocale, createT } from '$lib/i18n.ts';
 import { NAV_SECTIONS } from '$lib/nav.ts';
+import { listDocs } from '$lib/docs.ts';
 
 export async function load(ctx) {
   const locale = resolveLocale(ctx);
   const t = createT(locale);
-  return { locale, t, navSections: NAV_SECTIONS };
+  const dynamicDocs = listDocs(locale); // dogfood defineCollection.list() from @nexus_js/content
+  return { locale, t, navSections: NAV_SECTIONS, dynamicDocCount: dynamicDocs.length };
 }
 ---
 
@@ -29,6 +31,7 @@ export async function load(ctx) {
 
   <div class="extra-links">
     <a href="/releases{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}">📋 Releases</a>
+    <span class="doc-count">({pretext.dynamicDocCount} docs loaded via content.list())</span>
   </div>
 </div>
 
@@ -91,5 +94,11 @@ export async function load(ctx) {
   .extra-links {
     margin-top: 2.5rem;
     font-size: 1rem;
+  }
+
+  .doc-count {
+    color: var(--muted);
+    font-size: 0.85em;
+    margin-left: 0.5rem;
   }
 </style>

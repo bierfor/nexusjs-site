@@ -1,6 +1,8 @@
-# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.21)
+# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.23)
 
 Consolidated notes for the `0.9.x` line, version by version, using verifiable public evidence.
+
+**0.9.23** (current): Major DX + Content + SEO improvements (content package, request-scoped head + load() injection, compiler pretty errors + structured CompileError). See main Spanish RELEASES and docs site packages.md / comparison.md for details.
 
 ## Verified sources
 

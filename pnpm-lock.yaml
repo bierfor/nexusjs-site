@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@nexus_js/cli':
-        specifier: ^0.9.22
-        version: 0.9.22(@nexus_js/compiler@0.9.22)
+        specifier: ^0.9.23
+        version: 0.9.23(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.23)
+      '@nexus_js/content':
+        specifier: ^0.9.23
+        version: 0.9.23
       '@nexus_js/server':
-        specifier: ^0.9.22
-        version: 0.9.22(@nexus_js/compiler@0.9.22)
-      marked:
-        specifier: ^18.0.4
-        version: 18.0.4
+        specifier: ^0.9.23
+        version: 0.9.23(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.23)
 
 packages:
 
@@ -287,59 +287,69 @@ packages:
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
 
-  '@nexus_js/assets@0.9.21':
-    resolution: {integrity: sha512-32WwpOHZR9CEwHbDV3tXkKB/Xc9FfYS1/5YTNf/miG2n7e84dXqsK0Z1BQ/p4KrmhNvUfI1FbPBAieqvTuPWsg==}
+  '@nexus_js/assets@0.9.23':
+    resolution: {integrity: sha512-ZHEQox7X8tPB5YmUOZ4zm8hhRpK5PvQQroOppySXtPqtnQeRm5+lH+RFHLBcsEYtTCGZp24KpKcuyHKdI3zPuA==}
 
-  '@nexus_js/audit@0.9.22':
-    resolution: {integrity: sha512-K+CJYT+hD7wqIqy6SIg6kyxLe/jnBE6dDJKwTA0ErCLNnicYtTNlrTXZmEuAEsvI2bxu+JdKv9NPev8RkeirPA==}
+  '@nexus_js/audit@0.9.23':
+    resolution: {integrity: sha512-71bOnioYVJohjMMQDSW1hvbfZQxRta29zwIEF9wk7tZ1IUtws5cnc85ve9zuX1yxSvLcxI1TEJ1xorPM6YeNGw==}
 
-  '@nexus_js/bridge-postgres@0.9.22':
-    resolution: {integrity: sha512-V4h/abaxt5ph0maajpaaTx+CnRd5rr5/1RpbkCOlGMhMEMR59neMZhTJgKVyBbKEHV9uYUXsMXAY0SAHWc/Gvg==}
+  '@nexus_js/bridge-postgres@0.9.23':
+    resolution: {integrity: sha512-2pz86F4Xl7wa+uqiRzo5FkWGnJR6Hyy+jlXFpJZdcEehRnOLzivEevA1DT2Yg3l/QoqJs8uCSvO/kWOZM932Xg==}
 
-  '@nexus_js/bridge@0.9.22':
-    resolution: {integrity: sha512-dEnjSOheIBIKqCKKAVkfS0cjHb4vZ+y7kuURTIdrS4i/3z3fL307NCwu4g761SkYNzqoxscsEu2rUOHVY/aFxA==}
+  '@nexus_js/bridge@0.9.23':
+    resolution: {integrity: sha512-PkKeeeTGIXajG0fESEFAvAP/w/a49xcBGu1Ky9sLBAhTL9+Aat0NxIIWNuDJtzeNjeVxb3aAS5kTxqaNyqipOQ==}
 
-  '@nexus_js/cli@0.9.22':
-    resolution: {integrity: sha512-Oq/A1S4RgTMRClxYAiubQlA5u/hW1xB/xc/GOD6OicVlNz9MJH8H6IcAPUfjj/fEk5KszoqL2labUsmv2EkpVw==}
+  '@nexus_js/cli@0.9.23':
+    resolution: {integrity: sha512-+X1FI/v5xkw9ngBOsnIMu3RLte/uvr3DbakAKKHTH+kKqruUfWctoW78RMHWbGxApXbw3fQKdgk4TktIlQ4A9w==}
     hasBin: true
     peerDependencies:
       '@nexus_js/compiler': ^0.9.22
-      '@nexus_js/runtime': ^0.9.21
+      '@nexus_js/runtime': ^0.9.22
     peerDependenciesMeta:
       '@nexus_js/compiler':
         optional: true
       '@nexus_js/runtime':
         optional: true
 
-  '@nexus_js/compiler@0.9.21':
-    resolution: {integrity: sha512-96wOECdYfpCLtTv2TnOfVFNRtmOOBRI1OsT36z20rsxeF4JwTAC2y0hIhPOd/bK5nHRhW4M9OitwFwIOj/bLrw==}
+  '@nexus_js/compiler@0.9.23':
+    resolution: {integrity: sha512-/308nASX+jAEoW1+ZweL7hCQuE7ZByfvHGCyOfF2Y0cLovyjM8RnDl7FKMsYgKxDqchSpBMqrAtmwd+lPYwytQ==}
 
-  '@nexus_js/compiler@0.9.22':
-    resolution: {integrity: sha512-PbUmQGUlHTNa4z4NxoIHMoB1wnYtiMSrqNlzkQRaSsZHUbtv9brqZ7z+WmyWlmtS5cg7js3su7yJBj52LZ4Ngw==}
+  '@nexus_js/connect@0.9.23':
+    resolution: {integrity: sha512-qPW0qpAqRV+K8ulohPHeccmvd8NiqlB/BZPWX+1jsD7KKfDmp1OQU2yXqezYH4sQEKbbQ1GAggRKIeJaM5LPsw==}
 
-  '@nexus_js/connect@0.9.21':
-    resolution: {integrity: sha512-3eDkeAZ39mv9vzwIyLh7RAdUJu/Jf7k5eSNBfVSUHnCqvsUDW/LnyuhLi2NXE/SBmXNuAQhvbrOUr0rypUV9dA==}
-
-  '@nexus_js/router@0.9.21':
-    resolution: {integrity: sha512-ISu2U/Lw2vktpofIytUW293OTmoifjj370LfsO+woBB6W2ivBWiNqZ3lJNJ3rUvPOYh085eGTxIv9riTjbriTw==}
-
-  '@nexus_js/router@0.9.22':
-    resolution: {integrity: sha512-GB1JVIB6E3B8C1qeVaBKJ8XZ/1ncHQeAvgW2ZXoHDxzcLVknqc41PvhlmpFDSX3TtR+Y7dDZP4wceHWW17SQAw==}
-
-  '@nexus_js/security@0.9.21':
-    resolution: {integrity: sha512-hYuRts4QhqjHS01raFBqDtMTRAX77tqljeYL0x+3Lmpqc6juvcOuF3XwSFSMa0lS6hjYUmoARv86RDL/df/20w==}
-
-  '@nexus_js/security@0.9.22':
-    resolution: {integrity: sha512-801MENpO+bagdUvtoD7GGdQZzWFgENck/mFQQ/StkxTPgCIuRW4BAJU1DnzsH2gtkXgYV3a37oKWoVWAI7b+gQ==}
-
-  '@nexus_js/serialize@0.9.21':
-    resolution: {integrity: sha512-b8yU11pCG0TohG2OsZSFWGZCxSDp9ZRAIDEhzvqHfLHa/+gGWBC/c5g19jIuUs1Nw1GMb9/PF/Pgp3L+u3TW+Q==}
-
-  '@nexus_js/server@0.9.22':
-    resolution: {integrity: sha512-ZslpkSiRAd1fxjlIdVwPIuwLPZALDRjM5uuJHfE5TPURLMBbdtEeGTsLviy7ADR4bkc6i11VJ1e0lUsVDDYPag==}
+  '@nexus_js/content@0.9.23':
+    resolution: {integrity: sha512-i3A+DMgTvHTygP6ZiNqwLu4+xfVpfWcSQAs9PKsaT1VD/DppiZms0XhvErtN++XcbigzT4g9aaWrbV/Ga90BPw==}
     peerDependencies:
-      '@nexus_js/compiler': ^0.9.21
-      '@nexus_js/runtime': ^0.9.21
+      chokidar: ^4.0.0
+      shiki: ^1.0.0
+    peerDependenciesMeta:
+      chokidar:
+        optional: true
+      shiki:
+        optional: true
+
+  '@nexus_js/head@0.9.23':
+    resolution: {integrity: sha512-Ot/HAAAWe7poFzz8lVnJWZsCwEmHF/wL9K/3MGktLrBa3d+B0tBDMcxlwiHFFFKh3CbYnuOWCuxQA2O0cSD/GQ==}
+    peerDependencies:
+      '@nexus_js/runtime': ^0.9.22
+
+  '@nexus_js/router@0.9.23':
+    resolution: {integrity: sha512-3cA0RBm0ST64Z2+F7sbESfgs7CwA+DusvJLVazxtgqxBgh0wxj6rrtBzVkkHl4b4Ow/ta0mXhFPN4oa7Ijk+ww==}
+
+  '@nexus_js/runtime@0.9.23':
+    resolution: {integrity: sha512-LGQAJVZ0TkY7Qa+ibj63DPKuxNoN7eN9vPm5QjDlA7LWSNZhDC97hn+XvWWLOx+5Ls/u44zyqswbaqCu7QUEUw==}
+
+  '@nexus_js/security@0.9.23':
+    resolution: {integrity: sha512-50gvVt41tasW5VBcthG74zjALZBpuRhQytlUTVu4C5lAnWw8vvgKrj1oOK71/T3vvc1zRQsByJyu/79Z+GjYKQ==}
+
+  '@nexus_js/serialize@0.9.23':
+    resolution: {integrity: sha512-aVh6W8Y2J2Vc85lBs13gBtVvKb7OfufckAjovKEYj7XLy4U7X4F318rIaIqwHO0NBPPhlFjysA5FtXjuD+25Vg==}
+
+  '@nexus_js/server@0.9.23':
+    resolution: {integrity: sha512-3sjWY2FUQQ7g3LhH0N/UN8iq9VZ77mZpNaHd05qpMXQucG2zcD87Bn5JenqrZZZyZ6u19dRRvf3xqgVX/jZ/2w==}
+    peerDependencies:
+      '@nexus_js/compiler': ^0.9.22
+      '@nexus_js/runtime': ^0.9.22
     peerDependenciesMeta:
       '@nexus_js/compiler':
         optional: true
@@ -379,9 +389,9 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
-  marked@18.0.4:
-    resolution: {integrity: sha512-c/BTaKzg0G6ezQx97DAkYU7k0HM6ys0FqYeKBL6hlBByZwy+ycA1+f0vDdjMHKKeEjdgkx0GOv9Il6D+85cOqA==}
-    engines: {node: '>= 20'}
+  marked@15.0.12:
+    resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
+    engines: {node: '>= 18'}
     hasBin: true
 
   postgres@3.4.9:
@@ -570,68 +580,71 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
-  '@nexus_js/assets@0.9.21':
+  '@nexus_js/assets@0.9.23':
     dependencies:
       sharp: 0.33.5
 
-  '@nexus_js/audit@0.9.22': {}
+  '@nexus_js/audit@0.9.23': {}
 
-  '@nexus_js/bridge-postgres@0.9.22':
+  '@nexus_js/bridge-postgres@0.9.23':
     dependencies:
-      '@nexus_js/bridge': 0.9.22
+      '@nexus_js/bridge': 0.9.23
       postgres: 3.4.9
 
-  '@nexus_js/bridge@0.9.22': {}
+  '@nexus_js/bridge@0.9.23': {}
 
-  '@nexus_js/cli@0.9.22(@nexus_js/compiler@0.9.22)':
+  '@nexus_js/cli@0.9.23(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.23)':
     dependencies:
-      '@nexus_js/audit': 0.9.22
-      '@nexus_js/bridge': 0.9.22
-      '@nexus_js/bridge-postgres': 0.9.22
-      '@nexus_js/router': 0.9.22
-      '@nexus_js/security': 0.9.22
-      '@nexus_js/server': 0.9.22(@nexus_js/compiler@0.9.22)
+      '@nexus_js/audit': 0.9.23
+      '@nexus_js/bridge': 0.9.23
+      '@nexus_js/bridge-postgres': 0.9.23
+      '@nexus_js/router': 0.9.23
+      '@nexus_js/security': 0.9.23
+      '@nexus_js/server': 0.9.23(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.23)
       jiti: 2.7.0
     optionalDependencies:
-      '@nexus_js/compiler': 0.9.22
+      '@nexus_js/compiler': 0.9.23
+      '@nexus_js/runtime': 0.9.23
 
-  '@nexus_js/compiler@0.9.21':
+  '@nexus_js/compiler@0.9.23':
     dependencies:
       esbuild: 0.28.0
       magic-string: 0.30.21
       typescript: 5.9.3
 
-  '@nexus_js/compiler@0.9.22':
+  '@nexus_js/connect@0.9.23': {}
+
+  '@nexus_js/content@0.9.23':
     dependencies:
-      esbuild: 0.28.0
-      magic-string: 0.30.21
-      typescript: 5.9.3
+      marked: 15.0.12
 
-  '@nexus_js/connect@0.9.21': {}
-
-  '@nexus_js/router@0.9.21':
+  '@nexus_js/head@0.9.23(@nexus_js/runtime@0.9.23)':
     dependencies:
-      '@nexus_js/compiler': 0.9.21
+      '@nexus_js/runtime': 0.9.23
 
-  '@nexus_js/router@0.9.22':
+  '@nexus_js/router@0.9.23':
     dependencies:
-      '@nexus_js/compiler': 0.9.22
+      '@nexus_js/compiler': 0.9.23
 
-  '@nexus_js/security@0.9.21': {}
-
-  '@nexus_js/security@0.9.22': {}
-
-  '@nexus_js/serialize@0.9.21': {}
-
-  '@nexus_js/server@0.9.22(@nexus_js/compiler@0.9.22)':
+  '@nexus_js/runtime@0.9.23':
     dependencies:
-      '@nexus_js/assets': 0.9.21
-      '@nexus_js/connect': 0.9.21
-      '@nexus_js/router': 0.9.21
-      '@nexus_js/security': 0.9.21
-      '@nexus_js/serialize': 0.9.21
+      '@nexus_js/serialize': 0.9.23
+
+  '@nexus_js/security@0.9.23': {}
+
+  '@nexus_js/serialize@0.9.23': {}
+
+  '@nexus_js/server@0.9.23(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.23)':
+    dependencies:
+      '@nexus_js/assets': 0.9.23
+      '@nexus_js/connect': 0.9.23
+      '@nexus_js/head': 0.9.23(@nexus_js/runtime@0.9.23)
+      '@nexus_js/router': 0.9.23
+      '@nexus_js/security': 0.9.23
+      '@nexus_js/serialize': 0.9.23
     optionalDependencies:
-      '@nexus_js/compiler': 0.9.22
+      '@nexus_js/compiler': 0.9.23
+      '@nexus_js/runtime': 0.9.23
 
   color-convert@2.0.1:
     dependencies:
@@ -688,7 +701,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  marked@18.0.4: {}
+  marked@15.0.12: {}
 
   postgres@3.4.9: {}
 

@@ -2,12 +2,11 @@
 import { resolveLocale, createT } from '$lib/i18n.ts';
 import { getDocBySlug } from '$lib/docs.ts';
 import { findDocBySlug } from '$lib/nav.ts';
-import { marked } from 'marked';
 
 export async function load(ctx) {
   const locale = resolveLocale(ctx);
   const slug = ctx.params.slug;
-  const doc = getDocBySlug(slug);
+  const doc = getDocBySlug(slug, locale);
   const navItem = findDocBySlug(slug);
 
   if (!doc) {
@@ -17,21 +16,28 @@ export async function load(ctx) {
   const t = createT(locale);
   const title = t(doc.titleKey) || doc.titleKey;
 
-  // Render Markdown to HTML on server (trusted content from .md files loaded in load())
-  let renderedHTML = marked.parse(doc.body || '');
-  // Sanitize: strip any <script> tags from the rendered content.
-  // This prevents example code in docs from becoming live <script src="..."> tags in the page (which was causing the index.js 404).
-  renderedHTML = renderedHTML
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<script\b[^>]*\/>/gi, '');
+  // Page-specific head metadata overrides the layout defaults
+  const head = {
+    title: `${title} — Nexus.js`,
+    description: doc.excerpt || t('meta.description'),
+    canonical: `https://nexusjs.dev/docs/${slug}`,
+    og: {
+      type: 'article',
+      url: `https://nexusjs.dev/docs/${slug}`,
+      siteName: 'Nexus.js',
+    },
+  };
 
+  // doc.body is already rendered HTML from @nexus_js/content (marked + sanitize)
   return {
     locale,
     slug,
     doc,
     title,
     navItem,
-    renderedHTML,
+    renderedHTML: doc.body,
+    headings: doc.headings || [],
+    head,
   };
 }
 ---
@@ -45,6 +51,16 @@ export async function load(ctx) {
       </div>
     {/if}
   </div>
+
+  {#if pretext.headings && pretext.headings.length > 0}
+  <nav class="doc-toc">
+    <div class="toc-title">On this page</div>
+    {#each pretext.headings as h}
+      <a href="#{h.id}" class="toc-link" data-level="{h.level}">{h.text}</a>
+    {/each}
+  </nav>
+  <nexus-island client:visible src="$lib/islands/toc.ts"></nexus-island>
+  {/if}
 
   <div class="doc-content">
     <!-- Server-rendered Markdown (trusted content) output directly in the template text position.
@@ -66,6 +82,13 @@ export async function load(ctx) {
     max-width: 860px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
+  }
+
+  /* TOC float clearance for modo correcto layout */
+  .doc-content::after {
+    content: "";
+    display: block;
+    clear: both;
   }
 
   .doc-header {
@@ -167,6 +190,54 @@ export async function load(ctx) {
   .edit-link {
     margin-left: 1.5rem;
     opacity: 0.85;
+  }
+
+  .doc-toc {
+    position: sticky;
+    top: 1rem;
+    float: right;
+    width: 220px;
+    margin-left: 2rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    max-height: 60vh;
+    overflow: auto;
+  }
+
+  .toc-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+  }
+
+  .toc-link {
+    display: block;
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.15rem 0;
+    border-radius: 3px;
+  }
+
+  .toc-link:hover {
+    color: var(--accent2);
+    text-decoration: underline;
+  }
+
+  .toc-link[data-level="3"] { padding-left: 1rem; font-size: 0.75rem; }
+  .toc-link[data-level="4"] { padding-left: 2rem; font-size: 0.7rem; }
+
+  .toc-link.is-active {
+    color: var(--accent2);
+    font-weight: 600;
+    background: var(--surface);
+    padding-left: 0.25rem;
   }
 </style>
 

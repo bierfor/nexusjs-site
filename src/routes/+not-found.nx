@@ -15,8 +15,8 @@ export async function load(ctx) {
     <p class="lead">{pretext.t('notFound.lead')}</p>
 
     <div class="not-found-actions">
-      <a href="/" class="btn btn-primary">Go to homepage</a>
-      <a href="/docs" class="btn btn-outline">Browse documentation</a>
+      <a href="/" class="btn btn-primary">{pretext.t('notFound.home')}</a>
+      <a href="/docs" class="btn btn-outline">{pretext.t('notFound.browse')}</a>
     </div>
   </div>
 </div>
