@@ -1,12 +1,16 @@
 ---
 import { resolveLocale, createT } from '$lib/i18n.ts';
-import { getDocBySlug } from '$lib/docs.ts';
+import { getDocBySlugAsync } from '$lib/docs.ts';
 import { findDocBySlug } from '$lib/nav.ts';
 
 export async function load(ctx) {
   const locale = resolveLocale(ctx);
   const slug = ctx.params.slug;
-  const doc = getDocBySlug(slug, locale);
+  // Extra validation at route level
+  if (typeof slug !== 'string' || !/^[a-z0-9_-]+$/i.test(slug)) {
+    return ctx.notFound();
+  }
+  const doc = await getDocBySlugAsync(slug, locale);
   const navItem = findDocBySlug(slug);
 
   if (!doc) {
@@ -38,210 +42,49 @@ export async function load(ctx) {
     renderedHTML: doc.body,
     headings: doc.headings || [],
     head,
+    cspNonce: ctx.cspNonce,
   };
 }
 ---
 
-<div class="doc-page">
-  <div class="doc-header">
-    <h1 class="doc-title">{pretext.title}</h1>
+<div class="max-w-[860px] mx-auto px-6 pb-16 pt-8">
+  <div class="mb-8 pb-5 border-b border-[var(--border)]">
+    <h1 class="text-[2.1rem] font-bold tracking-[-0.025em] mb-2">{pretext.title}</h1>
     {#if pretext.navItem}
-      <div class="doc-meta">
-        <span class="doc-section">{pretext.t('docs.section')}: {pretext.t('nav.' + pretext.navItem.section) || pretext.navItem.section}</span>
+      <div class="text-sm text-[var(--muted)]">
+        <span>{pretext.t('docs.section')}: {pretext.t('nav.' + pretext.navItem.section) || pretext.navItem.section}</span>
       </div>
     {/if}
   </div>
 
   {#if pretext.headings && pretext.headings.length > 0}
-  <nav class="doc-toc">
-    <div class="toc-title">On this page</div>
+  <nav class="doc-toc float-right w-[220px] ml-8 p-3 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[0.8rem] max-h-[60vh] overflow-auto sticky top-4">
+    <div class="font-semibold mb-2 text-[var(--muted)] uppercase text-[0.7rem] tracking-[0.05em]">On this page</div>
     {#each pretext.headings as h}
-      <a href="#{h.id}" class="toc-link" data-level="{h.level}">{h.text}</a>
+      <a href="#{h.id}" class="toc-link block text-[var(--text)] no-underline py-0.5 rounded hover:text-[var(--accent2)]" data-level="{h.level}">{h.text}</a>
     {/each}
   </nav>
   <nexus-island client:visible src="$lib/islands/toc.ts"></nexus-island>
   {/if}
 
-  <div class="doc-content">
-    <!-- Server-rendered Markdown (trusted content) output directly in the template text position.
-         In .nx, text content expressions insert the string raw (no auto-escape for body, only attrs use __ssrAttr).
-         This makes the doc body visible immediately in the initial HTML response, no client JS delay or blank area. -->
-    <div class="prose">
+  <div class="clear-both prose max-w-none">
+    <!-- Server-rendered Markdown via @nexus_js/content in load() - modo correcto -->
+    <div>
       {pretext.renderedHTML}
     </div>
   </div>
 
-  <div class="doc-footer">
-    <a href="/docs" class="back-link">← {pretext.t('docs.backToIndex')}</a>
-    <a href="https://github.com/bierfor/nexusjs-site/edit/main/src/content/docs/{pretext.slug}.md" target="_blank" class="edit-link">Edit this page ↗</a>
+  <div class="mt-12 pt-6 border-t border-[var(--border)]">
+    <a href="/docs" class="text-[var(--accent2)] font-medium no-underline hover:underline">← {pretext.t('docs.backToIndex')}</a>
+    <a href="https://github.com/bierfor/nexusjs-site/edit/main/src/content/docs/{pretext.slug}.md" target="_blank" rel="noopener noreferrer" class="ml-6 text-[var(--accent2)] font-medium no-underline hover:underline">Edit this page ↗</a>
   </div>
 </div>
 
-<style>
-  .doc-page {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-  }
-
-  /* TOC float clearance for modo correcto layout */
-  .doc-content::after {
-    content: "";
-    display: block;
-    clear: both;
-  }
-
-  .doc-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .doc-title {
-    font-size: 2.1rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    margin-bottom: 0.5rem;
-  }
-
-  .doc-meta {
-    color: var(--muted);
-    font-size: 0.875rem;
-  }
-
-  .doc-content {
-    font-size: 1rem;
-    line-height: 1.75;
-  }
-
-  .doc-content h2 {
-    margin-top: 2.25rem;
-    margin-bottom: 0.75rem;
-    font-size: 1.4rem;
-    font-weight: 600;
-  }
-
-  .doc-content h3 {
-    margin-top: 1.75rem;
-    margin-bottom: 0.5rem;
-    font-size: 1.15rem;
-    font-weight: 600;
-  }
-
-  .doc-content pre {
-    background: #0f0f11;
-    color: #e4e4e7;
-    padding: 1rem;
-    border-radius: 10px;
-    overflow-x: auto;
-    margin: 1rem 0;
-    font-size: 0.9rem;
-  }
-
-  .doc-content code {
-    font-family: var(--mono);
-    background: var(--surface);
-    padding: 0.1em 0.4em;
-    border-radius: 4px;
-    font-size: 0.92em;
-  }
-
-  .doc-content pre code {
-    background: transparent;
-    padding: 0;
-  }
-
-  .doc-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
-    font-size: 0.95rem;
-  }
-
-  .doc-content th,
-  .doc-content td {
-    border: 1px solid var(--border);
-    padding: 0.6rem 0.9rem;
-    text-align: left;
-  }
-
-  .doc-content th {
-    background: var(--surface);
-    font-weight: 600;
-  }
-
-  .doc-footer {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .back-link, .edit-link {
-    color: var(--accent2);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-  }
-
-  .back-link:hover, .edit-link:hover {
-    text-decoration: underline;
-  }
-
-  .edit-link {
-    margin-left: 1.5rem;
-    opacity: 0.85;
-  }
-
-  .doc-toc {
-    position: sticky;
-    top: 1rem;
-    float: right;
-    width: 220px;
-    margin-left: 2rem;
-    padding: 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.8rem;
-    line-height: 1.3;
-    max-height: 60vh;
-    overflow: auto;
-  }
-
-  .toc-title {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.7rem;
-  }
-
-  .toc-link {
-    display: block;
-    color: var(--text);
-    text-decoration: none;
-    padding: 0.15rem 0;
-    border-radius: 3px;
-  }
-
-  .toc-link:hover {
-    color: var(--accent2);
-    text-decoration: underline;
-  }
-
-  .toc-link[data-level="3"] { padding-left: 1rem; font-size: 0.75rem; }
-  .toc-link[data-level="4"] { padding-left: 2rem; font-size: 0.7rem; }
-
-  .toc-link.is-active {
-    color: var(--accent2);
-    font-weight: 600;
-    background: var(--surface);
-    padding-left: 0.25rem;
-  }
+<style nonce="{pretext.cspNonce}">
+  /* Tailwind powered */
 </style>
 
-<script>
+<script nonce="{pretext.cspNonce}">
   // Optional: enhance code blocks or add copy buttons later
   // For now the content is static + server rendered
 </script>

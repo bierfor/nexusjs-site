@@ -18,7 +18,7 @@ export async function load(ctx) {
       type: 'website',
       url: 'https://nexusjs.dev/',
       siteName: 'Nexus.js',
-      image: 'https://nexusjs.dev/nexus-logo.svg',
+      image: '/nexus-logo.svg',
     },
     twitter: {
       card: 'summary_large_image',
@@ -26,297 +26,130 @@ export async function load(ctx) {
     },
   };
 
-  return { locale, t, langLinks, head };
+  return { locale, t, langLinks, head, cspNonce: ctx.cspNonce };
 }
 ---
 
-<section class="hero">
-  <div class="hero-badge">
-    <span class="hero-diamond">◆</span>
-    <span>{pretext.t('hero.badge')}</span>
-  </div>
-  <h1 class="hero-title">{pretext.t('hero.title')}</h1>
-  <p class="hero-subtitle">{pretext.t('hero.subtitle')}</p>
-  <div class="hero-actions">
-    <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn btn-primary">{pretext.t('hero.cta1')} →</a>
-    <a href="https://github.com/bierfor/nexus" class="btn btn-outline" target="_blank" rel="noopener noreferrer">{pretext.t('hero.cta2')} ↗</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat"><strong>25</strong><span>Packages</span></div>
-    <div class="stat"><strong>0 KB</strong><span>JS by Default</span></div>
-    <div class="stat"><strong>100%</strong><span>TypeScript</span></div>
-    <div class="stat"><strong>v0.9.22</strong><span>Latest</span></div>
-  </div>
-</section>
+<!-- Hero section with animated gradient background -->
+<section class="hero-section relative overflow-hidden">
+  <div class="hero-gradient-bg absolute inset-0 gradient-mesh pointer-events-none"></div>
+  <div class="relative max-w-[780px] mx-auto px-6 pt-20 pb-12 text-center">
+    <div class="hero-badge inline-flex items-center gap-2 px-3.5 py-1.5 bg-surface border border-border rounded-full text-xs font-semibold text-text-secondary mb-6 animate-fade-in-up delay-100">
+      <span class="text-accent2">◆</span>
+      <span>{pretext.t('hero.badge')}</span>
+    </div>
 
-<section class="why">
-  <div class="section-label">{pretext.t('why.label')}</div>
-  <h2>{pretext.t('why.title')}</h2>
-  <p class="lead">{pretext.t('why.lead')}</p>
-  <div class="why-grid">
-    <div class="why-card">
-      <div class="why-icon">⚡</div>
-      <h3>{pretext.t('why.card1t')}</h3>
-      <p>{pretext.t('why.card1d')}</p>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">🛡️</div>
-      <h3>{pretext.t('why.card2t')}</h3>
-      <p>{pretext.t('why.card2d')}</p>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">🔍</div>
-      <h3>{pretext.t('why.card3t')}</h3>
-      <p>{pretext.t('why.card3d')}</p>
-    </div>
-  </div>
-</section>
+    <h1 class="hero-title text-[3.25rem] font-extrabold leading-[1.1] tracking-[-0.03em] mb-4 gradient-text">{pretext.t('hero.title')}</h1>
+    <p class="hero-subtitle text-[1.125rem] text-muted max-w-[560px] mx-auto mb-7 leading-[1.7]">{pretext.t('hero.subtitle')}</p>
 
-<section class="enterprise">
-  <div class="section-label">{pretext.t('ent.label')}</div>
-  <h2>{pretext.t('ent.title')}</h2>
-  <p class="lead">{pretext.t('ent.lead')}</p>
-  <div class="enterprise-grid">
-    <div class="enterprise-card">
-      <div class="enterprise-emoji">🏢</div>
-      <h3>{pretext.t('ent.c1t')}</h3>
-      <p>{pretext.t('ent.c1d')}</p>
+    <div class="flex flex-wrap gap-3 justify-center mb-10">
+      <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="hero-cta btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-accent text-white no-underline hover:bg-[#27272a] active:translate-y-px transition shadow-md">
+        {pretext.t('hero.cta1')} →
+      </a>
+      <a href="https://github.com/bierfor/nexus" class="hero-cta btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-transparent text-text border-2 border-border-strong no-underline hover:border-text hover:bg-surface transition" target="_blank" rel="noopener noreferrer">
+        {pretext.t('hero.cta2')} ↗
+      </a>
     </div>
-    <div class="enterprise-card">
-      <div class="enterprise-emoji">🌐</div>
-      <h3>{pretext.t('ent.c2t')}</h3>
-      <p>{pretext.t('ent.c2d')}</p>
-    </div>
-    <div class="enterprise-card">
-      <div class="enterprise-emoji">🔒</div>
-      <h3>{pretext.t('ent.c3t')}</h3>
-      <p>{pretext.t('ent.c3d')}</p>
-    </div>
-    <div class="enterprise-card">
-      <div class="enterprise-emoji">📋</div>
-      <h3>{pretext.t('ent.c4t')}</h3>
-      <p>{pretext.t('ent.c4d')}</p>
+
+    <div class="flex justify-center gap-10 md:gap-14 flex-wrap text-sm">
+      <div class="hero-stat flex flex-col items-center">
+        <div class="hero-stat-number text-2xl font-semibold tracking-tight stat-number">25</div>
+        <div class="text-muted text-xs">Packages</div>
+      </div>
+      <div class="hero-stat flex flex-col items-center">
+        <div class="hero-stat-number text-2xl font-semibold tracking-tight stat-number">0 KB</div>
+        <div class="text-muted text-xs">JS by Default</div>
+      </div>
+      <div class="hero-stat flex flex-col items-center">
+        <div class="hero-stat-number text-2xl font-semibold tracking-tight stat-number">100%</div>
+        <div class="text-muted text-xs">TypeScript</div>
+      </div>
+      <div class="hero-stat flex flex-col items-center">
+        <div class="hero-stat-number text-2xl font-semibold tracking-tight stat-number">v{pretext.version}</div>
+        <div class="text-muted text-xs">Latest</div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="cta">
-  <h2>Ready to build?</h2>
-  <p>Start with the docs or scaffold a project in 30 seconds.</p>
-  <div class="cta-actions">
-    <a href="/docs/install{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn btn-primary">Read the Docs →</a>
-    <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn btn-outline">Quick Start →</a>
+<section class="max-w-[1100px] mx-auto px-6 py-16">
+  <div class="section-label uppercase tracking-[0.08em] text-xs font-semibold text-muted mb-2">{pretext.t('why.label')}</div>
+  <h2 class="text-3xl font-bold tracking-tight mb-3">{pretext.t('why.title')}</h2>
+  <p class="max-w-2xl text-[1.05rem] text-muted mb-10">{pretext.t('why.lead')}</p>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="why-card card-shine bg-[var(--surface)] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+      <div class="card-emoji w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mb-4 text-2xl emoji-hover">
+        ⚡
+      </div>
+      <h3 class="font-semibold text-lg mb-2">{pretext.t('why.card1t')}</h3>
+      <p class="text-sm text-text-secondary leading-relaxed">{pretext.t('why.card1d')}</p>
+    </div>
+    <div class="why-card card-shine bg-[var(--surface)] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+      <div class="card-emoji w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center mb-4 text-2xl emoji-hover">
+        🛡️
+      </div>
+      <h3 class="font-semibold text-lg mb-2">{pretext.t('why.card2t')}</h3>
+      <p class="text-sm text-text-secondary leading-relaxed">{pretext.t('why.card2d')}</p>
+    </div>
+    <div class="why-card card-shine bg-[var(--surface)] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+      <div class="card-emoji w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4 text-2xl emoji-hover">
+        🔍
+      </div>
+      <h3 class="font-semibold text-lg mb-2">{pretext.t('why.card3t')}</h3>
+      <p class="text-sm text-text-secondary leading-relaxed">{pretext.t('why.card3d')}</p>
+    </div>
   </div>
 </section>
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-lang">
-      <a href="{pretext.langLinks.en}" class="{pretext.locale === 'en' ? 'active' : ''}">English</a>
-      <a href="{pretext.langLinks.es}" class="{pretext.locale === 'es' ? 'active' : ''}">Español</a>
-      <a href="{pretext.langLinks.pt}" class="{pretext.locale === 'pt' ? 'active' : ''}">Português</a>
+<section class="max-w-[1100px] mx-auto px-6 pb-16">
+  <div class="section-label uppercase tracking-[0.08em] text-xs font-semibold text-muted mb-2">{pretext.t('ent.label')}</div>
+  <h2 class="text-3xl font-bold tracking-tight mb-3">{pretext.t('ent.title')}</h2>
+  <p class="max-w-2xl text-[1.05rem] text-muted mb-10">{pretext.t('ent.lead')}</p>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="ent-card card-shine bg-[var(--surface)] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+      <div class="card-emoji w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4 text-2xl emoji-hover">
+        🏢
+      </div>
+      <h3 class="font-semibold text-lg mb-2">{pretext.t('ent.c1t')}</h3>
+      <p class="text-sm text-text-secondary leading-relaxed">{pretext.t('ent.c1d')}</p>
     </div>
-    <p>© 2026 {pretext.t('footer.copy')}</p>
+    <div class="ent-card card-shine bg-[var(--surface)] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+      <div class="card-emoji w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4 text-2xl emoji-hover">
+        🌐
+      </div>
+      <h3 class="font-semibold text-lg mb-2">{pretext.t('ent.c2t')}</h3>
+      <p class="text-sm text-text-secondary leading-relaxed">{pretext.t('ent.c2d')}</p>
+    </div>
+    <div class="ent-card card-shine bg-[var(--surface)] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+      <div class="card-emoji w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center mb-4 text-2xl emoji-hover">
+        🔒
+      </div>
+      <h3 class="font-semibold text-lg mb-2">{pretext.t('ent.c3t')}</h3>
+      <p class="text-sm text-text-secondary leading-relaxed">{pretext.t('ent.c3d')}</p>
+    </div>
+    <div class="ent-card card-shine bg-[var(--surface)] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+      <div class="card-emoji w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center mb-4 text-2xl emoji-hover">
+        📋
+      </div>
+      <h3 class="font-semibold text-lg mb-2">{pretext.t('ent.c4t')}</h3>
+      <p class="text-sm text-text-secondary leading-relaxed">{pretext.t('ent.c4d')}</p>
+    </div>
   </div>
-</footer>
+</section>
 
-<style>
-  .hero {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 5rem 1.5rem 3rem;
-    text-align: center;
-  }
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-  }
-  .hero-diamond { color: var(--accent2); }
-  .hero-title {
-    font-size: 3.25rem;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-bottom: 1rem;
-  }
-  .hero-subtitle {
-    font-size: 1.125rem;
-    color: var(--muted);
-    max-width: 560px;
-    margin: 0 auto 1.75rem;
-    line-height: 1.7;
-  }
-  .hero-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    margin-bottom: 2.5rem;
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0.7rem 1.4rem;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    text-decoration: none;
-    transition: all 0.15s;
-    cursor: pointer;
-    border: none;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-  }
-  .btn-primary:hover { background: #27272a; transform: translateY(-1px); }
-  .btn-outline {
-    background: transparent;
-    color: var(--text);
-    border: 1.5px solid var(--border-strong);
-  }
-  .btn-outline:hover { border-color: var(--text); background: var(--surface); }
+<section class="cta-section max-w-[780px] mx-auto px-6 pb-20 text-center">
+  <h2 class="text-3xl font-bold tracking-tight mb-3">Ready to build?</h2>
+  <p class="text-muted mb-8">Start with the docs or scaffold a project in 30 seconds.</p>
+  <div class="flex flex-wrap gap-3 justify-center">
+    <a href="/docs/install{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-accent text-white no-underline hover:bg-[#27272a] shadow-md">Read the Docs →</a>
+    <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-transparent text-text border-2 border-border-strong no-underline hover:border-text hover:bg-surface">Quick Start →</a>
+  </div>
+</section>
 
-  .hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 2.5rem;
-    flex-wrap: wrap;
-  }
-  .stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .stat strong {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .stat span {
-    font-size: 12px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
+<nexus-island client:idle src="$lib/islands/home-animations.ts"></nexus-island>
 
-  .why, .enterprise {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 4rem 1.5rem;
-  }
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--accent2);
-    margin-bottom: 0.5rem;
-  }
-  .why h2, .enterprise h2 { margin-top: 0; }
-  .why-grid, .enterprise-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-    margin-top: 2rem;
-  }
-  .why-card, .enterprise-card {
-    padding: 1.75rem;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
-  .why-card:hover, .enterprise-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-  }
-  .why-icon, .enterprise-emoji {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-  }
-  .why-card h3, .enterprise-card h3 {
-    font-size: 1.0625rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    margin-top: 0;
-  }
-  .why-card p, .enterprise-card p {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 0;
-  }
-
-  .enterprise { background: #0f0f11; color: #e4e4e7; }
-  .enterprise .section-label { color: #60a5fa; }
-  .enterprise h2 { color: #fff; }
-  .enterprise .lead { color: #a1a1aa; }
-  .enterprise-card {
-    background: #18181b;
-    border-color: #27272a;
-  }
-  .enterprise-card h3 { color: #fff; }
-  .enterprise-card p { color: #a1a1aa; }
-
-  .cta {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 4rem 1.5rem;
-    text-align: center;
-  }
-  .cta h2 { margin-top: 0; }
-  .cta-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    margin-top: 1.25rem;
-  }
-
-  .site-footer {
-    border-top: 1px solid var(--border);
-    padding: 2rem 1.5rem;
-    text-align: center;
-  }
-  .footer-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  .footer-lang {
-    display: flex;
-    gap: 0.5rem;
-  }
-  .footer-lang a {
-    padding: 0.25rem 0.6rem;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    text-decoration: none;
-    border-radius: 6px;
-  }
-  .footer-lang a:hover { color: var(--text); background: var(--surface); }
-  .footer-lang a.active { background: var(--accent); color: #fff; }
-  .site-footer p { font-size: 13px; color: var(--muted); margin-bottom: 0; }
-
-  @media (max-width: 768px) {
-    .hero { padding-top: 4rem; }
-    .hero-title { font-size: 2.25rem; }
-    .why-grid, .enterprise-grid { grid-template-columns: 1fr; }
-    .hero-actions, .cta-actions { flex-direction: column; align-items: center; }
-    .btn { width: 100%; max-width: 280px; justify-content: center; }
-  }
+<style nonce="{pretext.cspNonce}">
+  /* Home page is now Tailwind-first. */
 </style>

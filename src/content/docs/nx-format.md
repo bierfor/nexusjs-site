@@ -41,7 +41,7 @@ export async function load(ctx) {
 <button onclick={() => count++}>Clicks: {count}</button>
 ```
 
-## Compile-time DX (0.9.23+)
+## Compile-time DX (0.9.23/0.9.24+)
 
 The compiler produces structured `CompileError` (with `code` like `NX-101`, `file`, `loc`, `hint`, optional `frame`) for common template problems such as unclosed `{#if}` or malformed `{#each}` (missing `as item` alias).
 

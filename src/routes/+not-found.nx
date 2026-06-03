@@ -4,56 +4,19 @@ import { resolveLocale, createT } from '$lib/i18n.ts';
 export async function load(ctx) {
   const locale = resolveLocale(ctx);
   const t = createT(locale);
-  return { locale, t };
+  return { locale, t, cspNonce: ctx.cspNonce };
 }
 ---
 
-<div class="not-found">
-  <div class="not-found-content">
-    <div class="error-code">404</div>
-    <h1>{pretext.t('notFound.title')}</h1>
-    <p class="lead">{pretext.t('notFound.lead')}</p>
+<div class="min-h-[70vh] flex items-center justify-center px-8 text-center">
+  <div class="max-w-[420px]">
+    <div class="text-[6rem] font-extrabold leading-none text-accent2 mb-2 tracking-[-0.05em]">404</div>
+    <h1 class="text-[1.85rem] font-bold mb-3">{pretext.t('notFound.title')}</h1>
+    <p class="text-[1.05rem] text-muted mb-8">{pretext.t('notFound.lead')}</p>
 
-    <div class="not-found-actions">
-      <a href="/" class="btn btn-primary">{pretext.t('notFound.home')}</a>
-      <a href="/docs" class="btn btn-outline">{pretext.t('notFound.browse')}</a>
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="/" class="inline-flex items-center px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-accent text-white no-underline hover:bg-[#27272a]">{pretext.t('notFound.home')}</a>
+      <a href="/docs" class="inline-flex items-center px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-transparent text-text border-2 border-border-strong no-underline hover:border-text hover:bg-surface">{pretext.t('notFound.browse')}</a>
     </div>
   </div>
 </div>
-
-<style>
-  .not-found {
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .not-found-content {
-    max-width: 420px;
-  }
-
-  .error-code {
-    font-size: 6rem;
-    font-weight: 800;
-    line-height: 1;
-    color: var(--accent2);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.05em;
-  }
-
-  .not-found h1 {
-    font-size: 1.85rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .not-found-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-  }
-</style>

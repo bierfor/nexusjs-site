@@ -1,5 +1,7 @@
-import { defineCollection } from '@nexus_js/content';
+import { defineCollection, renderMarkdown, renderMarkdownAsync, parseFrontmatter } from '@nexus_js/content';
 import type { CollectionItem } from '@nexus_js/content';
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 export interface DocEntry {
   slug: string;
@@ -26,7 +28,7 @@ const DOCS_METADATA: Array<Omit<DocEntry, 'body'>> = [
   { slug: 'middleware', titleKey: 'mw.title', section: 'advanced' },
   { slug: 'seo', titleKey: 'seo.title', section: 'advanced' },
   { slug: 'assets', titleKey: 'assets.title', section: 'advanced' },
-  { slug: 'css', titleKey: 'css.title', section: 'advanced' },
+  { slug: 'css', titleKey: 'css.title', section: 'tooling' },
   { slug: 'cli', titleKey: 'cli.title', section: 'tooling' },
   { slug: 'studio', titleKey: 'studio.title', section: 'tooling' },
   { slug: 'testing', titleKey: 'testing.title', section: 'tooling' },
@@ -44,7 +46,26 @@ const docsCollection = defineCollection({
   locales: ['en', 'es', 'pt'],
 });
 
-/** Load a single doc by slug, with i18n locale fallback. */
+function resolveDocPath(slug: string, locale?: string): string | undefined {
+  // Basic slug sanitization to prevent path traversal (only allow safe chars for filenames)
+  if (!/^[a-z0-9_-]+$/i.test(slug)) return undefined;
+
+  const baseDir = join(process.cwd(), 'src/content/docs');
+  const candidates: string[] = [];
+  if (locale && locale !== 'en') {
+    candidates.push(join(baseDir, `${slug}.${locale}.md`));
+  }
+  candidates.push(join(baseDir, `${slug}.md`));
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return undefined;
+}
+
+/** Load a single doc by slug, with i18n locale fallback (sync, no syntax highlighting). */
 export function getDocBySlug(slug: string, locale?: string): DocEntry | undefined {
   const meta = DOCS_METADATA.find(d => d.slug === slug);
   if (!meta) return undefined;
@@ -55,6 +76,27 @@ export function getDocBySlug(slug: string, locale?: string): DocEntry | undefine
     ...meta,
     body: item.html,
     headings: item.headings || [],
+  };
+}
+
+/** Load a single doc by slug, with i18n locale fallback and Shiki syntax highlighting (async, using @nexus_js/content in modo correcto). */
+export async function getDocBySlugAsync(slug: string, locale?: string): Promise<DocEntry | undefined> {
+  const meta = DOCS_METADATA.find(d => d.slug === slug);
+  if (!meta) return undefined;
+
+  const filePath = resolveDocPath(slug, locale);
+  if (!filePath) return undefined;
+
+  const raw = readFileSync(filePath, 'utf-8');
+  const { body } = parseFrontmatter(raw);
+  // Use the package's renderMarkdownAsync with highlight: true — this is the "modo correcto"
+  // (it handles data-lang, highlightCode internally with Shiki, and proper escaping).
+  const { html, headings } = await renderMarkdownAsync(body, { extractHeadings: true, highlight: true });
+
+  return {
+    ...meta,
+    body: html,
+    headings: headings || [],
   };
 }
 

@@ -11,7 +11,7 @@ Nexus requires Node.js ≥ 22 and pnpm ≥ 9.
 npm create @nexus_js/nexus my-app
 cd my-app
 pnpm install
-# Latest (0.9.23+) includes compiler DX, improved head/SEO, content collections etc.
+# Latest (0.9.24+) includes compiler DX, improved head/SEO, content collections, documentation and site style updates (white/black themes) etc.
 ```
 
 ### Start development

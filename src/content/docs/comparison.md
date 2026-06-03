@@ -31,7 +31,7 @@ How Nexus compares to mainstream full-stack frameworks in 2026.
 - **Seguridad por defecto** en vez de tener que añadirla después.
 - Un modelo mental **más simple y explícito** que Server Components + caching mágico (usa `load()` + `pretext`).
 - La mejor experiencia posible para sitios de contenido + algo de interactividad (gracias a `@nexus_js/content`: collections, headings para TOC, plurals, async render, watch).
-- Excelente DX de errores en compile time (structured CompileError + pretty formatters with frames) — ver 0.9.23 en releases.
+- Excelente DX de errores en compile time (structured CompileError + pretty formatters with frames) — ver 0.9.24 en releases.
 - Escapar del "React tax" sin renunciar a una gran experiencia de componentes.
 - Metadata/SEO fácil vía `load() { head: {...} }` con inyección automática (request-scoped).
 

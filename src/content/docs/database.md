@@ -14,6 +14,13 @@ import { PrismaClient } from '@prisma/client';
 export const db = new PrismaClient();
 ```
 
+Use @nexus_js/db for thin adapters if you want provider swapping (Prisma/Drizzle/Postgres.js/libSQL).
+
+Combine with security (tenant isolation via bridge or ctx) and content collections for rich data.
+
+See @nexus_js/db and bridge.md.
+
+
 ## Drizzle adapter
 
 ```ts

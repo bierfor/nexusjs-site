@@ -6,16 +6,17 @@ export default {
     hardened: true,
     shieldLite: true,
     csp: {
-      additionalScriptSrc: ['https://cdnjs.cloudflare.com'],
+      // additionalScriptSrc removed: cdnjs was unused (tighten attack surface)
       additionalStyleSrc: [
         'https://fonts.googleapis.com',
-        'https://fonts.gstatic.com', // if needed for some
+        'https://fonts.gstatic.com',
       ],
       additionalFontSrc: ['https://fonts.gstatic.com'],
       additionalConnectSrc: [
         'https://fonts.googleapis.com',
         'https://fonts.gstatic.com',
       ],
+      additionalImgSrc: ['https://nexusjs.dev'],
     },
   },
 };

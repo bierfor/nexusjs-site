@@ -1,8 +1,8 @@
-# Notas de release Nexus 0.9.x (0.9.0 -> 0.9.23)
+# Notas de release Nexus 0.9.x (0.9.0 -> 0.9.24)
 
 Consolidado da linha `0.9.x`, versão por versão, usando apenas evidência pública verificável.
 
-**0.9.23** (atual): Melhorias grandes em DX + Conteúdo + SEO (pacote content, head request-scoped + injeção via load(), erros bonitos do compiler + CompileError estruturado). Veja o RELEASES principal em espanhol e docs/packages.md para detalhes.
+**0.9.24** (atual): Atualizações de documentação e polimento de UI/estilos (consistência de temas branco/negro, logo preto em fundos claros, estilos de blocos de código melhorados com vars CSS), cobertura completa de documentação de pacotes, follow-ups de hardening de segurança. Veja seções detalhadas abaixo + packages.md no site de docs. Notas anteriores de 0.9.23 abaixo. Site UI/security: sidebar (left tab) polish (filter+clear, active states, mobile X animation), black logo on light bg for white theme consistency, full cspNonce support + CSP tightening (removed unused cdnjs), strict sanitize on releases, path traversal protection, tabnabbing fixes (rel=noopener). Releases page now light-themed (no "todo negro"). Docs: complete packages.md coverage for *all* pkgs + new dedicated pages (bridge/sync/connect/ui/assets etc.); recent work in RELEASES + security/comparison. Veja o RELEASES principal em espanhol e docs site para full details + packages.md / comparison.md.
 
 ## Fontes verificadas
 

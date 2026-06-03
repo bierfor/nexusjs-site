@@ -7,20 +7,20 @@ export async function load(ctx) {
   const locale = resolveLocale(ctx);
   const t = createT(locale);
   const dynamicDocs = listDocs(locale); // dogfood defineCollection.list() from @nexus_js/content
-  return { locale, t, navSections: NAV_SECTIONS, dynamicDocCount: dynamicDocs.length };
+  return { locale, t, navSections: NAV_SECTIONS, dynamicDocCount: dynamicDocs.length, cspNonce: ctx.cspNonce };
 }
 ---
 
-<div class="docs-index">
-  <h1>{pretext.t('docs.indexTitle')}</h1>
+<div class="max-w-[860px] mx-auto px-6 pb-16 pt-8">
+  <h1 class="text-[2.1rem] font-bold tracking-[-0.025em] mb-2">{pretext.t('docs.indexTitle')}</h1>
   <p class="lead">{pretext.t('docs.lead')}</p>
 
-  <div class="docs-grid">
+  <div class="grid md:grid-cols-2 gap-6 mt-8">
     {#each pretext.navSections as section}
-      <div class="docs-section">
-        <div class="section-title">{pretext.t(section.labelKey)}</div>
+      <div class="bg-surface border border-border rounded-2xl p-5">
+        <div class="font-semibold mb-3 text-sm text-muted uppercase tracking-wider">{pretext.t(section.labelKey)}</div>
         {#each section.items as item}
-          <a href="/docs/{item.slug}{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="doc-link">
+          <a href="/docs/{item.slug}{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--bg2)] text-sm">
             <span class="emoji">{item.emoji}</span>
             <span>{pretext.t(item.labelKey)}</span>
           </a>
@@ -29,76 +29,12 @@ export async function load(ctx) {
     {/each}
   </div>
 
-  <div class="extra-links">
+  <div class="mt-10 text-sm flex items-center gap-2">
     <a href="/releases{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}">📋 Releases</a>
     <span class="doc-count">({pretext.dynamicDocCount} docs loaded via content.list())</span>
   </div>
 </div>
 
-<style>
-  .docs-index {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-  }
-
-  .docs-index h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .docs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .docs-section {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-  }
-
-  .section-title {
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .doc-link {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.45rem 0.5rem;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-    margin-bottom: 2px;
-  }
-
-  .doc-link:hover {
-    background: var(--surface);
-  }
-
-  .doc-link .emoji {
-    font-size: 1.1em;
-    width: 1.6em;
-    display: inline-block;
-  }
-
-  .extra-links {
-    margin-top: 2.5rem;
-    font-size: 1rem;
-  }
-
-  .doc-count {
-    color: var(--muted);
-    font-size: 0.85em;
-    margin-left: 0.5rem;
-  }
+<style nonce="{pretext.cspNonce}">
+  /* Tailwind powered */
 </style>

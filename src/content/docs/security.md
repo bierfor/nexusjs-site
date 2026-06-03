@@ -40,7 +40,8 @@ export default {
 
 Hardened Mode enables:
 
-- Strict CSP with nonces
+- Strict CSP with nonces (full cspNonce support in load() + nonce attrs on inline <style>/<script> for custom)
 - Security headers (HSTS, X-Frame-Options, etc.)
-- Build-time dependency CVE scanning
-- Secret leak detection
+- Build-time dependency CVE scanning (via audit)
+- Secret leak detection (compiler ghost wall)
+- Recent: CSP tightened (no unused broad sources), tabnabbing + path-traversal protections applied in docs site as dogfood.

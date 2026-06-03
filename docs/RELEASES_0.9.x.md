@@ -1,8 +1,8 @@
-# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.23)
+# Nexus 0.9.x Release Notes (0.9.0 -> 0.9.24)
 
 Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evidencia verificable.
 
-**0.9.23** (current): Major DX + Content + SEO improvements. See detailed sections below + packages.md in the docs site.
+**0.9.24** (current): Documentation and UI/style polish (white/black theme consistency, black logo on light backgrounds, improved code block styling with CSS vars), full package documentation coverage, security hardening follow-ups. See detailed sections below + packages.md in the docs site. Previous 0.9.23 notes below.
 
 ## Fuentes verificadas
 
@@ -45,7 +45,17 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 
 ---
 
-## Detalle por versión (0.9.23 -> 0.9.0)
+## Detalle por versión (0.9.24 -> 0.9.0)
+
+### v0.9.24
+- Documentation updates to reflect 0.9.24 as latest.
+- Site style improvements: refined white/light theme (blacker text #111 for better contrast on blanco backgrounds) and black/dark code styles (centralized --code-* CSS vars for consistency in pre, Shiki, raw sources; better borders).
+- Sidebar logo polished to pure black "N" on white with strong borders and hovers ("todo en blanco" consistency).
+- Releases page and raw source use light vars where appropriate, dark code blocks polished.
+- Full documentation coverage: expanded packages.md with all ~25 packages, new dedicated pages for bridge, sync, connect, ui, serialize, types, vite-plugin-nexus.
+- Extended RELEASES notes with recent site UI/security/doc work.
+- All in "modo correcto" (load/pretext, @nexus_js/content, etc.).
+- Builds and dogfooding verified.
 
 ### v0.9.23
 - **@nexus_js/content** maduro y documentado: `loadContent` con fallback i18n, `defineCollection.list()` (auto-discovery + filter/sort), `renderMarkdownAsync` + Shiki opcional (fallback silencioso), ICU plurals en `defineI18n` (parser robusto con conteo de llaves), `watchContent` + `stopAllWatchers`, `formatDate`/`formatRelative` localizado.
@@ -56,6 +66,10 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 - Mejoras en wiring: CLI atrapa CompileError y usa formatter; server hace lo mismo + páginas de error especiales para compile issues.
 - Site (nexusjs-site) actualizado a 0.9.23, migraciones a patrones puros (releases via content, TOC desde headings, i18n full, start script fix).
 - Todas las mejoras publicadas y empujadas.
+- **Mejoras UI/estilos en sitio (sidebar izquierdo "tab")**: Filtro de navegación funcional con botón clear (X), estados activos con barra accent y resaltado de sección padre, mobile con animación hamburguesa a X + backdrop blur, language switcher como control segmentado en contenedor pill, versión como link directo a releases. Logo del aside ahora negro (text-[var(--accent)]) sobre bg claro con borde para consistencia con tema "todo en blanco".
+- **Hardening de seguridad (auditoría completa)**: Soporte completo de cspNonce (ctx.cspNonce expuesto en todos los load() + nonce= en <style>/<script> inline de todas las páginas incluyendo Releases y layout). CSP ajustado: eliminado additionalScriptSrc cdnjs innecesario (no usado). Releases cambiado a sanitize: 'strict'. Protección contra path traversal en carga de docs (sanitización de slug + guardia en ruta). Fix tabnabbing: rel="noopener noreferrer" en todos los links externos target=_blank (footer, releases, edit page).
+- **Releases page**: Contenedor principal cambiado a tema claro (bg-[var(--surface)] etc) para no ser "todo negro"; raw source mantiene pre oscuro tipo código. Estilos actualizados en global.css para consistencia light.
+- Refinamientos adicionales: focus rings, espaciados, pesos, hover states, scrollbars sutiles en sidebar, todo usando vars del tema y Tailwind. Build y verificación de nonce/estilos limpia.
 
 ### v0.9.21
 - Endpoint `/_nexus/global.css` en dev: descubre automáticamente `src/app.css|global.css|index.css|styles.css`.
@@ -144,4 +158,12 @@ Para adoptar todas las mejoras acumuladas de la rama:
 ```bash
 npm install @nexus_js/cli@0.9.21 @nexus_js/server@0.9.21 @nexus_js/compiler@0.9.21 @nexus_js/graphql@0.9.21
 ```
+
+## Site & docs improvements (ongoing in 0.9.23/0.9.24+ dogfooding)
+- Sidebar izquierdo ("tab") major polish: filtro con clear (X), active states + section highlight, mobile X animation + blur backdrop, language segmented pill, version link to releases.
+- Logo del aside ahora negro (text-[var(--accent)]) + bg claro + borde para consistencia con tema light "todo en blanco".
+- Security hardening: cspNonce full support (ctx + nonce attrs en todos los <style>/<script> inline, incl. Releases), CSP tightened (removido cdnjs unused), releases a strict sanitize, path traversal protection en doc slugs, tabnabbing fixes (rel=noopener en todos target=_blank).
+- Releases page: contenedor light (bg vars) en vez de "todo negro"; raw source pre código.
+- Docs: packages.md ahora cubre *todos* los paquetes (tabla completa + secciones para assets/bridge/sync/connect/ui/serialize/types/vite/etc.); nuevas páginas dedicadas (bridge.md, sync.md, connect.md, ui.md, etc.); actualizaciones en releases/security/comparison para latest features y site work.
+- Todo en modo correcto + site como perfecto dogfood.
 

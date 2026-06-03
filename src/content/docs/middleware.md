@@ -17,6 +17,12 @@ export async function auth(ctx: NexusContext, next: () => Promise<Response>) {
 ```
 
 ## Applying middleware
+Register in `nexus.config.ts` or per-route.
+
+Edge compatible (Web Standards Request/Response). Use with security (rateLimit, vault) in load() or actions.
+
+See @nexus_js/middleware README for full pipeline examples.
+
 
 ```svelte
 ---

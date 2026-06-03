@@ -13,7 +13,7 @@ export async function load(ctx) {
     contentDir: 'docs',
     locale,
     includeRaw: true,
-    sanitize: 'permissive', // release notes are trusted source; keep formatting
+    sanitize: 'strict', // use strict for better security (details/summary etc are in default allowlist)
   });
 
   const releaseNotes = releaseItem.raw || releaseItem.html || 'Release notes not available for this language yet.';
@@ -26,17 +26,17 @@ export async function load(ctx) {
     canonical: `https://nexusjs.dev/releases${locale !== 'en' ? '?lang=' + locale : ''}`,
   };
 
-  return { locale, t, releaseNotes, renderedRelease, head };
+  return { locale, t, releaseNotes, renderedRelease, head, cspNonce: ctx.cspNonce };
 }
 ---
 
-<div class="releases-page">
-  <div class="releases-header">
-    <h1>{pretext.t('releases.title')}</h1>
+<div class="max-w-[920px] mx-auto px-6 pb-16 pt-8">
+  <div class="mb-8">
+    <h1 class="text-[2.1rem] font-bold tracking-[-0.025em] mb-2">{pretext.t('releases.title')}</h1>
     <p class="lead">{pretext.t('releases.lead')}</p>
   </div>
 
-  <div class="releases-content">
+  <div class="bg-[var(--surface)] text-[var(--text)] p-6 rounded-2xl overflow-auto text-sm leading-relaxed border border-[var(--border)]">
     <!-- Rendered via @nexus_js/content (modo correcto) for nice HTML (headings, lists). -->
     <div class="prose release-notes">
       {pretext.renderedRelease}
@@ -48,67 +48,11 @@ export async function load(ctx) {
     </details>
   </div>
 
-  <div class="releases-footer">
-    <p>Full source available in the <a href="https://github.com/bierfor/nexus" target="_blank">GitHub repository</a>.</p>
+  <div class="mt-8 pt-6 border-t border-border text-sm text-muted">
+    <p>Full source available in the <a href="https://github.com/bierfor/nexus" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
   </div>
 </div>
 
-<style>
-  .releases-page {
-    max-width: 920px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-  }
-
-  .releases-header {
-    margin-bottom: 2rem;
-  }
-
-  .releases-header h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .releases-content {
-    background: #0f0f11;
-    color: #e4e4e7;
-    padding: 1.5rem;
-    border-radius: 12px;
-    overflow-x: auto;
-    font-size: 14px;
-    line-height: 1.55;
-  }
-
-  .releases-content pre {
-    margin: 0;
-    white-space: pre-wrap;
-    font-family: var(--mono);
-  }
-
-  .releases-footer {
-    margin-top: 2rem;
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-
-  .raw-source {
-    margin-top: 1.5rem;
-    border-top: 1px solid #333;
-    padding-top: 1rem;
-  }
-
-  .raw-source summary {
-    cursor: pointer;
-    color: var(--accent2);
-    font-size: 0.85rem;
-  }
-
-  .raw-source pre {
-    background: #0a0a0c;
-    padding: 1rem;
-    border-radius: 8px;
-    font-size: 12px;
-    margin-top: 0.5rem;
-    overflow: auto;
-  }
+<style nonce="{pretext.cspNonce}">
+  /* Tailwind powered */
 </style>
