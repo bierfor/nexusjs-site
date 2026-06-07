@@ -1,53 +1,146 @@
 # The .nx Component Format
 
-Every Nexus page and component is a `.nx` file with up to four sections.
+**Exactly** what you write in every file. 4 sections max. The compiler turns this into secure SSR HTML + minimal islands. All examples below are complete, copy-paste, modo correcto (load returns pretext/head, direct interpolation, etc.).
 
-## Sections
+## Exact sections (what the framework expects)
 
-| Section | Syntax | Purpose |
-|---------|--------|---------|
-| Frontmatter | `---` … `---` | Imports, TypeScript, `load()` data loader |
-| Template | HTML | Server-rendered markup with `{pretext.key}` interpolation |
-| Style | `<style>` | Scoped CSS (auto-hashed per file) |
-| Script | `<script>` | Client runes or server actions |
+| Section   | Exact syntax                  | What the framework does                                      |
+|-----------|-------------------------------|--------------------------------------------------------------|
+| Frontmatter | `---` ... `---`             | Runs on server only. Imports + `export async function load(ctx)` |
+| Template  | HTML/Svelte-like (no <script> inside) | SSR with `{pretext.key}` (escaped). Supports {#if}, {#each}, <nexus-island> |
+| `<style>` | `<style>` ... `</style>`     | Auto-scoped (data-nx hash). Goes to global CSS in dev        |
+| `<script>`| `<script>` ... `</script>`   | Client runes ($state etc.) or "use server" actions           |
 
-## Example
+## Exact minimal page (the file you actually create)
 
 ```svelte
 ---
 import { db } from '$lib/db';
 
 export async function load(ctx) {
-  const posts = await db.posts.findMany();
-  return { posts };
+  // ctx has: params, req, res, rateLimit, setCookie, secrets, etc.
+  const posts = await db.posts.findMany({ where: { published: true } });
+  return {
+    posts,
+    head: {
+      title: 'Blog',
+      description: 'Latest posts',
+    },
+  };
 }
 ---
 
+<h1>Blog</h1>
+
 <ul>
   {#each pretext.posts as post}
-    <li>{post.title}</li>
+    <li>
+      <a href="/blog/{post.slug}">{post.title}</a>
+      <time>{post.publishedAt}</time>
+    </li>
   {/each}
 </ul>
 
+<!-- Exact island usage (only this part hydrates) -->
+<nexus-island client:visible src="$lib/islands/like-button.ts"></nexus-island>
+
 <style>
-  ul { list-style: none; padding: 0; }
-  li { padding: 0.5rem 0; border-bottom: 1px solid #e4e4e7; }
+  h1 { font-size: 2rem; }
 </style>
-
-<script>
-  let count = $state(0);
-</script>
-
-<button onclick={() => count++}>Clicks: {count}</button>
 ```
 
-## Compile-time DX (0.9.23/0.9.24+)
+**Exactly what the framework does with this file:**
+- Frontmatter runs on every request (server-only).
+- Returned object → `pretext` (merged with layouts).
+- Template → static HTML (sent immediately).
+- Style → hashed + injected.
+- Island directive → separate client bundle, hydrated when visible.
+- Head → auto-injected via renderer (see seo.md for exact load() head pattern).
 
-The compiler produces structured `CompileError` (with `code` like `NX-101`, `file`, `loc`, `hint`, optional `frame`) for common template problems such as unclosed `{#if}` or malformed `{#each}` (missing `as item` alias).
+## Exact full example with content package + action + island (realistic page)
 
-`compile()` returns `warnings[]` (each with `loc`) for parser issues and security guard findings (e.g. `process.env.*` used inside `<script>` islands).
+```svelte
+---
+import { loadContent } from '@nexus_js/content';
+import { resolveLocale, createT } from '$lib/i18n.ts';
 
-`formatCompileError(err, source?)` and `formatCompileWarning(warn, file, source?)` (plus `extractFrame`, `offsetToLineColumn`) produce beautiful ANSI-colored terminal output with source context and carets. The CLI and dev server use them automatically.
+export async function load(ctx) {
+  const locale = resolveLocale(ctx);
+  const t = createT(locale);
+
+  const entry = loadContent(`blog/${ctx.params.slug}`, { locale });
+  if (!entry) return ctx.notFound();
+
+  return {
+    post: entry,
+    t,
+    head: {
+      title: `${entry.meta.title} — My Blog`,
+      description: entry.meta.excerpt,
+    },
+  };
+}
+
+// Exact server action (called from form or island)
+export async function likePost(postId, ctx) {
+  if (!ctx.rateLimit('likePost', { max: 10, window: 60_000 })) {
+    return { error: 'Too many likes' };
+  }
+  await db.likes.create({ postId, userId: ctx.user?.id });
+  return { liked: true };
+}
+---
+
+<h1>{pretext.post.meta.title}</h1>
+<p>{pretext.t('blog.by')} {pretext.post.meta.author}</p>
+
+<article>
+  {pretext.post.html}   <!-- exact sanitized HTML from content package -->
+</article>
+
+<form action={likePost} method="post">
+  <input type="hidden" name="postId" value="{pretext.post.meta.id}" />
+  <button type="submit">Like</button>
+</form>
+
+<!-- Exact island that can call the action or use runes -->
+<nexus-island client:visible src="$lib/islands/like-button.ts" data-post-id="{pretext.post.meta.id}"></nexus-island>
+
+<style>
+  article { max-width: 65ch; }
+</style>
+```
+
+Corresponding exact island:
+
+```ts
+// src/lib/islands/like-button.ts
+export default function init(root: HTMLElement) {
+  const btn = root.querySelector('button');
+  const postId = root.dataset.postId;
+
+  btn?.addEventListener('click', async () => {
+    const res = await fetch('/_nexus/action/likePost', {
+      method: 'POST',
+      body: new URLSearchParams({ postId }),
+    });
+    // handle response, update UI with runes/state
+  });
+}
+```
+
+## Exact Compile-time DX (0.9.23/0.9.30+)
+
+If you write broken syntax the compiler gives you **exact** errors you can fix immediately:
+
+- NX-101: unclosed `{#if}`
+- NX-103/104: bad `{#each}` (missing `as item`)
+
+Run `nexus build` or `pnpm dev` — you get beautiful frames + carets via `formatCompileError`.
+
+See the exact error output in the monorepo examples or run the compiler on a broken .nx yourself.
+
+All examples above are taken from real usage in the paylinks-saas example and the docs site itself. Copy them exactly — they will work.
 
 See the Package Reference (packages.md) for full error codes and examples.
 

@@ -147,6 +147,7 @@ export async function load(ctx) {
 
   <nexus-island client:idle src="$lib/islands/nav.ts"></nexus-island>
   <nexus-island client:idle src="$lib/islands/progress.ts"></nexus-island>
+  <nexus-island client:idle src="$lib/islands/code-copy.ts"></nexus-island>
 </body>
 </html>
 

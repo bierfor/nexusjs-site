@@ -76,7 +76,7 @@ export async function load(ctx) {
 
   <div class="mt-12 pt-6 border-t border-[var(--border)]">
     <a href="/docs" class="text-[var(--accent2)] font-medium no-underline hover:underline">← {pretext.t('docs.backToIndex')}</a>
-    <a href="https://github.com/bierfor/nexusjs-site/edit/main/src/content/docs/{pretext.slug}.md" target="_blank" rel="noopener noreferrer" class="ml-6 text-[var(--accent2)] font-medium no-underline hover:underline">Edit this page ↗</a>
+    <a href="https://github.com/bierfor/nexusjs-site/edit/main/src/content/docs/{pretext.slug}{pretext.locale && pretext.locale !== 'en' ? '.' + pretext.locale : ''}.md" target="_blank" rel="noopener noreferrer" class="ml-6 text-[var(--accent2)] font-medium no-underline hover:underline">Edit this page ↗</a>
   </div>
 </div>
 

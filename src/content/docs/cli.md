@@ -1,20 +1,30 @@
 # CLI Reference
 
-All Nexus commands: `nexus <command> [options]`
+**Exact** commands and what they do.
 
-| Command | Description |
-|---------|-------------|
-| `nexus dev` | Start development server with HMR |
-| `nexus build` | Production build to `.nexus/output/` |
-| `nexus start` | Start production server |
-| `nexus audit` | Security audit of dependencies |
-| `nexus fix` | Auto-fix security issues |
-| `nexus studio` | Launch developer dashboard |
-| `nexus test` | Run Vitest tests |
+| Exact command you type          | Exact thing that happens |
+|---------------------------------|--------------------------|
+| `nexus dev --port 3000`        | Starts dev server, watches .nx/.ts, HMR, serves /_nexus/global.css etc. |
+| `nexus build`                  | Produces optimized server + client bundles in `.nexus/output/` |
+| `nexus start`                  | Runs the production server from the build output |
+| `nexus audit`                  | Runs OSV CVE scan + secret leak + unused dep checks (same as build-time) |
+| `nexus fix`                    | Auto-applies safe fixes from audit |
+| `nexus studio`                 | Real-time dashboard (islands, actions, cache, store) |
+| `nexus test`                   | Runs Vitest with SSR + island + action helpers |
+| `nexus routes`                 | Prints the resolved route tree |
+| `nexus check`                  | Type-checks without running the server |
 
-During `nexus dev` and `nexus build`, the compiler now surfaces rich structured errors (CompileError with code like NX-101 for unclosed `{#if}`, loc, hint) using `formatCompileError` / `formatCompileWarning`. You get ANSI-colored output with source frames and carets automatically. See the compiler DX section in packages.md.
+During `nexus dev` and `nexus build` you get **exact** structured errors:
 
-## nexus.config.ts
+```text
+◆ NX-101  Unclosed {#if}
+  src/routes/checkout/+page.nx:18:3
+  hint: Add {/if} or use {:else if}
+```
+
+`formatCompileError` / `formatCompileWarning` + frames are used automatically by the CLI and dev server.
+
+## Exact nexus.config.ts (the one you copy)
 
 ```ts
 export default {
@@ -26,3 +36,5 @@ export default {
   css: { entry: './src/global.css' },
 };
 ```
+
+See the other pages in this list (especially security.md for the exact hardened + cspNonce story, and the new dedicated pages) for more exact usage of everything the CLI wires up. All commands above are implemented in @nexus_js/cli and are the ones used to develop and build this very documentation site.

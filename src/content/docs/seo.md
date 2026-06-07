@@ -1,53 +1,125 @@
 # SEO & Head Management
 
-Server-side metadata injection with client-side reactive updates.
+**Exact** way to manage <title>, meta, og, twitter, JSON-LD etc. using only `load()` + the `head` object. The renderer does everything else.
 
-## Recommended: return `head` from `load()`
-
-The easiest and most powerful way (auto-injected by the renderer, no manual template work needed):
+## Exact recommended pattern: return `head` from `load()`
 
 ```ts
-// src/routes/+page.nx or any layout/page
+// src/routes/blog/[slug]/+page.nx  (or any layout/page)
 export async function load(ctx) {
-  const post = await db.posts.find(ctx.params.id);
+  const post = await db.posts.find(ctx.params.slug);
+  if (!post) return ctx.notFound();
 
   return {
     post,
-    // This object is automatically picked up, passed through defineHead(ctx),
-    // flushed, rendered to safe HTML, and injected into <head> (replaces <!--nexus:head--> or injects before </head>).
     head: {
-      title: `${post.title} — Nexus.js`,
-      description: post.excerpt,
-      canonical: `https://nexusjs.dev/blog/${post.slug}`,
+      title: `${post.title} — My Blog`,
+      description: post.excerpt || post.summary?.slice(0, 160),
+      canonical: `https://example.com/blog/${post.slug}`,
+      robots: post.draft ? 'noindex' : undefined,
       og: {
         type: 'article',
-        image: post.cover,
+        url: `https://example.com/blog/${post.slug}`,
+        title: post.title,
+        description: post.excerpt,
+        image: post.cover || post.images?.[0],
         imageAlt: post.title,
+        siteName: 'My Blog',
       },
       twitter: {
         card: 'summary_large_image',
+        site: '@myblog',
+      },
+      // You can also return JSON-LD as a string or object (renderer will serialize it)
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        author: { '@type': 'Person', name: post.author },
       },
     },
   };
 }
 ```
 
-In your root layout just keep the marker:
+In your root `+layout.nx` put **exactly** this marker (nothing else needed):
 
 ```html
 <head>
-  ...static tags...
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!--nexus:head-->
 </head>
 ```
 
-Layouts and pages are merged (deeper/child wins). Perfect for per-page SEO while sharing base tags.
+The framework:
+- Calls `defineHead(ctx)` with everything returned from the route chain
+- Flushes it
+- Renders safe HTML
+- Injects it (replaces the marker or appends before </head>)
 
-## Layout inheritance
+## Exact layout + page merging (child wins)
 
-Return partial `head` objects from layouts and let pages override only what they need:
+Root layout returns base tags:
 
 ```ts
+export async function load(ctx) {
+  return {
+    head: {
+      title: 'My Blog',
+      description: 'Thoughts on code and life',
+    },
+  };
+}
+```
+
+A page can override only what it needs:
+
+```ts
+export async function load(ctx) {
+  return {
+    head: {
+      title: `${post.title} — My Blog`,   // overrides
+      description: post.excerpt,          // overrides
+      // canonical, og, etc. added on top
+    },
+  };
+}
+```
+
+## Exact client-side reactive head (useHead in islands)
+
+```ts
+// inside an island or a <script> with client: directive
+import { useHead } from '@nexus_js/head';
+
+let title = $state('Dynamic Title');
+
+useHead(() => ({
+  title: `${title} — Live`,
+  description: 'Updated on the client',
+}));
+```
+
+Changes are reflected immediately in the document head.
+
+## Exact usage with @nexus_js/content (MD frontmatter → head)
+
+```ts
+export async function load(ctx) {
+  const entry = loadContent(`blog/${ctx.params.slug}`, { locale: ctx.locale });
+  return {
+    entry,
+    head: {
+      title: entry.meta.title,
+      description: entry.meta.description,
+      og: { image: entry.meta.image },
+    },
+  };
+}
+```
+
+All the patterns above are taken directly from the @nexus_js/head + server renderer code and real usage in the docs site + examples. Use them exactly. See the other pages in this list (quickstart.md for the minimal load + head, server-actions.md for actions that also return head/redirect, content usage in packages.md).
 // src/routes/+layout.nx
 export async function load(ctx) {
   return {

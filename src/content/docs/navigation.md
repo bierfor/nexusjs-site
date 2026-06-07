@@ -1,6 +1,22 @@
 # SPA Navigation
 
-Server-Driven DOM Morphing. No VDOM diff, no full page reload. Islands keep their state.
+**Exact** client navigation that feels like a SPA but is driven by the server.
+
+```svelte
+<a href="/about" data-nexus-link>Go to about</a>
+
+<script>
+  // or imperatively
+  import { goto } from '@nexus_js/runtime';
+  goto('/dashboard', { replace: true });
+</script>
+```
+
+The framework does a server fetch for the new page, morphs the DOM (preserving island state and $pretext), and updates history. No client-side router bundle.
+
+See store.md for how $pretext survives the morph, islands.md for state that lives inside islands, and server-actions.md for actions that return `{ redirect: '...' }` (the navigation layer respects them).
+
+All of the above (data-nexus-link, goto, morphing rules, state preservation) are the exact implementation in the runtime used by the docs site itself. Use them exactly as shown. Islands keep their state.
 
 ## Declarative links
 

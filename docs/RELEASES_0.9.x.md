@@ -2,7 +2,7 @@
 
 Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evidencia verificable.
 
-**0.9.24** (current): Documentation and UI/style polish (white/black theme consistency, black logo on light backgrounds, improved code block styling with CSS vars), full package documentation coverage, security hardening follow-ups. See detailed sections below + packages.md in the docs site. Previous 0.9.23 notes below.
+**0.9.24** (current): Full multi-language support for all child documentation content ("todo el contenido del hijo"): every docs page now has accurate .es.md + .pt.md translations (matching the exact "modo correcto" usage examples added previously); only Installation previously worked with lang switch. Standardized MD layout (bare slug.md = English default for collection loadContent compatibility + ${slug}.${locale}.md variants), updated resolveDocPath + edit links + nav ?lang= to preserve locale for child prose. UI i18n fixes in PT keys. Documentation + UI/style polish (white/black theme consistency, black logo on light backgrounds, improved code block styling with CSS vars), full package documentation coverage, security hardening follow-ups. See detailed sections below + packages.md in the docs site. Previous 0.9.23 notes below.
 
 ## Fuentes verificadas
 
@@ -20,6 +20,8 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 
 | Versión | Estado de evidencia | Mejoras documentadas |
 |---|---|---|
+| `0.9.24` | Alta | Actualizaciones de documentación y pulido de UI/estilos (consistencia de temas blanco/negro, logo negro en fondos claros, estilos de bloques de código con vars CSS); cobertura completa de docs de paquetes (todos ~25 en packages.md + nuevas páginas dedicadas para bridge/sync/connect/ui/serialize/types/vite-plugin-nexus); follow-ups de seguridad (cspNonce, ajuste CSP, sanitize strict en releases, protección path traversal, fixes tabnabbing). |
+| `0.9.23` | Alta | Mejoras mayores en DX + Contenido + SEO (paquete content completo, head request-scoped + inyección via load(), DX de compiler con errores estructurados + formatters). Sitio actualizado con patrones puros (releases via content, TOC desde headings, i18n full, fix start script). Pulido UI: sidebar (filtro+clear, estados activos, animación X mobile), logo negro, etc. |
 | `0.9.21` | Alta | Soporte CSS global / Tailwind / PostCSS en dev: endpoint `/_nexus/global.css` + config `css.entry`. |
 | `0.9.20` | Alta | Runtime navigation: evita reinyectar stylesheets ya presentes en `<head>` (menos FOUC en SPA). |
 | `0.9.19` | Alta | Cache de assets estáticos (`ETag`, `Last-Modified`) + deduplicación de stylesheets inyectados por SSR. |
@@ -156,7 +158,7 @@ Documento consolidado de la rama `0.9.x`, versión por versión, usando solo evi
 Para adoptar todas las mejoras acumuladas de la rama:
 
 ```bash
-npm install @nexus_js/cli@0.9.21 @nexus_js/server@0.9.21 @nexus_js/compiler@0.9.21 @nexus_js/graphql@0.9.21
+npm install @nexus_js/cli@0.9.24 @nexus_js/server@0.9.24 @nexus_js/compiler@0.9.24 @nexus_js/graphql@0.9.24
 ```
 
 ## Site & docs improvements (ongoing in 0.9.23/0.9.24+ dogfooding)

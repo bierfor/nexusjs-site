@@ -1,36 +1,158 @@
-Every component is static by default. Only the interactive parts ship JavaScript.
+# Islands Architecture
 
-### How it works
+Nexus ships **zero JavaScript by default**. Only the components you explicitly mark with a `client:*` directive receive a browser bundle. Everything else is server-rendered static HTML.
 
-Nexus compiles `.nx` files to static HTML by default. If a component contains client runes (`$state`, `$derived`) or a `client:*` directive, the compiler extracts it as an **island** — a self-contained client bundle that hydrates only that part of the page.
+This is "islands architecture": small, self-contained interactive regions in a sea of static markup.
 
-### Island directives
+---
 
-| Directive                    | Behavior                          |
-|-----------------------------|-----------------------------------|
-| `client:load`               | Hydrate immediately               |
-| `client:idle`               | Hydrate when browser is idle      |
-| `client:visible`            | Hydrate when scrolled into view   |
-| `client:media="..."`        | Hydrate on media query            |
-| `server:only`               | Never hydrate (pure SSR)          |
+## Hydration directives
 
-### Example
+Add the attribute directly to any element in your `.nx` template:
+
+| Directive | Behavior |
+|-----------|----------|
+| `client:load` | Hydrate immediately when the page loads (critical UI: header, cart) |
+| `client:idle` | Hydrate after the browser is idle (good default for most interactions) |
+| `client:visible` | Hydrate only when scrolled into the viewport (best for performance) |
+| `client:media="(min-width: 768px)"` | Hydrate only when the media query matches (responsive conditional) |
+| `server:only` | Never ships JS; pure static HTML (default if no directive is present) |
+
+---
+
+## Two kinds of islands
+
+### 1. Inline islands
+
+Write the interactive logic directly inside the `.nx` file. The compiler extracts the client code automatically.
 
 ```svelte
-<nexus-island client:visible src="$lib/islands/counter.ts"></nexus-island>
+<div client:visible>
+  <script>
+    let count = $state(0);
+  </script>
+  <button onclick={() => count++}>
+    Clicked {count} times
+  </button>
+</div>
+```
+
+Use inline islands for small, one-off interactions that don't need reuse.
+
+### 2. External islands (recommended)
+
+Keep islands in `src/lib/islands/` and reference them via `src`. This is the preferred pattern for any non-trivial client logic.
+
+```svelte
+<!-- src/routes/counter/+page.nx -->
+---
+export async function load(ctx) {
+  return { initialCount: 42 };
+}
+---
+
+<h1>Counter demo</h1>
+
+<nexus-island
+  client:visible
+  src="$lib/islands/counter.ts"
+  data-initial="{pretext.initialCount}">
+</nexus-island>
 ```
 
 ```ts
 // src/lib/islands/counter.ts
-export default function init() {
+export default function init(root: HTMLElement) {
   let count = $state(0);
-  const btn = document.getElementById('counter-btn');
-  btn?.addEventListener('click', () => count++);
+
+  const btn = document.createElement('button');
+  btn.textContent = `Count: ${count}`;
+  root.appendChild(btn);
+
+  $effect(() => {
+    btn.textContent = `Count: ${count}`;
+  });
+
+  btn.addEventListener('click', () => count++);
+
+  // Read server data passed via data-* attributes
+  const initial = root.dataset.initial;
+  if (initial) count = parseInt(initial, 10);
 }
 ```
 
-### Benefits
+**Island contract:**
+- File must export `export default function init(root: HTMLElement, data?: any)`.
+- `root` is the `<nexus-island>` element itself.
+- The framework sets up the Svelte 5 runes context before calling `init`, so `$state`, `$effect`, and `$derived` work immediately.
+- You can read `data-*` attributes from `root.dataset` for server-to-client data transfer.
 
-- **Zero JS by default** — static pages ship no JavaScript
-- **Surgical hydration** — only interactive components pay the JS cost
-- **State survives navigation** — islands keep their state during SPA morphing
+---
+
+## Default hydration strategy
+
+You can set a project-wide default in `nexus.config.ts` so you don't have to repeat the directive on every island:
+
+```ts
+export default {
+  defaultHydration: 'client:visible', // or 'client:idle' / 'client:load'
+};
+```
+
+With this config, `<nexus-island src="$lib/islands/counter.ts">` without any directive will use `client:visible`.
+
+---
+
+## State survival across navigation
+
+Because islands are self-contained, their internal `$state` survives SPA navigation (see `navigation.md` for `goto` and link behavior). The DOM is morphed, but the island's JS context and state stay alive.
+
+---
+
+## Islands + server actions (realistic pattern)
+
+```svelte
+---
+export async function load(ctx) {
+  const likes = await db.likes.countForPost(ctx.params.id);
+  return { likes };
+}
+
+export async function like(postId) {
+  "use server";
+  await db.likes.create({ postId });
+  return { success: true };
+}
+---
+
+<nexus-island
+  client:visible
+  src="$lib/islands/like-button.ts"
+  data-post-id="{pretext.postId}"
+  data-initial-likes="{pretext.likes}">
+</nexus-island>
+```
+
+The island can call the action via `fetch` to `/_nexus/action/like` (the framework wires the endpoint automatically) and update its local state without a full reload.
+
+---
+
+## External islands in v0.9.30+
+
+In v0.9.30, external islands are served directly from `/_nexus/lib/islands/*.js`. The compiler rewrites `$lib/islands/counter.ts` to the correct public URL. This works for:
+
+- `.ts` and `.tsx` source files (auto-transpiled in dev)
+- Relative imports inside the island file (rewritten to `.js`)
+- Production builds (hashed bundles in `.nexus/output/lib/`)
+
+If an island file imports utilities from `$lib/utils.ts`, those are also served automatically via `/_nexus/lib/`.
+
+---
+
+## Best practices
+
+1. **Prefer `client:visible`** for anything below the fold; it defers JS download and execution until the user actually needs it.
+2. **Use external islands** (`src="$lib/islands/..."`) for anything longer than a few lines; keeps `.nx` files clean and enables reuse.
+3. **Pass data via `data-*` attributes** instead of global variables; it's explicit, SSR-safe, and survives hydration.
+4. **Keep islands focused**; one island per interactive concern (e.g., one for the mobile menu, one for the reading progress bar).
+5. **Don't over-island**; if something works without JS (CSS-only accordion, native `<details>`), leave it static.

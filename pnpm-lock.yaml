@@ -9,17 +9,17 @@ importers:
   .:
     dependencies:
       '@nexus_js/cli':
-        specifier: ^0.9.24
-        version: 0.9.24(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.24)
+        specifier: ^0.9.30
+        version: 0.9.30(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.30)
       '@nexus_js/content':
-        specifier: ^0.9.24
-        version: 0.9.24(shiki@1.29.2)
+        specifier: ^0.9.30
+        version: 0.9.30(shiki@1.29.2)
       '@nexus_js/runtime':
-        specifier: ^0.9.24
-        version: 0.9.24
+        specifier: ^0.9.30
+        version: 0.9.30
       '@nexus_js/server':
-        specifier: ^0.9.24
-        version: 0.9.24(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.24)
+        specifier: ^0.9.30
+        version: 0.9.30(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.30)
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
@@ -338,8 +338,8 @@ packages:
   '@nexus_js/bridge@0.9.23':
     resolution: {integrity: sha512-PkKeeeTGIXajG0fESEFAvAP/w/a49xcBGu1Ky9sLBAhTL9+Aat0NxIIWNuDJtzeNjeVxb3aAS5kTxqaNyqipOQ==}
 
-  '@nexus_js/cli@0.9.24':
-    resolution: {integrity: sha512-TIL56k9/Q5WaJrIXIU13RZkvWuSL23QzPIhHi2TyVjYA0v8ig9QIGpDHI0vitsBycbCscOy3L0r8OuouBiad5A==}
+  '@nexus_js/cli@0.9.30':
+    resolution: {integrity: sha512-1giszIpYrIMvdq/Xzhzo56AVep4MMCzU5hGc34rNYVNot+v7E/GgB7zLc6MQNus6zUhBUupiA9iIf7tEj1GXGA==}
     hasBin: true
     peerDependencies:
       '@nexus_js/compiler': ^0.9.22
@@ -356,8 +356,8 @@ packages:
   '@nexus_js/connect@0.9.23':
     resolution: {integrity: sha512-qPW0qpAqRV+K8ulohPHeccmvd8NiqlB/BZPWX+1jsD7KKfDmp1OQU2yXqezYH4sQEKbbQ1GAggRKIeJaM5LPsw==}
 
-  '@nexus_js/content@0.9.24':
-    resolution: {integrity: sha512-8dNXsxyZt3w5XBqDPfNcPxyfVtpHP5CHCLOInSkSMa1svA/Kc8q00CULUBzHgoHLPN/Frvna7OpEbc0uIz87lQ==}
+  '@nexus_js/content@0.9.30':
+    resolution: {integrity: sha512-Sm9/3lty5DLsa97XQeOqrK6rVeY1sIjwXiAD/0nzk2Po8oXDzzZbhLsxfdI4/umLWVgnbyT5mmnoJkdhQdyCMQ==}
     peerDependencies:
       chokidar: ^4.0.0
       shiki: ^1.0.0
@@ -375,8 +375,8 @@ packages:
   '@nexus_js/router@0.9.23':
     resolution: {integrity: sha512-3cA0RBm0ST64Z2+F7sbESfgs7CwA+DusvJLVazxtgqxBgh0wxj6rrtBzVkkHl4b4Ow/ta0mXhFPN4oa7Ijk+ww==}
 
-  '@nexus_js/runtime@0.9.24':
-    resolution: {integrity: sha512-wOTP+wbUEkBJMyRvnFZJ6/Of4QzoBRLxBkjl/LULInfSZ3yvMMSxdKRha8iLsbsc5BBZSIhv+HV3tZ7xWs0Z4Q==}
+  '@nexus_js/runtime@0.9.30':
+    resolution: {integrity: sha512-zgj+gwxWS9FLjW4bHf8m9Y9NtfbcNvzhs6TEBb3FbJsVa9/Hq2ExZxOEal1XA2oxJ7xXpwqoWIyOrqmf3pNY4g==}
 
   '@nexus_js/security@0.9.23':
     resolution: {integrity: sha512-50gvVt41tasW5VBcthG74zjALZBpuRhQytlUTVu4C5lAnWw8vvgKrj1oOK71/T3vvc1zRQsByJyu/79Z+GjYKQ==}
@@ -384,8 +384,8 @@ packages:
   '@nexus_js/serialize@0.9.23':
     resolution: {integrity: sha512-aVh6W8Y2J2Vc85lBs13gBtVvKb7OfufckAjovKEYj7XLy4U7X4F318rIaIqwHO0NBPPhlFjysA5FtXjuD+25Vg==}
 
-  '@nexus_js/server@0.9.24':
-    resolution: {integrity: sha512-0iecoTo20NnkQKwAMOU4FTEXYVwL/qcW0SboOjvNw44N+N7RL23yERpnUfK7VUJfWjWvBLlhTdiAYBE6ieDvuQ==}
+  '@nexus_js/server@0.9.30':
+    resolution: {integrity: sha512-ceKzoYCDxI2p2vPjx2VY2v2xFhFP0evitpui3DETDTFUyW2Q8vg0Tp1/ydS145RltAX70/0/ajOooiqpY4nMgg==}
     peerDependencies:
       '@nexus_js/compiler': ^0.9.22
       '@nexus_js/runtime': ^0.9.22
@@ -1018,18 +1018,18 @@ snapshots:
 
   '@nexus_js/bridge@0.9.23': {}
 
-  '@nexus_js/cli@0.9.24(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.24)':
+  '@nexus_js/cli@0.9.30(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.30)':
     dependencies:
       '@nexus_js/audit': 0.9.23
       '@nexus_js/bridge': 0.9.23
       '@nexus_js/bridge-postgres': 0.9.23
       '@nexus_js/router': 0.9.23
       '@nexus_js/security': 0.9.23
-      '@nexus_js/server': 0.9.24(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.24)
+      '@nexus_js/server': 0.9.30(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.30)
       jiti: 2.7.0
     optionalDependencies:
       '@nexus_js/compiler': 0.9.23
-      '@nexus_js/runtime': 0.9.24
+      '@nexus_js/runtime': 0.9.30
 
   '@nexus_js/compiler@0.9.23':
     dependencies:
@@ -1039,21 +1039,21 @@ snapshots:
 
   '@nexus_js/connect@0.9.23': {}
 
-  '@nexus_js/content@0.9.24(shiki@1.29.2)':
+  '@nexus_js/content@0.9.30(shiki@1.29.2)':
     dependencies:
       marked: 15.0.12
     optionalDependencies:
       shiki: 1.29.2
 
-  '@nexus_js/head@0.9.23(@nexus_js/runtime@0.9.24)':
+  '@nexus_js/head@0.9.23(@nexus_js/runtime@0.9.30)':
     dependencies:
-      '@nexus_js/runtime': 0.9.24
+      '@nexus_js/runtime': 0.9.30
 
   '@nexus_js/router@0.9.23':
     dependencies:
       '@nexus_js/compiler': 0.9.23
 
-  '@nexus_js/runtime@0.9.24':
+  '@nexus_js/runtime@0.9.30':
     dependencies:
       '@nexus_js/serialize': 0.9.23
 
@@ -1061,17 +1061,17 @@ snapshots:
 
   '@nexus_js/serialize@0.9.23': {}
 
-  '@nexus_js/server@0.9.24(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.24)':
+  '@nexus_js/server@0.9.30(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.30)':
     dependencies:
       '@nexus_js/assets': 0.9.23
       '@nexus_js/connect': 0.9.23
-      '@nexus_js/head': 0.9.23(@nexus_js/runtime@0.9.24)
+      '@nexus_js/head': 0.9.23(@nexus_js/runtime@0.9.30)
       '@nexus_js/router': 0.9.23
       '@nexus_js/security': 0.9.23
       '@nexus_js/serialize': 0.9.23
     optionalDependencies:
       '@nexus_js/compiler': 0.9.23
-      '@nexus_js/runtime': 0.9.24
+      '@nexus_js/runtime': 0.9.30
 
   '@shikijs/core@1.29.2':
     dependencies:

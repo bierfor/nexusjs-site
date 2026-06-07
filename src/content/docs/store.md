@@ -1,6 +1,29 @@
 # Global State Store
 
-Shared state across islands and pages. Hydration Miss = 0. State is never lost during SPA navigation.
+**Exact** $pretext and global store usage.
+
+```svelte
+<script>
+  // exact reactive access to server data that survived hydration
+  const user = $pretext.user;
+  let theme = $sync('theme', 'light');   // see runes.md
+</script>
+
+<p>Welcome, {user.name}</p>
+```
+
+In load() you return whatever you want:
+
+```ts
+export async function load(ctx) {
+  return {
+    user: await getCurrentUser(ctx),
+    // becomes available as $pretext.user on client (and pretext.user on server)
+  };
+}
+```
+
+See navigation.md for the exact SPA morphing that keeps this state alive, and islands.md for how islands read/write it. The $pretext rune and the merge rules are implemented exactly in the runtime and used throughout the docs site examples. State is never lost during SPA navigation.
 
 ## Global store
 

@@ -1,5 +1,6 @@
 ---
 import { resolveLocale, createT, langHref } from '$lib/i18n.ts';
+import { listDocs } from '$lib/docs.ts';
 
 export async function load(ctx) {
   const locale = resolveLocale(ctx);
@@ -9,6 +10,7 @@ export async function load(ctx) {
     es: langHref(ctx.url, 'es'),
     pt: langHref(ctx.url, 'pt'),
   };
+  const docCount = listDocs(locale).length;
 
   const head = {
     title: t('meta.title'),
@@ -26,7 +28,7 @@ export async function load(ctx) {
     },
   };
 
-  return { locale, t, langLinks, head, cspNonce: ctx.cspNonce };
+  return { locale, t, langLinks, head, cspNonce: ctx.cspNonce, docCount };
 }
 ---
 
@@ -43,7 +45,7 @@ export async function load(ctx) {
     <p class="hero-subtitle text-[1.125rem] text-muted max-w-[560px] mx-auto mb-7 leading-[1.7]">{pretext.t('hero.subtitle')}</p>
 
     <div class="flex flex-wrap gap-3 justify-center mb-10">
-      <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="hero-cta btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-accent text-white no-underline hover:bg-[#27272a] active:translate-y-px transition shadow-md">
+      <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="hero-cta btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-accent text-white no-underline hover:bg-[var(--accent)] active:translate-y-px transition shadow-md">
         {pretext.t('hero.cta1')} →
       </a>
       <a href="https://github.com/bierfor/nexus" class="hero-cta btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-transparent text-text border-2 border-border-strong no-underline hover:border-text hover:bg-surface transition" target="_blank" rel="noopener noreferrer">
@@ -143,7 +145,7 @@ export async function load(ctx) {
   <h2 class="text-3xl font-bold tracking-tight mb-3">Ready to build?</h2>
   <p class="text-muted mb-8">Start with the docs or scaffold a project in 30 seconds.</p>
   <div class="flex flex-wrap gap-3 justify-center">
-    <a href="/docs/install{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-accent text-white no-underline hover:bg-[#27272a] shadow-md">Read the Docs →</a>
+    <a href="/docs/install{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-accent text-white no-underline hover:bg-[var(--accent)] shadow-md">Read the Docs →</a>
     <a href="/docs/quickstart{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="btn-glow inline-flex items-center gap-1.5 px-5 py-3 rounded-[10px] font-semibold text-[0.9375rem] bg-transparent text-text border-2 border-border-strong no-underline hover:border-text hover:bg-surface">Quick Start →</a>
   </div>
 </section>

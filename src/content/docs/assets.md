@@ -1,33 +1,122 @@
 # Assets — Images & Fonts
 
-Automatic AVIF/WebP conversion, responsive srcsets, blur placeholders, and font optimization.
+**Exact** usage of the zero-JS image/font pipeline. Import from `@nexus_js/assets` and interpolate the result directly in any .nx template. The helper runs on the server during render.
 
-## The `Image()` helper
+## Exact basic Image() usage (the one line you write)
 
-Nexus provides a server-side image optimizer that generates responsive `<picture>` elements with modern formats. Unlike a plain `<img>` tag, `Image()` handles format negotiation, srcsets, lazy loading, and blur placeholders automatically.
-
-### Basic usage
-
-Import `Image` from `@nexus_js/assets` and interpolate it directly in your `.nx` template:
-
-```ts
-// src/routes/+page.nx
+```svelte
 ---
 import { Image } from '@nexus_js/assets';
 ---
 
-{Image({ src: '/hero.jpg', alt: 'Hero', width: 1200, height: 600 })}
+{Image({ 
+  src: '/hero.jpg', 
+  alt: 'Hero image', 
+  width: 1200, 
+  height: 600 
+})}
 ```
 
-This outputs a `<picture>` with:
-- `<source type="image/avif">` for modern browsers
-- `<source type="image/webp">` as fallback
-- `<img>` with the original format as final fallback
-- Responsive `srcset` across breakpoints: 320, 640, 960, 1280, 1920
-- `width` and `height` attributes to prevent layout shift (CLS)
-- `loading="lazy"` and `decoding="async"` by default
+**Exactly what this produces (the HTML the framework emits):**
 
-### Fill mode (backgrounds, heroes)
+```html
+<picture>
+  <source type="image/avif" srcset="/_nexus/image/... .avif 320w, ... 640w, ..." sizes="...">
+  <source type="image/webp" ...>
+  <img src="/_nexus/image/... .jpg" width="1200" height="600" alt="Hero image" loading="lazy" decoding="async">
+</picture>
+```
+
+The optimizer (called during SSR) creates the responsive variants on the fly (or from cache) and returns the ready-to-use element.
+
+### Exact fill / hero mode (background-style images)
+
+```svelte
+{Image({ 
+  src: '/hero.jpg', 
+  alt: '', 
+  width: 1920, 
+  height: 1080, 
+  fill: true,           // makes it absolute + object-cover
+  class: 'absolute inset-0' 
+})}
+```
+
+### Exact dynamic dimensions from the filesystem (the load() pattern)
+
+```ts
+// in your +page.nx or layout
+import { getImageDimensions } from '@nexus_js/assets';
+import { resolve } from 'node:path';
+
+export async function load(ctx) {
+  const publicDir = resolve(process.cwd(), 'public');
+  const dims = await getImageDimensions('/uploads/photo.jpg', publicDir);
+
+  return {
+    photo: {
+      src: '/uploads/photo.jpg',
+      alt: 'User photo',
+      ...dims,           // { width, height }
+    },
+  };
+}
+```
+
+Then in template:
+
+```svelte
+{Image({ 
+  src: pretext.photo.src, 
+  alt: pretext.photo.alt, 
+  width: pretext.photo.width, 
+  height: pretext.photo.height 
+})}
+```
+
+### Exact unoptimized / remote / SVG usage
+
+```svelte
+<!-- Bypass optimizer completely (SVGs, GIFs, or when you want the original byte-for-byte) -->
+{Image({ src: '/logo.svg', alt: 'Logo', width: 200, height: 200, unoptimized: true })}
+
+<!-- Remote images are proxied and optimized safely (blocks private IPs etc.) -->
+{Image({ src: 'https://example.com/photo.jpg', alt: 'Remote', width: 800, height: 600 })}
+```
+
+### Exact round / avatar crops
+
+```svelte
+{Image({ 
+  src: '/avatar.jpg', 
+  alt: 'Avatar', 
+  width: 128, 
+  height: 128, 
+  round: true 
+})}
+```
+
+### Exact font optimization (the other half of the package)
+
+```ts
+// in load() or anywhere
+import { preloadFont } from '@nexus_js/assets';
+
+const font = preloadFont({
+  family: 'Inter',
+  weights: [400, 600],
+  subsets: ['latin'],
+  display: 'swap',
+});
+```
+
+Then in template (usually in root layout):
+
+```svelte
+{pretext.font}   <!-- emits the exact <link rel="preload" as="font"> + font-face rules -->
+```
+
+All the calls above (`Image({...})`, `getImageDimensions`, `preloadFont`) are the exact public API exported by `@nexus_js/assets`. They are safe to call from `load()` (they run on the server). See the package source or the monorepo examples for the precise implementation details. Combine with the patterns shown in quickstart.md, routing.md, and seo.md for full pages.
 
 When an image should stretch to fill its container:
 

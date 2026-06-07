@@ -52,9 +52,11 @@ function resolveDocPath(slug: string, locale?: string): string | undefined {
 
   const baseDir = join(process.cwd(), 'src/content/docs');
   const candidates: string[] = [];
+  // Support locale variants for non-default (en is now bare .md to match @nexus_js/content loadContent)
   if (locale && locale !== 'en') {
     candidates.push(join(baseDir, `${slug}.${locale}.md`));
   }
+  // Bare .md is English (default locale); collection loadContent uses this convention too
   candidates.push(join(baseDir, `${slug}.md`));
 
   for (const candidate of candidates) {

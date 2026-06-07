@@ -15,6 +15,16 @@ export async function load(ctx) {
   <h1 class="text-[2.1rem] font-bold tracking-[-0.025em] mb-2">{pretext.t('docs.indexTitle')}</h1>
   <p class="lead">{pretext.t('docs.lead')}</p>
 
+  <div class="mt-4 mb-6">
+    <input 
+      type="search" 
+      id="docs-search" 
+      placeholder="{pretext.t('docs.searchPlaceholder')}" 
+      class="w-full max-w-sm px-4 py-2 text-sm border border-border rounded-lg bg-surface placeholder:text-muted focus:outline-none focus:border-accent2"
+      autocomplete="off"
+    />
+  </div>
+
   <div class="grid md:grid-cols-2 gap-6 mt-8">
     {#each pretext.navSections as section}
       <div class="bg-surface border border-border rounded-2xl p-5">
@@ -34,6 +44,20 @@ export async function load(ctx) {
     <span class="doc-count">({pretext.dynamicDocCount} docs loaded via content.list())</span>
   </div>
 </div>
+
+<script nonce="{pretext.cspNonce}">
+  // Simple client-side filter for docs sections (modo correcto enhancement)
+  const search = document.getElementById('docs-search');
+  if (search) {
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase().trim();
+      document.querySelectorAll('div.grid > div').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        (card as HTMLElement).style.display = !q || text.includes(q) ? '' : 'none';
+      });
+    });
+  }
+</script>
 
 <style nonce="{pretext.cspNonce}">
   /* Tailwind powered */
