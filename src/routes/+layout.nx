@@ -2,16 +2,15 @@
 import { resolveLocale, createT, langHref } from '$lib/i18n.ts';
 import { NAV_SECTIONS } from '$lib/nav.ts';
 import { readFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
 
 function getFrameworkVersion() {
   try {
-    const req = createRequire(import.meta.url);
-    const pkgPath = req.resolve('@nexus_js/server/package.json');
+    const modUrl = import.meta.resolve('@nexus_js/server');
+    const pkgPath = new URL(modUrl).pathname.replace('/dist/index.js', '/package.json');
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
-    return pkg.version || '0.9.24';
+    return pkg.version || '0.9.31';
   } catch {
-    return '0.9.24';
+    return '0.9.31';
   }
 }
 
