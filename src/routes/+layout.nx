@@ -94,9 +94,9 @@ export async function load(ctx) {
 
     <div class="px-4 py-2.5 border-b border-border bg-[var(--bg2)]">
       <div class="inline-flex gap-0.5 p-0.5 bg-surface/60 rounded-lg border border-border/60">
-        <a href="{pretext.langLinks.en}" class="lang-switch px-2.5 py-0.5 text-[11px] font-medium tracking-wider rounded-md transition-all {pretext.locale === 'en' ? 'bg-[var(--bg2)] text-text shadow-sm border border-border' : 'text-muted hover:text-text hover:bg-[var(--bg2)]/70'}">EN</a>
-        <a href="{pretext.langLinks.es}" class="lang-switch px-2.5 py-0.5 text-[11px] font-medium tracking-wider rounded-md transition-all {pretext.locale === 'es' ? 'bg-[var(--bg2)] text-text shadow-sm border border-border' : 'text-muted hover:text-text hover:bg-[var(--bg2)]/70'}">ES</a>
-        <a href="{pretext.langLinks.pt}" class="lang-switch px-2.5 py-0.5 text-[11px] font-medium tracking-wider rounded-md transition-all {pretext.locale === 'pt' ? 'bg-[var(--bg2)] text-text shadow-sm border border-border' : 'text-muted hover:text-text hover:bg-[var(--bg2)]/70'}">PT</a>
+        <a href="{pretext.langLinks.en}" class="lang-switch px-2.5 py-0.5 text-[11px] font-medium tracking-wider rounded-md transition-all {pretext.locale === 'en' ? 'bg-[var(--bg2)] text-text shadow-sm border border-border' : 'text-muted hover:text-text hover:bg-[var(--bg2)]/70'}" data-nx-prefetch="false">EN</a>
+        <a href="{pretext.langLinks.es}" class="lang-switch px-2.5 py-0.5 text-[11px] font-medium tracking-wider rounded-md transition-all {pretext.locale === 'es' ? 'bg-[var(--bg2)] text-text shadow-sm border border-border' : 'text-muted hover:text-text hover:bg-[var(--bg2)]/70'}" data-nx-prefetch="false">ES</a>
+        <a href="{pretext.langLinks.pt}" class="lang-switch px-2.5 py-0.5 text-[11px] font-medium tracking-wider rounded-md transition-all {pretext.locale === 'pt' ? 'bg-[var(--bg2)] text-text shadow-sm border border-border' : 'text-muted hover:text-text hover:bg-[var(--bg2)]/70'}" data-nx-prefetch="false">PT</a>
       </div>
     </div>
 
@@ -113,7 +113,7 @@ export async function load(ctx) {
       {#each pretext.navSections as section}
         <div class="nav-section px-3 pt-4 pb-0.5 text-[10px] font-semibold tracking-[0.08em] text-muted/90 uppercase select-none">{pretext.t(section.labelKey)}</div>
         {#each section.items as item}
-          <a href="/docs/{item.slug}{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="nav-link group flex items-center gap-2 px-3 py-[7px] rounded-lg hover:bg-surface active:bg-[var(--surface)] transition-all duration-150 relative overflow-hidden" data-slug="{item.slug}">
+          <a href="/docs/{item.slug}{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="nav-link group flex items-center gap-2 px-3 py-[7px] rounded-lg hover:bg-surface active:bg-[var(--surface)] transition-all duration-150 relative overflow-hidden" data-slug="{item.slug}" data-nx-prefetch="hover">
             <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 bg-accent2 rounded-r-full transition-all duration-200 group-hover:h-[60%] opacity-0 group-hover:opacity-100"></span>
             <span class="text-[15px] w-5 opacity-90">{item.emoji}</span>
             <span class="text-[13px] text-text/90 group-hover:text-text transition-colors">{pretext.t(item.labelKey)}</span>
@@ -122,7 +122,7 @@ export async function load(ctx) {
       {/each}
 
       <div class="nav-section px-3 pt-4 pb-0.5 text-[10px] font-semibold tracking-[0.08em] text-muted/90 uppercase select-none">More</div>
-      <a href="/releases{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="nav-link group flex items-center gap-2 px-3 py-[7px] rounded-lg hover:bg-surface active:bg-[var(--surface)] transition-all duration-150 relative overflow-hidden">
+      <a href="/releases{pretext.locale !== 'en' ? '?lang=' + pretext.locale : ''}" class="nav-link group flex items-center gap-2 px-3 py-[7px] rounded-lg hover:bg-surface active:bg-[var(--surface)] transition-all duration-150 relative overflow-hidden" data-nx-prefetch="hover">
         <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 bg-accent2 rounded-r-full transition-all duration-200 group-hover:h-[60%] opacity-0 group-hover:opacity-100"></span>
         <span class="text-[15px] w-5 opacity-90">📋</span>
         <span class="text-[13px] text-text/90 group-hover:text-text transition-colors">Releases</span>

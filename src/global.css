@@ -1,4 +1,27 @@
 @import 'tailwindcss';
+@source './.generated/tailwind-classes.html';
+
+@theme {
+  --color-bg: var(--bg);
+  --color-bg2: var(--bg2);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent2: var(--accent2);
+  --color-accent-muted: var(--accent-muted);
+  --color-green: var(--green);
+  --color-amber: var(--amber);
+  --color-red: var(--red);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-muted: var(--muted);
+  --font-sans: var(--sans);
+  --font-mono: var(--mono);
+  --radius-DEFAULT: var(--radius);
+}
 
 @layer nexus.global {
   :root {

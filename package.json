@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/extract-tw-classes.mjs",
     "dev": "nexus dev --port 3000",
+    "prebuild": "node scripts/extract-tw-classes.mjs",
     "build": "nexus build",
     "start": "nexus start"
   },
