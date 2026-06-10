@@ -1,0 +1,44 @@
+diff --git a/dist/index.js b/dist/index.js
+index c8dbbf1754c74a3c8805fafe0262c9d36f0f30b7..0b1821f60a26e43acea90f8bda6078bc99440a4f 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -663,23 +663,25 @@ export async function createNexusServer(opts) {
+                     catch (err) {
+                         console.error('[Nexus] Server action preload failed:', err);
+                     }
+-                    // Pre-warm the aggregated CSS cache in dev mode so that the very
+-                    // first page load (and Cmd+R with "Disable cache" in DevTools) does
+-                    // not stall waiting for CSS compilation.  The build runs in the
+-                    // background — listen() resolves immediately while the CSS compiles
+-                    // concurrently.  Any errors are swallowed; the first CSS request
+-                    // will fall back to a normal on-demand build.
++                    // Pre-warm CSS caches and update renderOpts so SSR includes the correct
++                    // links. In production this is blocking (fast — single file read) so
++                    // the first HTML response already knows whether global.css exists.
++                    try {
++                        const hasGlobal = (await buildGlobalStylesheet(opts.root, opts.cssEntry)) !== null;
++                        renderOpts.assets.styles = hasGlobal
++                            ? ['/_nexus/global.css', '/_nexus/styles.css']
++                            : ['/_nexus/styles.css'];
++                    }
++                    catch {
++                        renderOpts.assets.styles = ['/_nexus/styles.css'];
++                    }
++
+                     if (dev) {
++                        // In dev also warm the aggregated stylesheet in the background so
++                        // the first request is fast (first paint without FOUC).
+                         buildAggregatedNxStylesheet(opts.root).catch(() => { });
+-                        // Pre-warm global CSS and update renderOpts so SSR includes the link.
+-                        buildGlobalStylesheet(opts.root, opts.cssEntry)
+-                            .then((css) => {
+-                            if (css !== null) {
+-                                renderOpts.assets.styles = ['/_nexus/global.css', '/_nexus/styles.css'];
+-                            }
+-                        })
+-                            .catch(() => { });
+                     }
++
+                     server.listen(port, () => resolve());
+                 })().catch(reject);
+             });

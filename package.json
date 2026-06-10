@@ -20,5 +20,9 @@
     "shiki": "^1.0.0",
     "tailwindcss": "^4.3.0"
   },
-  "devDependencies": {}
+  "pnpm": {
+    "patchedDependencies": {
+      "@nexus_js/server@0.9.30": "patches/@nexus_js__server@0.9.30.patch"
+    }
+  }
 }
