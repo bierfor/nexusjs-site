@@ -5,12 +5,11 @@ import { readFileSync } from 'node:fs';
 
 function getFrameworkVersion() {
   try {
-    const modUrl = import.meta.resolve('@nexus_js/server');
-    const pkgPath = new URL(modUrl).pathname.replace('/dist/index.js', '/package.json');
-    const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
-    return pkg.version || '0.9.31';
+    const pkgPath = import.meta.resolve('@nexus_js/server/package.json');
+    const pkg = JSON.parse(readFileSync(new URL(pkgPath), 'utf8'));
+    return pkg.version || '0.9.32';
   } catch {
-    return '0.9.31';
+    return '0.9.32';
   }
 }
 
