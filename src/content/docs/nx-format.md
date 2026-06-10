@@ -6,8 +6,8 @@
 
 | Section   | Exact syntax                  | What the framework does                                      |
 |-----------|-------------------------------|--------------------------------------------------------------|
-| Frontmatter | `---` ... `---`             | Runs on server only. Imports + `export async function load(ctx)` |
-| Template  | HTML/Svelte-like (no <script> inside) | SSR with `{pretext.key}` (escaped). Supports {#if}, {#each}, <nexus-island> |
+| Frontmatter | `---` ... `---`             | Runs on server only. Imports, exported values, and `load()` / `preload()` functions |
+| Template  | Svelte 5 Runes-compatible HTML (no <script> inside) | SSR with `{pretext.key}` (escaped). Supports {#if}, {#each}, <nexus-island> |
 | `<style>` | `<style>` ... `</style>`     | Auto-scoped (data-nx hash). Goes to global CSS in dev        |
 | `<script>`| `<script>` ... `</script>`   | Client runes ($state etc.) or "use server" actions           |
 
@@ -129,7 +129,7 @@ export default function init(root: HTMLElement) {
 }
 ```
 
-## Exact Compile-time DX (0.9.23/0.9.30+)
+## Exact Compile-time DX (v0.9.31)
 
 If you write broken syntax the compiler gives you **exact** errors you can fix immediately:
 
@@ -143,6 +143,23 @@ See the exact error output in the monorepo examples or run the compiler on a bro
 All examples above are taken from real usage in the paylinks-saas example and the docs site itself. Copy them exactly — they will work.
 
 See the Package Reference (packages.md) for full error codes and examples.
+
+## Link prefetching (v0.9.31)
+
+Add `data-nx-prefetch` to any `<a>` tag to control when the next page is prefetched:
+
+| Attribute | Behavior |
+|-----------|----------|
+| `data-nx-prefetch="hover"` | Prefetch when the user hovers the link (default) |
+| `data-nx-prefetch="visible"` | Prefetch when the link enters the viewport |
+| `data-nx-prefetch="load"` | Prefetch immediately on page load |
+| `data-nx-prefetch="false"` | Disable prefetch for this link |
+
+```svelte
+<a href="/about" data-nx-prefetch="visible">About</a>
+<a href="/checkout" data-nx-prefetch="load">Checkout</a>
+<a href="/external" data-nx-prefetch="false">External link</a>
+```
 
 ## Rules
 

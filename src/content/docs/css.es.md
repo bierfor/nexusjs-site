@@ -1,6 +1,26 @@
 # Stylesheets — Tailwind, PostCSS y CSS Scoped
 
-Nexus tiene soporte de primera clase para CSS con compilación automática de PostCSS, integración con Tailwind CSS v4, estilos scoped por componente, y serving de hojas de estilo globales sin configuración.
+Nexus ofrece soporte de primera clase para CSS: una única hoja de estilos unificada, compilación automática de PostCSS, integración con Tailwind CSS v4, estilos scoped por componente y serving de CSS global sin configuración.
+
+---
+
+## Cómo se sirven los estilos
+
+Nexus v0.9.31 sirve **una** hoja de estilos automáticamente:
+
+- **`/_nexus/styles.css`** — hoja unificada que incluye:
+  1. Tu entry de CSS global procesado con PostCSS/Tailwind (se antepone al principio).
+  2. CSS scoped agregado de todos los archivos `.nx`.
+
+Comienza con la declaración de capas:
+
+```css
+@layer nexus.scoped, nexus.global;
+```
+
+El framework inyecta `<link rel="stylesheet" href="/_nexus/styles.css">` en el `<head>` durante el SSR. No necesitas agregarlo manualmente.
+
+El endpoint legacy **`/_nexus/global.css`** sigue disponible por compatibilidad hacia atrás, pero **ya no se inyecta** en el SSR.
 
 ---
 
@@ -13,15 +33,15 @@ Nexus descubre automáticamente tu hoja de estilos global en estas ubicaciones (
 - `src/index.css`
 - `src/styles.css`
 
-Si encuentra alguna, la procesa con PostCSS (cuando hay config presente) y la sirve en `/_nexus/global.css`. El framework inyecta automáticamente el link en el SSR.
+Si encuentra alguna, la procesa con PostCSS y la antepone al principio de la hoja unificada.
 
 ### Entry personalizado
 
-Sobreescribe la auto-descubrimiento en `nexus.config.ts`:
+Sobrescribe la auto-descubrimiento en `nexus.config.ts`:
 
 ```ts
 export default {
-  css: { entry: './src/styles/main.css' },
+  css: { entry: 'src/global.css' },
 };
 ```
 
@@ -33,26 +53,91 @@ El path es relativo a la raíz del proyecto.
 
 Nexus lee `postcss.config.{mjs,cjs,js}` y ejecuta tu CSS global a través de PostCSS automáticamente tanto en dev como en producción.
 
-### Setup exacto para Tailwind v4
+### Dependencias recomendadas
 
-```bash
-pnpm add -D tailwindcss postcss @tailwindcss/postcss autoprefixer
+Como el CSS de producción se compila on-the-fly, instálalas como `dependencies`, **no** como `devDependencies`:
+
+```json
+{
+  "dependencies": {
+    "tailwindcss": "^4.3.0",
+    "@tailwindcss/postcss": "^4.3.0",
+    "postcss": "^8.5.0",
+    "autoprefixer": "^10.4.0"
+  }
+}
 ```
+
+### Configuración de PostCSS
 
 ```ts
 // postcss.config.mjs
 export default {
   plugins: {
     '@tailwindcss/postcss': {},
+    autoprefixer: {},
   },
 };
 ```
+
+### Indicarle a Tailwind dónde están las clases de los `.nx`
+
+Tailwind CSS v4 no escanea archivos `.nx` por defecto. Apúntalo a un archivo HTML generado que contenga las clases usadas en tus componentes.
+
+Agrega un script `predev` y `prebuild` que genere `src/.generated/tailwind-classes.html`. Ejemplo `scripts/extract-tw-classes.mjs`:
+
+```js
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
+import { join } from 'node:path';
+
+async function* walk(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) yield* walk(path);
+    else if (path.endsWith('.nx')) yield path;
+  }
+}
+
+const classes = new Set();
+for await (const file of walk('src')) {
+  const source = await readFile(file, 'utf8');
+  for (const match of source.matchAll(/class\s*=\s*["']([^"']+)["']/g)) {
+    match[1].split(/\s+/).forEach((c) => c && classes.add(c));
+  }
+}
+
+const tags = [...classes].sort().map((c) => `<div class="${c}"></div>`).join('\n');
+const html = `<!DOCTYPE html>\n<html>\n<body>\n${tags}\n</body>\n</html>\n`;
+
+await mkdir('src/.generated', { recursive: true });
+await writeFile('src/.generated/tailwind-classes.html', html);
+```
+
+Luego agrégalo en `package.json`:
+
+```json
+{
+  "scripts": {
+    "predev": "node scripts/extract-tw-classes.mjs",
+    "prebuild": "node scripts/extract-tw-classes.mjs"
+  }
+}
+```
+
+Añade `src/.generated` a tu `.gitignore`.
+
+### Archivo de CSS global
 
 ```css
 /* src/global.css */
 @import 'tailwindcss';
 
+@source './.generated/tailwind-classes.html';
+
 @theme {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
   --color-accent: #c45c26;
 }
 
@@ -68,9 +153,7 @@ body {
 }
 ```
 
-Eso es todo. En dev, `/_nexus/global.css` retorna el output completo de Tailwind compilado. En producción, el pipeline de build lo empaqueta y hashea.
-
-**Nota:** Tailwind v4 usa configuración nativa en CSS (`@theme`, `@import "tailwindcss"`). No se requiere `tailwind.config.js` a menos que necesites globs de contenido personalizados (Nexus ya compila archivos `.nx`, así que Tailwind los escanea automáticamente vía el plugin de PostCSS).
+Tailwind v4 es CSS-first: define tokens de diseño personalizados con `@theme` dentro de `global.css` en lugar de usar `tailwind.config.js`.
 
 ---
 
@@ -97,11 +180,11 @@ Cualquier bloque `<style>` dentro de un archivo `.nx` se scopa automáticamente 
 </style>
 ```
 
-El compilador hashea los selectores para que `.card` solo aplique a elementos de este componente. Se sirve vía la hoja de estilos agregada en `/_nexus/styles.css`.
+El compilador hashea los selectores para que `.card` solo aplique a elementos de este componente. Los estilos scoped se agregan a `/_nexus/styles.css`.
 
 ### Escape hatch `:global()`
 
-Para apuntar a elementos globales (ej. `body`, `html`) o sobreescribir un componente hijo:
+Para apuntar a elementos globales (ej. `body`, `html`) o sobrescribir un componente hijo:
 
 ```svelte
 <style>
@@ -116,28 +199,15 @@ Para apuntar a elementos globales (ej. `body`, `html`) o sobreescribir un compon
 
 ---
 
-## Cómo se sirven los estilos
-
-Nexus sirve **dos** hojas de estilo automáticamente en cada página:
-
-1. **`/_nexus/global.css`** — tu entry global (procesado por PostCSS)
-2. **`/_nexus/styles.css`** — estilos scoped agregados de todos los archivos `.nx`
-
-Ambas se inyectan en el `<head>` durante el SSR (a menos que ya las hayas declarado manualmente). No necesitas agregar tags `<link>` tú mismo.
-
-La hoja de estilos scoped agregada envuelve el CSS de cada componente en `@layer nexus.scoped` para que conviva limpiamente con tus estilos globales.
-
----
-
 ## CSS layers
 
-Nexus usa `@layer` de CSS para manejar especificidad:
+Nexus gestiona la especificidad con `@layer` de CSS. La hoja unificada declara:
 
 ```css
 @layer nexus.scoped, nexus.global;
 ```
 
-- Los estilos scoped de archivos `.nx` viven en `@layer nexus.scoped`
+- Los estilos scoped de archivos `.nx` viven en `@layer nexus.scoped`.
 - Tu CSS global puede vivir opcionalmente en `@layer nexus.global` si lo envuelves:
 
 ```css
@@ -152,12 +222,10 @@ Esto previene guerras de especificidad entre utilidades globales y estilos de co
 
 ## Dev vs producción
 
-| Entorno | CSS Global | CSS Scoped |
-|---------|------------|------------|
-| **Dev** | Compilado on-demand con PostCSS, servido con hot-reload busting | Recompilado al guardar cualquier `.nx` |
-| **Producción** | Empaquetado, minificado y hasheado en `.nexus/output/` | Extraído, deduplicado y hasheado por ruta |
-
-En producción, ambas hojas de estilo llevan un hash de contenido en su nombre para caching inmutable.
+| Entorno | Hoja unificada (`/_nexus/styles.css`) |
+|---------|--------------------------------------|
+| **Dev** | Compilada on-demand con PostCSS, hot-reload ante cambios de CSS global o scoped |
+| **Producción** | Empaquetada, minificada y hasheada por contenido en `.nexus/output/` para caching inmutable |
 
 ---
 
@@ -165,6 +233,9 @@ En producción, ambas hojas de estilo llevan un hash de contenido en su nombre p
 
 1. **Usa `src/global.css` para design tokens** (colores, fuentes, espaciado) y directivas de Tailwind.
 2. **Usa `<style>` en `.nx` para layout específico del componente** que no debería filtrar a otros componentes.
-3. **Evita CSS global pesado**; la hoja de estilos scoped agregada se deduplica por ruta en producción.
+3. **Evita CSS global pesado**; la hoja de estilos scoped se deduplica por ruta en producción.
 4. **Prefiere variables CSS** para theming; funcionan tanto en contextos globales como scoped.
-5. **No linkees manualmente `/_nexus/global.css`** en tu layout; el renderer lo inyecta automáticamente cuando existe el archivo de entry.
+5. **No linkees manualmente `/_nexus/global.css`** en tu layout; confía en la hoja unificada `/_nexus/styles.css` que Nexus inyecta automáticamente.
+6. **Mantén los paquetes de Tailwind en `dependencies`** (`tailwindcss`, `@tailwindcss/postcss`, `postcss`, `autoprefixer`) para que los builds de producción puedan compilar CSS on-the-fly.
+7. **Ejecuta el script de extracción de clases de Tailwind en `predev` y `prebuild`** para que Tailwind v4 vea las clases usadas en los archivos `.nx`.
+8. **Define tokens de diseño personalizados con `@theme`** en `global.css` en lugar de `tailwind.config.js`.

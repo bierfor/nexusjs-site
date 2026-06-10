@@ -4,6 +4,8 @@
 
 ## Exact Docker / VPS (the Dockerfile + compose you copy)
 
+`postcss`, `tailwindcss`, and `autoprefixer` must be in `dependencies` (not `devDependencies`), because Nexus compiles CSS on-the-fly in production.
+
 ```dockerfile
 FROM node:22-alpine
 WORKDIR /app
@@ -11,10 +13,11 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@9 --activate
 RUN pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm build
+RUN pnpm build          # runs nexus build
 ENV NODE_ENV=production
-ENV NEXUS_SECRET=your-32-char-secret-here
-CMD ["pnpm", "start"]
+ENV PORT=3000
+EXPOSE 3000
+CMD ["pnpm", "start"]   # requires "start": "nexus start" in package.json
 ```
 
 `docker-compose.yml` (exact):
@@ -27,6 +30,14 @@ services:
     environment:
       - NEXUS_SECRET=${NEXUS_SECRET}
 ```
+
+Generate a strong production secret:
+
+```bash
+openssl rand -base64 32
+```
+
+The production server refuses to start if `NEXUS_SECRET` is missing. It must be a random string of at least 32 characters.
 
 ## Exact Cloudflare Workers / Pages (the one-line config)
 
@@ -50,22 +61,13 @@ export default {
 
 Push to Vercel — it will detect the adapter output.
 
-## Exact required environment
-
-`NEXUS_SECRET` (32+ chars) is **mandatory** when `hardened: true` (signs cookies, CSRF tokens, etc.). Set it in your platform dashboard or .env.
-
-All the adapter output, the exact Dockerfile, and the env requirement are taken from the real deployment paths used by the framework (packages/server + cli) and the examples in the monorepo. See testing.md for the exact way to test your deployed actions, and security.md for the exact hardened headers you will get in production. The docs site itself is deployed using these patterns.
-  build: { adapter: 'vercel' },
-};
-```
-
-## Deno Deploy / Bun
+## Exact Deno Deploy / Bun
 
 Set `adapter: 'deno'` or run with `bun run .nexus/output/server.js`.
 
-## Required env vars
+## Required environment variables
 
 | Variable | Purpose |
 |----------|---------|
-| `NEXUS_SECRET` | Session signing, CSRF tokens (required in production) |
-| `NEXUS_BUILD_ID` | Build fingerprint (set to git SHA in CI) |
+| `NEXUS_SECRET` | Session signing, CSRF tokens (required in production; the server will not start without it) |
+| `PORT` | Server port (default is `3000` or whatever you set in `nexus.config.ts` `server.port`) |

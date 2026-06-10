@@ -12,10 +12,10 @@ Adicione o atributo diretamente a qualquer elemento no seu template `.nx`:
 
 | Diretiva | Comportamento |
 |----------|---------------|
+| `client:visible` | Hidrata quando a island entra no viewport (default recomendado) |
+| `client:idle` | Hidrata quando o navegador estiver idle |
 | `client:load` | Hidrata imediatamente ao carregar a página (UI crítica: header, carrinho) |
-| `client:idle` | Hidrata quando o navegador estiver idle (bom default para a maioria) |
-| `client:visible` | Hidrata apenas ao rolar até o viewport (melhor performance) |
-| `client:media="(min-width: 768px)"` | Hidrata apenas quando o media query corresponder (condicional responsivo) |
+| `client:media="(min-width: 768px)"` | Hidrata quando o media query corresponder (condicional responsivo) |
 | `server:only` | Nunca envia JS; HTML estático puro (default se não houver diretiva) |
 
 ---
@@ -137,15 +137,31 @@ A island pode chamar a ação via `fetch` para `/_nexus/action/like` (o framewor
 
 ---
 
-## Islands externas em v0.9.30+
+## Islands externas em v0.9.31
 
-Em v0.9.30, as islands externas são servidas diretamente de `/_nexus/lib/islands/*.js`. O compilador reescreve `$lib/islands/counter.ts` para a URL pública correta. Isso funciona para:
+Em v0.9.31, as islands externas são servidas diretamente de `/_nexus/lib/islands/*.js`. O compilador reescreve `$lib/islands/counter.ts` para a URL pública correta. Isso funciona para:
 
 - Arquivos fonte `.ts` e `.tsx` (auto-transpilados em dev)
 - Imports relativos dentro do arquivo island (reescritos para `.js`)
 - Builds de produção (bundles hasheados em `.nexus/output/lib/`)
 
 Se um arquivo island importa utilidades de `$lib/utils.ts`, estas também são servidas automaticamente via `/_nexus/lib/`.
+
+---
+
+## Dados de pretext
+
+As islands recebem automaticamente o `pretext` da página como segundo argumento de `init`. Você não precisa serializar manualmente cada valor via atributos `data-*`.
+
+```ts
+// src/lib/islands/counter.ts
+export default function init(root: HTMLElement, pretext: any) {
+  // pretext contém todos os dados do servidor retornados por load()
+  console.log(pretext.initialCount);
+}
+```
+
+Você ainda pode usar atributos `data-*` para passar overrides individuais ou manter a island livre de dependências.
 
 ---
 

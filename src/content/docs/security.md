@@ -18,7 +18,7 @@ export async function dangerousAction(formData, ctx) {
 <form action={dangerousAction} method="post">...</form>
 ```
 
-Framework does SameSite cookies + cryptographic token + constant-time check automatically on every action.
+Framework does SameSite cookies + cryptographic token + constant-time check automatically on every action. This protection requires `NEXUS_SECRET` in production.
 
 ## Exact Ghost Wall (secret leak detection)
 
@@ -76,6 +76,10 @@ export default {
     hardened: true,
     csp: {
       additionalScriptSrc: [],   // be explicit
+      additionalStyleSrc: [],
+      additionalFontSrc: [],
+      additionalConnectSrc: [],
+      additionalImgSrc: [],
     },
   },
 };
@@ -102,7 +106,24 @@ Hardened mode also gives you (exactly):
 - Permissions-Policy (camera etc. off)
 - Automatic build-time secret scanning + @nexus_js/audit CVE blocking
 
-## Exact recent 0.9.30 dogfooding patterns (applied to this very site)
+`NEXUS_SECRET` is required in production whenever hardened mode (or any session/CSRF protection) is active.
+
+## Exact Shield Lite
+
+For a lighter hardening preset when full hardened mode is too strict:
+
+```ts
+// nexus.config.ts
+export default {
+  security: {
+    shieldLite: true,
+  },
+};
+```
+
+Shield Lite enables a smaller baseline of security headers and checks without the full hardened restrictions.
+
+## Exact recent 0.9.31 dogfooding patterns (applied to this very site)
 
 - Always add `rel="noopener noreferrer"` on `target="_blank"` external links (tabnabbing fix).
 - Always sanitize route params before using them in paths:

@@ -18,7 +18,7 @@ export async function dangerousAction(formData, ctx) {
 <form action={dangerousAction} method="post">...</form>
 ```
 
-El framework hace SameSite cookies + token criptográfico + chequeo en tiempo constante automáticamente en cada action.
+El framework hace SameSite cookies + token criptográfico + chequeo en tiempo constante automáticamente en cada action. Esta protección requiere `NEXUS_SECRET` en producción.
 
 ## Ghost Wall exacto (detección de fuga de secretos)
 
@@ -76,6 +76,10 @@ export default {
     hardened: true,
     csp: {
       additionalScriptSrc: [],   // sé explícito
+      additionalStyleSrc: [],
+      additionalFontSrc: [],
+      additionalConnectSrc: [],
+      additionalImgSrc: [],
     },
   },
 };
@@ -102,7 +106,24 @@ Hardened mode también te da (exacto):
 - Permissions-Policy (cámara etc. off)
 - Escaneo automático de secretos en build-time + bloqueo de CVE de @nexus_js/audit
 
-## Patrones exactos recientes de dogfooding 0.9.30 (aplicados a este mismo sitio)
+`NEXUS_SECRET` es requerido en producción cuando hardened mode (o cualquier protección de sesión/CSRF) está activo.
+
+## Shield Lite exacto
+
+Para un preset de endurecimiento más ligero cuando hardened mode completo es demasiado estricto:
+
+```ts
+// nexus.config.ts
+export default {
+  security: {
+    shieldLite: true,
+  },
+};
+```
+
+Shield Lite activa una línea base menor de headers y checks de seguridad sin las restricciones completas de hardened mode.
+
+## Patrones exactos recientes de dogfooding 0.9.31 (aplicados a este mismo sitio)
 
 - Siempre agrega `rel="noopener noreferrer"` en links externos `target="_blank"` (fix de tabnabbing).
 - Siempre sanitiza params de ruta antes de usarlos en paths:

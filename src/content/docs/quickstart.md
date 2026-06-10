@@ -1,16 +1,55 @@
 Create a new Nexus project in seconds and deploy your first page. Everything follows "modo correcto": data via `load(ctx)` → `pretext`, content via `@nexus_js/content` when needed, direct `{pretext.xxx}` interpolation, no legacy patterns.
 
-### Step 1 — Scaffold a new app (exact command)
+### Step 1 — Scaffold a new app
 
 ```bash
-npm create @nexus_js/nexus my-app
+npx @nexus_js/create-nexus@latest my-app
 cd my-app
 pnpm install
 ```
 
-This creates a project using the latest 0.9.30+ patterns (load/pretext, .nx templates, islands, hardened security by default).
+Or with pnpm:
 
-### Step 2 — Your first page (exact .nx file)
+```bash
+pnpm dlx @nexus_js/create-nexus my-app
+cd my-app
+pnpm install
+```
+
+This creates a project using the latest v0.9.31 patterns (`load()` / `preload()`, `.nx` templates, islands, link prefetching, hardened security by default).
+
+### Step 2 — Project structure and config
+
+A new Nexus project looks like this:
+
+```
+src/
+  routes/
+    +page.nx
+    +layout.nx
+    +not-found.nx
+  lib/
+public/
+nexus.config.ts
+```
+
+A typical `nexus.config.ts` for v0.9.31:
+
+```ts
+import type { NexusConfig } from '@nexus_js/cli';
+
+export default {
+  defaultHydration: 'client:visible',
+  css: { entry: 'src/global.css' },
+  server: { port: 3000 },
+  security: {
+    hardened: true,
+    shieldLite: true,
+  },
+} satisfies NexusConfig;
+```
+
+### Step 3 — Your first page (exact .nx file)
 
 Create `src/routes/about/+page.nx` with **exact** code a user should write:
 
@@ -69,7 +108,7 @@ export async function load(ctx) {
 
 > **Tip:** For anything longer than a few lines, use an **external island** (`src="$lib/islands/counter.ts"`) instead of inline `<script>`. It keeps `.nx` files clean, enables reuse, and works with `defaultHydration` in `nexus.config.ts`. See `islands.md` for the full pattern.
 
-### Step 3 — Add i18n (exact, using defineI18n)
+### Step 4 — Add i18n (exact, using defineI18n)
 
 Update `src/lib/i18n.ts` (or use the generated one):
 
@@ -88,7 +127,7 @@ export const i18n = defineI18n({
 
 Then in load: `const t = i18n.tFn(locale); return { t };` and use `{pretext.t('about.welcome')}`.
 
-### Step 4 — Use external content (exact with @nexus_js/content)
+### Step 5 — Use external content (exact with @nexus_js/content)
 
 For MD-driven pages (recommended for docs/blogs):
 
@@ -106,11 +145,11 @@ return {
 
 In template: `{pretext.content}` (already sanitized HTML).
 
-### Step 5 — Visit & build
+### Step 6 — Visit & build
 
 - `pnpm dev` → http://localhost:3000/about (instant SSR, hot reload for .nx).
-- `pnpm build && pnpm start` → production output in `.nexus/output/`.
+- Set `NEXUS_SECRET` in production, then `pnpm build && pnpm start` → production output in `.nexus/output/`.
 
-The framework guarantees: security (CSRF on actions, CSP, etc.), performance (islands + streaming), type safety (via load returns), and "modo correcto" DX.
+The framework guarantees: security (CSRF on actions, CSP, etc.), performance (islands + streaming + link prefetching), type safety (via load returns), and "modo correcto" DX.
 
 See the other pages in this list (e.g. routing.md, server-actions.md) for more exact variations. All examples here are copy-paste ready and match the real paylinks-saas example in the monorepo.

@@ -2,17 +2,16 @@
 
 **Comandos exatos** e o que eles fazem.
 
-| Comando exato que você digita   | Coisa exata que acontece |
-|---------------------------------|------------------------|
-| `nexus dev --port 3000`        | Inicia servidor dev, observa .nx/.ts, HMR, serve /_nexus/global.css etc. |
-| `nexus build`                  | Produz bundles otimizados de server + cliente em `.nexus/output/` |
-| `nexus start`                  | Executa o servidor de produção a partir da saída do build |
-| `nexus audit`                  | Executa scan CVE OSV + vazamento de segredos + checks de deps não usadas (igual ao build-time) |
-| `nexus fix`                    | Aplica fixes seguros automaticamente do audit |
-| `nexus studio`                 | Dashboard em tempo real (islands, actions, cache, store) |
-| `nexus test`                   | Executa Vitest com helpers para SSR + island + action |
-| `nexus routes`                 | Imprime a árvore de rotas resolvida |
-| `nexus check`                  | Type-check sem rodar o servidor |
+| Comando | O que faz |
+|---------|-----------|
+| `nexus dev` | Inicia servidor dev com HMR e observação de arquivos |
+| `nexus build` | Compila a app para produção em `.nexus/output/` |
+| `nexus start` | Executa o servidor de produção (requer `NEXUS_SECRET`) |
+| `nexus check` | Type-check no projeto sem rodar o servidor |
+| `nexus audit` | Executa checks de segurança (scan CVE, vazamento de segredos, deps não usadas) |
+| `nexus studio` | Abre o dashboard em tempo real |
+| `nexus routes` | Imprime a árvore de rotas resolvida |
+| `nexus add` | Adiciona pacotes, rotas ou scaffolding ao projeto |
 
 Durante `nexus dev` e `nexus build` você obtém **erros estruturados exatos**:
 
@@ -23,6 +22,21 @@ Durante `nexus dev` e `nexus build` você obtém **erros estruturados exatos**:
 ```
 
 `formatCompileError` / `formatCompileWarning` + frames são usados automaticamente pelo CLI e pelo servidor dev.
+
+## Opções
+
+| Opção | Alias | Descrição |
+|-------|-------|-----------|
+| `--port` | `-p` | Porta a usar (padrão é `server.port` em `nexus.config.ts` ou `3000`) |
+| `--host` | | Host a usar (padrão é `localhost`) |
+| `--root` | | Caminho raíz do projeto |
+
+Exemplos:
+
+```bash
+nexus dev --port 3000
+nexus start --host 0.0.0.0
+```
 
 ## nexus.config.ts exato (o que você copia)
 

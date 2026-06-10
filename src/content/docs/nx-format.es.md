@@ -6,8 +6,8 @@
 
 | Sección   | Sintaxis exacta               | Qué hace el framework                                        |
 |-----------|-------------------------------|--------------------------------------------------------------|
-| Frontmatter | `---` ... `---`             | Corre solo en servidor. Imports + `export async function load(ctx)` |
-| Template  | HTML/Svelte-like (sin <script> adentro) | SSR con `{pretext.key}` (escapado). Soporta {#if}, {#each}, <nexus-island> |
+| Frontmatter | `---` ... `---`             | Corre solo en servidor. Imports, valores exportados y funciones `load()` / `preload()` |
+| Template  | HTML compatible con Svelte 5 Runes (sin <script> adentro) | SSR con `{pretext.key}` (escapado). Soporta {#if}, {#each}, <nexus-island> |
 | `<style>` | `<style>` ... `</style>`     | Auto-scoped (hash data-nx). Va a CSS global en dev           |
 | `<script>`| `<script>` ... `</script>`   | Runes de cliente ($state etc.) o acciones "use server"       |
 
@@ -80,7 +80,6 @@ export async function load(ctx) {
     },
   };
 }
----
 
 // Acción de servidor exacta (llamada desde form o island)
 export async function likePost(postId, ctx) {
@@ -130,7 +129,7 @@ export default function init(root: HTMLElement) {
 }
 ```
 
-## DX exacto en tiempo de compilación (0.9.23/0.9.30+)
+## DX exacto en tiempo de compilación (v0.9.31)
 
 Si escribes sintaxis rota el compilador te da **errores exactos** que puedes arreglar inmediatamente:
 
@@ -144,6 +143,23 @@ Ver la salida de error exacta en los ejemplos del monorepo o ejecuta el compilad
 Todos los ejemplos arriba están tomados de uso real en el ejemplo paylinks-saas y el propio sitio de docs. Cópialos exactamente — funcionarán.
 
 Ver la Referencia de Paquetes (packages.md) para códigos de error completos y ejemplos.
+
+## Prefetch de links (v0.9.31)
+
+Agrega `data-nx-prefetch` a cualquier etiqueta `<a>` para controlar cuándo se prefetch la siguiente página:
+
+| Atributo | Comportamiento |
+|----------|----------------|
+| `data-nx-prefetch="hover"` | Prefetch al hacer hover sobre el link (default) |
+| `data-nx-prefetch="visible"` | Prefetch cuando el link entra al viewport |
+| `data-nx-prefetch="load"` | Prefetch inmediatamente al cargar la página |
+| `data-nx-prefetch="false"` | Desactiva el prefetch para este link |
+
+```svelte
+<a href="/about" data-nx-prefetch="visible">About</a>
+<a href="/checkout" data-nx-prefetch="load">Checkout</a>
+<a href="/external" data-nx-prefetch="false">External link</a>
+```
 
 ## Reglas
 

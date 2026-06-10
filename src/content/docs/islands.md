@@ -12,10 +12,10 @@ Add the attribute directly to any element in your `.nx` template:
 
 | Directive | Behavior |
 |-----------|----------|
-| `client:load` | Hydrate immediately when the page loads (critical UI: header, cart) |
-| `client:idle` | Hydrate after the browser is idle (good default for most interactions) |
-| `client:visible` | Hydrate only when scrolled into the viewport (best for performance) |
-| `client:media="(min-width: 768px)"` | Hydrate only when the media query matches (responsive conditional) |
+| `client:visible` | Hydrate when the island enters the viewport (recommended default) |
+| `client:idle` | Hydrate when the browser is idle |
+| `client:load` | Hydrate immediately on page load (critical UI: header, cart) |
+| `client:media="(min-width: 768px)"` | Hydrate when the media query matches (responsive conditional) |
 | `server:only` | Never ships JS; pure static HTML (default if no directive is present) |
 
 ---
@@ -137,15 +137,31 @@ The island can call the action via `fetch` to `/_nexus/action/like` (the framewo
 
 ---
 
-## External islands in v0.9.30+
+## External islands in v0.9.31
 
-In v0.9.30, external islands are served directly from `/_nexus/lib/islands/*.js`. The compiler rewrites `$lib/islands/counter.ts` to the correct public URL. This works for:
+In v0.9.31, external islands are served directly from `/_nexus/lib/islands/*.js`. The compiler rewrites `$lib/islands/counter.ts` to the correct public URL. This works for:
 
 - `.ts` and `.tsx` source files (auto-transpiled in dev)
 - Relative imports inside the island file (rewritten to `.js`)
 - Production builds (hashed bundles in `.nexus/output/lib/`)
 
 If an island file imports utilities from `$lib/utils.ts`, those are also served automatically via `/_nexus/lib/`.
+
+---
+
+## Pretext data
+
+Islands automatically receive the page's `pretext` as the second argument to `init`. You do not need to manually serialize every value through `data-*` attributes.
+
+```ts
+// src/lib/islands/counter.ts
+export default function init(root: HTMLElement, pretext: any) {
+  // pretext contains the full server data returned by load()
+  console.log(pretext.initialCount);
+}
+```
+
+You can still use `data-*` attributes to pass individual overrides or keep the island dependency-free.
 
 ---
 
