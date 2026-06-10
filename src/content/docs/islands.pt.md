@@ -31,8 +31,8 @@ Escreva a lógica interativa diretamente dentro do arquivo `.nx`. O compilador e
   <script>
     let count = $state(0);
   </script>
-  <button onclick={() => count++}>
-    Clicked {count} times
+  <button onclick={() => count.value++}>
+    Clicked {count.value} times
   </button>
 </div>
 ```
@@ -66,23 +66,23 @@ export default function init(root: HTMLElement) {
   let count = $state(0);
 
   const btn = document.createElement('button');
-  btn.textContent = `Count: ${count}`;
+  btn.textContent = `Count: ${count.value}`;
   root.appendChild(btn);
 
   $effect(() => {
-    btn.textContent = `Count: ${count}`;
+    btn.textContent = `Count: ${count.value}`;
   });
 
-  btn.addEventListener('click', () => count++);
+  btn.addEventListener('click', () => count.value++);
 
   // Lê dados do servidor passados via data-* attributes
   const initial = root.dataset.initial;
-  if (initial) count = parseInt(initial, 10);
+  if (initial) count.value = parseInt(initial, 10);
 }
 ```
 
 **Contrato da island:**
-- O arquivo deve exportar `export default function init(root: HTMLElement, data?: any)`.
+- O arquivo deve exportar `export default function init(root: HTMLElement)`.
 - `root` é o elemento `<nexus-island>` em si.
 - O framework configura o contexto de runes do Svelte 5 antes de chamar `init`, então `$state`, `$effect` e `$derived` funcionam imediatamente.
 - Você pode ler atributos `data-*` de `root.dataset` para transferir dados servidor → cliente.
@@ -137,9 +137,9 @@ A island pode chamar a ação via `fetch` para `/_nexus/action/like` (o framewor
 
 ---
 
-## Islands externas em v0.9.31
+## Islands externas em v0.9.32
 
-Em v0.9.31, as islands externas são servidas diretamente de `/_nexus/lib/islands/*.js`. O compilador reescreve `$lib/islands/counter.ts` para a URL pública correta. Isso funciona para:
+Em v0.9.32, as islands externas são servidas diretamente de `/_nexus/lib/islands/*.js`. O compilador reescreve `$lib/islands/counter.ts` para a URL pública correta. Isso funciona para:
 
 - Arquivos fonte `.ts` e `.tsx` (auto-transpilados em dev)
 - Imports relativos dentro do arquivo island (reescritos para `.js`)
@@ -151,17 +151,15 @@ Se um arquivo island importa utilidades de `$lib/utils.ts`, estas também são s
 
 ## Dados de pretext
 
-As islands recebem automaticamente o `pretext` da página como segundo argumento de `init`. Você não precisa serializar manualmente cada valor via atributos `data-*`.
+As islands externas leem atributos `data-*` de `root.dataset` para transferir dados servidor → cliente.
 
 ```ts
 // src/lib/islands/counter.ts
-export default function init(root: HTMLElement, pretext: any) {
-  // pretext contém todos os dados do servidor retornados por load()
-  console.log(pretext.initialCount);
+export default function init(root: HTMLElement) {
+  const initial = root.dataset.initial;
+  if (initial) console.log(parseInt(initial, 10));
 }
 ```
-
-Você ainda pode usar atributos `data-*` para passar overrides individuais ou manter a island livre de dependências.
 
 ---
 

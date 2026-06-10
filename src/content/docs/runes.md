@@ -4,13 +4,13 @@ The most ergonomic reactivity system in JavaScript. Svelte 5 Runes are **exactly
 
 ```svelte
 <script>
-  let count = $state(0);           // reactive primitive
+  let count = $state(0);           // reactive signal
   let name = $state('Nexus');
 </script>
 
-<button onclick={() => count++}>{count}</button>
-<input bind:value={name} />
-<p>Hello {name}</p>
+<button onclick={() => count.value++}>{count.value}</button>
+<input value={name.value} oninput={(e) => name.value = e.target.value} />
+<p>Hello {name.value}</p>
 ```
 
 ### Exact $derived (computed, runs only when dependencies change)
@@ -18,11 +18,11 @@ The most ergonomic reactivity system in JavaScript. Svelte 5 Runes are **exactly
 ```svelte
 <script>
   let count = $state(0);
-  let doubled = $derived(count * 2);   // automatically updates
-  let label = $derived(`${count} clicks → ${doubled}`);
+  let doubled = $derived(count.value * 2);   // automatically updates
+  let label = $derived(`${count.value} clicks → ${doubled.value}`);
 </script>
 
-<button onclick={() => count++}>{label}</button>
+<button onclick={() => count.value++}>{label.value}</button>
 ```
 
 ### Exact $effect (side effects, runs after the DOM updates)
@@ -32,8 +32,8 @@ The most ergonomic reactivity system in JavaScript. Svelte 5 Runes are **exactly
   let count = $state(0);
 
   $effect(() => {
-    console.log('count changed to', count);   // exact timing: after template paint
-    document.title = `Count: ${count}`;
+    console.log('count changed to', count.value);   // runs when dependencies change
+    document.title = `Count: ${count.value}`;
   });
 </script>
 ```
@@ -41,37 +41,28 @@ The most ergonomic reactivity system in JavaScript. Svelte 5 Runes are **exactly
 ### Exact $props (in a reusable .nx component)
 
 ```svelte
-<!-- src/components/Button.nx -->
 <script>
-  let { 
-    label = 'Click me', 
-    onClick, 
-    disabled = false 
-  } = $props();     // exact destructuring with defaults
+  let props = $props<{ label: string; onClick: () => void; disabled?: boolean }>({
+    label: 'Click me',
+    disabled: false,
+  });
 </script>
 
-<button onclick={onClick} disabled={disabled}>
-  {label}
+<button onclick={props.onClick} disabled={props.disabled}>
+  {props.label}
 </button>
-```
-
-Usage in a page:
-
-```svelte
-<Button label="Save" onClick={() => save()} />
 ```
 
 ### Exact $sync (persisted reactive state — survives navigation & refresh)
 
 ```svelte
 <script>
-  // key + default value. Persists to localStorage / session / url automatically
-  let theme = $sync('theme', 'light');
-  let count = $sync('count', 0, { persist: 'session' });
+  let theme = $sync('theme', { default: 'light', persist: 'local' });
+  let count = $sync('count', { default: 0, persist: 'session' });
 </script>
 
-<button onclick={() => count++}>{count}</button>
-<select bind:value={theme}>
+<button onclick={() => count.value++}>{count.value}</button>
+<select value={theme.value} onchange={(e) => theme.value = e.target.value}>
   <option value="light">Light</option>
   <option value="dark">Dark</option>
 </select>
@@ -95,6 +86,6 @@ export async function load(ctx) {
 </nexus-island>
 ```
 
-Inside the island you read `root.dataset.initial` and turn it into a $state.
+Inside the island you read `root.dataset.initial` and turn it into a `$state` via `let count = $state(parseInt(root.dataset.initial || '0', 10));`.
 
 All rune semantics above are identical to Svelte 5 (the framework just integrates them into .nx + islands + SSR). Copy the snippets exactly — they work in any .nx or island file. See server-actions.md for calling actions from runes, and store.md for the global $pretext / store integration.

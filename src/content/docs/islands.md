@@ -66,25 +66,25 @@ export default function init(root: HTMLElement) {
   let count = $state(0);
 
   const btn = document.createElement('button');
-  btn.textContent = `Count: ${count}`;
+  btn.textContent = `Count: ${count.value}`;
   root.appendChild(btn);
 
   $effect(() => {
-    btn.textContent = `Count: ${count}`;
+    btn.textContent = `Count: ${count.value}`;
   });
 
-  btn.addEventListener('click', () => count++);
+  btn.addEventListener('click', () => count.value++);
 
   // Read server data passed via data-* attributes
   const initial = root.dataset.initial;
-  if (initial) count = parseInt(initial, 10);
+  if (initial) count.value = parseInt(initial, 10);
 }
 ```
 
 **Island contract:**
-- File must export `export default function init(root: HTMLElement, data?: any)`.
+- File must export `export default function init(root: HTMLElement)`.
 - `root` is the `<nexus-island>` element itself.
-- The framework sets up the Svelte 5 runes context before calling `init`, so `$state`, `$effect`, and `$derived` work immediately.
+- The framework sets up the runes context before calling `init`, so `$state`, `$effect`, and `$derived` work immediately.
 - You can read `data-*` attributes from `root.dataset` for server-to-client data transfer.
 
 ---
@@ -137,9 +137,9 @@ The island can call the action via `fetch` to `/_nexus/action/like` (the framewo
 
 ---
 
-## External islands in v0.9.31
+## External islands in v0.9.32
 
-In v0.9.31, external islands are served directly from `/_nexus/lib/islands/*.js`. The compiler rewrites `$lib/islands/counter.ts` to the correct public URL. This works for:
+In v0.9.32, external islands are served directly from `/_nexus/lib/islands/*.js`. The compiler rewrites `$lib/islands/counter.ts` to the correct public URL. This works for:
 
 - `.ts` and `.tsx` source files (auto-transpiled in dev)
 - Relative imports inside the island file (rewritten to `.js`)
@@ -149,19 +149,7 @@ If an island file imports utilities from `$lib/utils.ts`, those are also served 
 
 ---
 
-## Pretext data
-
-Islands automatically receive the page's `pretext` as the second argument to `init`. You do not need to manually serialize every value through `data-*` attributes.
-
-```ts
-// src/lib/islands/counter.ts
-export default function init(root: HTMLElement, pretext: any) {
-  // pretext contains the full server data returned by load()
-  console.log(pretext.initialCount);
-}
-```
-
-You can still use `data-*` attributes to pass individual overrides or keep the island dependency-free.
+## 
 
 ---
 

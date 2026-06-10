@@ -9,7 +9,7 @@ El sistema de archivos es tu router. Sin configuración requerida. **Exacto** ma
 | `src/routes/blog/[slug]/+page.nx`   | `/blog/my-post`               | `ctx.params.slug === 'my-post'`          |
 | `src/routes/(marketing)/about/+page.nx` | `/about` (grupo, sin segmento en URL) | {}                             |
 | `src/routes/api/users/+server.nx`   | `/api/users` (solo API)       | ctx.req / ctx.res completo               |
-| `src/routes/blog/[...slug]/+page.nx`| `/blog/a/b/c`                 | `ctx.params.slug === 'a/b/c'` (catch-all)|
+| `src/routes/blog/(marketing)/about/+page.nx` | `/about` (grupo, sin segmento en URL) | {} |
 
 ### Ruta dinámica exacta + load + manejo de error (el archivo que escribes)
 
@@ -81,15 +81,12 @@ El framework mezcla pretext (el hijo gana) y anida el HTML en los marcadores slo
 
 ```svelte
 ---
-export async function GET(ctx) {
+export async function load(ctx) {
+  if (ctx.request.method !== 'GET') {
+    return new Response('Method not allowed', { status: 405 });
+  }
   const posts = await db.posts.findMany();
-  return ctx.json({ posts });   // Response exacto con headers correctos
-}
-
-export async function POST(ctx) {
-  const data = await ctx.req.json();
-  const created = await db.posts.create(data);
-  return ctx.json(created, { status: 201 });
+  return Response.json({ posts });
 }
 ---
 ```

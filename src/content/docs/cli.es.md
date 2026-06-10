@@ -12,6 +12,8 @@
 | `nexus studio` | Abre el dashboard en tiempo real |
 | `nexus routes` | Imprime el árbol de rutas resuelto |
 | `nexus add` | Agrega paquetes, rutas o scaffolding al proyecto |
+| `nexus bridge` | Abre el CLI del database bridge |
+| `nexus fix` | Auto-corrección de lint y formato |
 
 Durante `nexus dev` y `nexus build` obtienes **errores estructurados exactos**:
 
@@ -29,6 +31,11 @@ Durante `nexus dev` y `nexus build` obtienes **errores estructurados exactos**:
 |--------|-------|-------------|
 | `--port` | `-p` | Puerto a usar (por defecto `server.port` en `nexus.config.ts` o `3000`) |
 | `--host` | | Host a usar (por defecto `localhost`) |
+| `--ci` | | Modo CI para `nexus audit` (no interactivo) |
+| `--json` | | Salida JSON para `nexus audit` |
+| `--fix` | | Auto-fix para `nexus audit` |
+| `--dry-run` | | Vista previa de cambios para `nexus fix` |
+| `--force` | | Forzar operación para `nexus fix` |
 | `--root` | | Ruta raíz del proyecto |
 
 Ejemplos:
@@ -36,6 +43,8 @@ Ejemplos:
 ```bash
 nexus dev --port 3000
 nexus start --host 0.0.0.0
+nexus audit --ci --json
+nexus fix --dry-run
 ```
 
 ## nexus.config.ts exacto (el que copias)

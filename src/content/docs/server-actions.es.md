@@ -31,7 +31,7 @@ export async function subscribe(formData, ctx) {
 - En submit (sin JS): POST completo con token CSRF automático.
 - Con JS: `fetch` a `/_nexus/action/subscribe`, misma protección, retorna JSON.
 - El resultado está disponible como `pretext.result` después de la action (para la request actual).
-- Las race conditions son manejadas por el runtime (puedes retornar `{ queue: true }` etc. — ver patrones avanzados abajo).
+- Las race conditions son manejadas por el runtime (configura `race` en `createAction`).
 
 ## Auth + cookie + redirect exactos (copia este patrón)
 
@@ -79,9 +79,7 @@ import { z } from 'zod';
 export async function contact(formData, ctx) {
   "use server";
 
-  if (!ctx.rateLimit('contact', { max: 5, window: 60_000 })) {
-    return { error: 'Demasiados mensajes. Intenta de nuevo en un minuto.' };
-  }
+  // El rate limiting se configura via opts de createAction, no ctx.rateLimit()
 
   const result = z.object({
     email: z.string().email(),
@@ -95,7 +93,7 @@ export async function contact(formData, ctx) {
     return { error: 'Entrada inválida' };
   }
 
-  await db.messages.create({ ...result.data, ip: ctx.req.ip });
+  await db.messages.create({ ...result.data });
   return { success: true };
 }
 ---
@@ -144,4 +142,4 @@ export async function heavyAction(formData, ctx) {
 }
 ```
 
-Todos los patrones arriba (el marcador "use server", ctx.rateLimit, ctx.setCookie, return { redirect/error }, el endpoint fetch exacto `/_nexus/action/Name`, manejo de races) están tomados directamente del paquete server y los ejemplos reales en el monorepo. Úsalos exactamente como se muestran. Combina con load() (para datos iniciales), runes (para estado UI), e islands (para la parte cliente). Ver las otras páginas de esta lista para la imagen completa.
+Todos los patrones arriba (el marcador "use server", ctx.setCookie, return { redirect/error }, el endpoint fetch exacto `/_nexus/action/Name`) están tomados directamente del paquete server y los ejemplos reales en el monorepo. Úsalos exactamente como se muestran. Combina con load() (para datos iniciales), runes (para estado UI), e islands (para la parte cliente). Ver las otras páginas de esta lista para la imagen completa.

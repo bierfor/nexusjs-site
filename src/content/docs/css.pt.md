@@ -6,7 +6,7 @@ O Nexus oferece suporte de primeira classe para CSS: uma folha de estilos unific
 
 ## Como os estilos são servidos
 
-O Nexus v0.9.31 serve **uma** folha de estilos automaticamente:
+O Nexus v0.9.32 serve **uma** folha de estilos automaticamente:
 
 - **`/_nexus/styles.css`** — folha unificada que inclui:
   1. Seu entry de CSS global processado com PostCSS/Tailwind (anteposto no início).

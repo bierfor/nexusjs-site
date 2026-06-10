@@ -6,7 +6,7 @@ Nexus has first-class CSS support with a single unified stylesheet, automatic Po
 
 ## How styles are served
 
-Nexus v0.9.31 serves **one** stylesheet automatically:
+Nexus v0.9.32 serves **one** stylesheet automatically:
 
 - **`/_nexus/styles.css`** — a unified stylesheet that includes:
   1. Your global CSS entry, processed with PostCSS/Tailwind (prepended first).

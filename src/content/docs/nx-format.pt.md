@@ -9,7 +9,7 @@
 | Frontmatter | `---` ... `---`             | Roda só no servidor. Imports, valores exportados e funções `load()` / `preload()` |
 | Template  | HTML compatível com Svelte 5 Runes (sem <script> dentro) | SSR com `{pretext.key}` (escapado). Suporta {#if}, {#each}, <nexus-island> |
 | `<style>` | `<style>` ... `</style>`     | Auto-scoped (hash data-nx). Vai para CSS global em dev       |
-| `<script>`| `<script>` ... `</script>`   | Runes de cliente ($state etc.) ou ações "use server"         |
+| `<script>`| `<script>` ... `</script>`   | Runes de cliente ($state etc.) dentro de islands somente      |
 
 ## Página mínima exata (o arquivo que você realmente cria)
 
@@ -83,9 +83,7 @@ export async function load(ctx) {
 
 // Ação de servidor exata (chamada de form ou island)
 export async function likePost(postId, ctx) {
-  if (!ctx.rateLimit('likePost', { max: 10, window: 60_000 })) {
-    return { error: 'Likes demais' };
-  }
+  "use server";
   await db.likes.create({ postId, userId: ctx.user?.id });
   return { liked: true };
 }
@@ -97,11 +95,6 @@ export async function likePost(postId, ctx) {
 <article>
   {pretext.post.html}   <!-- HTML sanitizado exato do pacote de conteúdo -->
 </article>
-
-<form action={likePost} method="post">
-  <input type="hidden" name="postId" value="{pretext.post.meta.id}" />
-  <button type="submit">Curtir</button>
-</form>
 
 <!-- Island exata que pode chamar a ação ou usar runes -->
 <nexus-island client:visible src="$lib/islands/like-button.ts" data-post-id="{pretext.post.meta.id}"></nexus-island>
@@ -122,6 +115,7 @@ export default function init(root: HTMLElement) {
   btn?.addEventListener('click', async () => {
     const res = await fetch('/_nexus/action/likePost', {
       method: 'POST',
+      headers: { 'x-nexus-action': '1' },
       body: new URLSearchParams({ postId }),
     });
     // tratar resposta, atualizar UI com runes/state
@@ -129,7 +123,7 @@ export default function init(root: HTMLElement) {
 }
 ```
 
-## DX exato em tempo de compilação (v0.9.31)
+## DX exato em tempo de compilação (v0.9.32)
 
 Se você escrever sintaxe quebrada o compilador dá **erros exatos** que você pode corrigir imediatamente:
 
@@ -144,7 +138,7 @@ Todos os exemplos acima são tirados de uso real no exemplo paylinks-saas e no p
 
 Veja a Referência de Pacotes (packages.md) para códigos de erro completos e exemplos.
 
-## Prefetch de links (v0.9.31)
+## Prefetch de links (v0.9.32)
 
 Adicione `data-nx-prefetch` a qualquer tag `<a>` para controlar quando a próxima página é prefetch:
 

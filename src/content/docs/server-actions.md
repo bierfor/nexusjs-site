@@ -79,9 +79,7 @@ import { z } from 'zod';
 export async function contact(formData, ctx) {
   "use server";
 
-  if (!ctx.rateLimit('contact', { max: 5, window: 60_000 })) {
-    return { error: 'Too many messages. Try again in a minute.' };
-  }
+  // Rate limiting is configured via createAction opts, not ctx.rateLimit()
 
   const result = z.object({
     email: z.string().email(),
@@ -129,19 +127,16 @@ export default function init(root: HTMLElement) {
 export async function heavyAction(formData, ctx) {
   "use server";
 
-  if (ctx.isAborted) return;                    // user navigated away
-
   const result = await doLongWork();
   return { 
     data: result,
     // or
     redirect: '/success',
-    // or
-    queue: true,          // let the runtime queue it if another action is running
-    // or
-    ignore: true,         // silently ignore if a newer action started
   };
 }
+
+// Race strategy is set when registering the action (not returned):
+// createAction(handler, { race: 'queue' })   // queue, cancel, reject, ignore
 ```
 
 All the patterns above (the "use server" marker, ctx.rateLimit, ctx.setCookie, return { redirect/error }, the exact fetch endpoint `/_nexus/action/Name`, race handling) are taken directly from the server package and the real examples in the monorepo. Use them exactly as shown. Combine with load() (for initial data), runes (for UI state), and islands (for the client part). See the other pages in this list for the full picture.

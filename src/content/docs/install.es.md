@@ -17,13 +17,13 @@ corepack prepare pnpm@9 --activate
 ### Paso a paso: crear y ejecutar (sesión de terminal exacta)
 
 ```bash
-npm create @nexus_js/nexus my-app
+npm create @nexus_js/create-nexus my-app
 cd my-app
 pnpm install
 pnpm dev
 ```
 
-Abre http://localhost:3000. Ahora tienes una app corriendo usando features 0.9.30+ (load/pretext, islands, seguridad hardened).
+Abre http://localhost:3000. Ahora tienes una app corriendo usando features 0.9.32+ (load/pretext, islands, seguridad hardened).
 
 ### Archivos generados exactos que verás/editarás
 

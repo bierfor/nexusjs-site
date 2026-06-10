@@ -25,7 +25,7 @@ O monorepo do Nexus está organizado em pacotes focados. Todos os pacotes seguem
 | `@nexus_js/bridge` | Descoberta legacy (DB/APIs), modelo canônico, geradores seguros (GraphQL + Shield) |
 | `@nexus_js/serialize` | Transporte lossless (Date, Map, Set, BigInt, RegExp, URL) server <-> client |
 | `@nexus_js/vite-plugin-nexus` | Plugin Vite ( transform .nx, HMR, manifests de islands, scoped CSS HMR, Server Actions) |
-| `@nexus_js/create-nexus` | Scaffold (npm create @nexus_js/nexus) |
+| `@nexus_js/create-nexus` | Scaffold (npm create @nexus_js/create-nexus) |
 | `@nexus_js/eslint-plugin-bridge` | Regras ESLint para isolamento bridge/tenant |
 | `@nexus_js/nexus_js` / `@nexus_js/nexus-js` | Meta pacotes para CLI (bins nexus + create-nexus) |
 
@@ -152,7 +152,7 @@ Quando setado, os elementos `<nexus-island>` sem diretiva explícita usam o defa
 - Continua a enforcement de "modo correto" neste site de documentação (todo conteúdo via @nexus_js/content, load/pretext para dados, head via load(), sem padrões legacy).
 - Veja CHANGELOG.md no monorepo para a lista completa.
 
-Para instalação e quickstart veja as páginas dedicadas (sempre use o último `npm create @nexus_js/nexus`).
+Para instalação e quickstart veja as páginas dedicadas (sempre use o último `npm create @nexus_js/create-nexus`).
 
 ## @nexus_js/assets
 
@@ -251,7 +251,7 @@ Config avançada só quando você opta por não usar os defaults. Veja páginas 
 ## @nexus_js/create-nexus + CLIs meta
 
 ```bash
-npm create @nexus_js/nexus my-app
+npm create @nexus_js/create-nexus my-app
 ```
 
 Dá a você os bins `nexus` e `create-nexus`. Use os meta pacotes @nexus_js/nexus_js ou @nexus_js/nexus-js.

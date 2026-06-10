@@ -8,8 +8,8 @@ The file system is your router. No config required. **Exact** file → route map
 | `src/routes/about/+page.nx`       | `/about`                      | {}                                       |
 | `src/routes/blog/[slug]/+page.nx` | `/blog/my-post`               | `ctx.params.slug === 'my-post'`          |
 | `src/routes/(marketing)/about/+page.nx` | `/about` (group, no segment in URL) | {}                             |
-| `src/routes/api/users/+server.nx` | `/api/users` (API only)       | Full ctx.req / ctx.res                   |
-| `src/routes/blog/[...slug]/+page.nx` | `/blog/a/b/c`              | `ctx.params.slug === 'a/b/c'` (catch-all)|
+| `src/routes/api/users/+server.nx` | `/api/users` (API route)       | Full `ctx.request`, `ctx.url`, `ctx.params` |
+| `src/routes/blog/(marketing)/about/+page.nx` | `/about` (group, no segment in URL) | {}                             |
 
 ### Exact dynamic route + load + error handling (the file you write)
 
@@ -81,15 +81,12 @@ The framework merges pretext (child wins) and nests the HTML at the slot markers
 
 ```svelte
 ---
-export async function GET(ctx) {
+export async function load(ctx) {
+  if (ctx.request.method !== 'GET') {
+    return new Response('Method not allowed', { status: 405 });
+  }
   const posts = await db.posts.findMany();
-  return ctx.json({ posts });   // exact Response with correct headers
-}
-
-export async function POST(ctx) {
-  const data = await ctx.req.json();
-  const created = await db.posts.create(data);
-  return ctx.json(created, { status: 201 });
+  return Response.json({ posts });
 }
 ---
 ```

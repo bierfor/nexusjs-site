@@ -39,31 +39,11 @@ openssl rand -base64 32
 
 The production server refuses to start if `NEXUS_SECRET` is missing. It must be a random string of at least 32 characters.
 
-## Exact Cloudflare Workers / Pages (the one-line config)
+## Cloudflare Workers / Pages, Vercel, Deno Deploy
 
-```ts
-// nexus.config.ts
-export default {
-  build: { adapter: 'cloudflare' },
-};
-```
+Nexus runs on any runtime with Web-standard `Request`/`Response` support (Node 22+, Deno, Bun, Cloudflare Workers). There is no built-in adapter system yet; deploy the Docker pattern above or run `nexus start` on your target platform.
 
-Then `pnpm build` produces the `_worker.js` + static assets the adapter expects.
-
-## Exact Vercel (the one-line config)
-
-```ts
-// nexus.config.ts
-export default {
-  build: { adapter: 'vercel' },
-};
-```
-
-Push to Vercel — it will detect the adapter output.
-
-## Exact Deno Deploy / Bun
-
-Set `adapter: 'deno'` or run with `bun run .nexus/output/server.js`.
+For serverless platforms, a community adapter or custom entry point that imports `createNexusServer` from `@nexus_js/server` and wraps it for the platform's handler signature is required.
 
 ## Required environment variables
 

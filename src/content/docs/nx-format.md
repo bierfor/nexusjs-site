@@ -9,7 +9,7 @@
 | Frontmatter | `---` ... `---`             | Runs on server only. Imports, exported values, and `load()` / `preload()` functions |
 | Template  | Svelte 5 Runes-compatible HTML (no <script> inside) | SSR with `{pretext.key}` (escaped). Supports {#if}, {#each}, <nexus-island> |
 | `<style>` | `<style>` ... `</style>`     | Auto-scoped (data-nx hash). Goes to global CSS in dev        |
-| `<script>`| `<script>` ... `</script>`   | Client runes ($state etc.) or "use server" actions           |
+| `<script>`| `<script>` ... `</script>`   | Client runes ($state etc.) inside islands only               |
 
 ## Exact minimal page (the file you actually create)
 
@@ -83,9 +83,7 @@ export async function load(ctx) {
 
 // Exact server action (called from form or island)
 export async function likePost(postId, ctx) {
-  if (!ctx.rateLimit('likePost', { max: 10, window: 60_000 })) {
-    return { error: 'Too many likes' };
-  }
+  "use server";
   await db.likes.create({ postId, userId: ctx.user?.id });
   return { liked: true };
 }
@@ -97,11 +95,6 @@ export async function likePost(postId, ctx) {
 <article>
   {pretext.post.html}   <!-- exact sanitized HTML from content package -->
 </article>
-
-<form action={likePost} method="post">
-  <input type="hidden" name="postId" value="{pretext.post.meta.id}" />
-  <button type="submit">Like</button>
-</form>
 
 <!-- Exact island that can call the action or use runes -->
 <nexus-island client:visible src="$lib/islands/like-button.ts" data-post-id="{pretext.post.meta.id}"></nexus-island>
@@ -122,6 +115,7 @@ export default function init(root: HTMLElement) {
   btn?.addEventListener('click', async () => {
     const res = await fetch('/_nexus/action/likePost', {
       method: 'POST',
+      headers: { 'x-nexus-action': '1' },
       body: new URLSearchParams({ postId }),
     });
     // handle response, update UI with runes/state
@@ -129,7 +123,7 @@ export default function init(root: HTMLElement) {
 }
 ```
 
-## Exact Compile-time DX (v0.9.31)
+## Exact Compile-time DX (v0.9.32)
 
 If you write broken syntax the compiler gives you **exact** errors you can fix immediately:
 
@@ -144,7 +138,7 @@ All examples above are taken from real usage in the paylinks-saas example and th
 
 See the Package Reference (packages.md) for full error codes and examples.
 
-## Link prefetching (v0.9.31)
+## Link prefetching (v0.9.32)
 
 Add `data-nx-prefetch` to any `<a>` tag to control when the next page is prefetched:
 

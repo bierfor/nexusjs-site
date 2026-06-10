@@ -16,7 +16,7 @@ cd my-app
 pnpm install
 ```
 
-This creates a project using the latest v0.9.31 patterns (`load()` / `preload()`, `.nx` templates, islands, link prefetching, hardened security by default).
+This creates a project using the latest v0.9.32 patterns (`load()`, `.nx` templates, islands, link prefetching, hardened security by default).
 
 ### Step 2 — Project structure and config
 
@@ -33,13 +33,12 @@ public/
 nexus.config.ts
 ```
 
-A typical `nexus.config.ts` for v0.9.31:
+A typical `nexus.config.ts` for v0.9.32:
 
 ```ts
 import type { NexusConfig } from '@nexus_js/cli';
 
 export default {
-  defaultHydration: 'client:visible',
   css: { entry: 'src/global.css' },
   server: { port: 3000 },
   security: {
@@ -67,30 +66,19 @@ export async function load(ctx) {
     description: 'Nexus.js in action',
   };
 
-  // Return data for template + optional head for SEO (auto-injected)
+  // Return data for template (auto-merged into pretext)
   return {
     page: pageData,
-    head: {
-      title: `${pageData.title} — My Nexus App`,
-      description: pageData.description,
-    },
   };
 }
 ---
 
 <h1>{pretext.page.title}</h1>
 <p>{pretext.page.description}</p>
-<p>{pretext.t('about.welcome')}</p>
 
 <!-- Example island for interactivity (only this ships JS) -->
-<div client:visible>
-  <script>
-    let count = $state(0);
-  </script>
-  <button onclick={() => count++}>
-    Clicked {count} times
-  </button>
-</div>
+<nexus-island client:visible src="$lib/islands/counter.ts" data-initial="42">
+</nexus-island>
 
 <style>
   h1 { color: #2563eb; font-size: 2rem; }
@@ -125,7 +113,7 @@ export const i18n = defineI18n({
 });
 ```
 
-Then in load: `const t = i18n.tFn(locale); return { t };` and use `{pretext.t('about.welcome')}`.
+Then in load: `const t = i18n.tFn(locale); return { t };` and use `{pretext.t('about.welcome')}`. The `tFn` returns a translation function.
 
 ### Step 5 — Use external content (exact with @nexus_js/content)
 
@@ -135,11 +123,10 @@ For MD-driven pages (recommended for docs/blogs):
 // in load(ctx)
 import { loadContent } from '@nexus_js/content';
 
-const entry = loadContent('about', { locale });
+const entry = loadContent('about', { locale, contentDir: 'src/content' });
 return { 
   content: entry.html, 
-  headings: entry.headings,
-  head: { title: entry.meta.title }
+  title: entry.meta?.title,
 };
 ```
 

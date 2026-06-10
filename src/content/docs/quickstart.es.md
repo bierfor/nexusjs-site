@@ -16,7 +16,7 @@ cd my-app
 pnpm install
 ```
 
-Esto crea un proyecto usando los patrones v0.9.31 (`load()` / `preload()`, templates `.nx`, islands, prefetch de links, seguridad hardened por defecto).
+Esto crea un proyecto usando los patrones v0.9.32 (`load()`, templates `.nx`, islands, prefetch de links, seguridad hardened por defecto).
 
 ### Paso 2 — Estructura del proyecto y config
 
@@ -33,7 +33,7 @@ public/
 nexus.config.ts
 ```
 
-Un `nexus.config.ts` típico para v0.9.31:
+Un `nexus.config.ts` típico para v0.9.32:
 
 ```ts
 import type { NexusConfig } from '@nexus_js/cli';
@@ -135,11 +135,10 @@ Para páginas impulsadas por MD (recomendado para docs/blogs):
 // en load(ctx)
 import { loadContent } from '@nexus_js/content';
 
-const entry = loadContent('about', { locale });
+const entry = loadContent('about', { locale, contentDir: 'src/content' });
 return { 
   content: entry.html, 
-  headings: entry.headings,
-  head: { title: entry.meta.title }
+  title: entry.meta?.title,
 };
 ```
 

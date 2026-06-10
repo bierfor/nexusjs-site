@@ -31,7 +31,7 @@ export async function subscribe(formData, ctx) {
 - No submit (sem JS): POST completo com token CSRF automático.
 - Com JS: `fetch` para `/_nexus/action/subscribe`, mesma proteção, retorna JSON.
 - O resultado fica disponível como `pretext.result` depois da action (para a request atual).
-- Race conditions são tratadas pelo runtime (você pode retornar `{ queue: true }` etc. — veja padrões avançados abaixo).
+- Race conditions são tratadas pelo runtime (configure `race` no `createAction`).
 
 ## Auth + cookie + redirect exatos (copie este padrão)
 
@@ -79,9 +79,7 @@ import { z } from 'zod';
 export async function contact(formData, ctx) {
   "use server";
 
-  if (!ctx.rateLimit('contact', { max: 5, window: 60_000 })) {
-    return { error: 'Mensagens demais. Tente novamente em um minuto.' };
-  }
+  // O rate limiting é configurado via opts do createAction, não ctx.rateLimit()
 
   const result = z.object({
     email: z.string().email(),
@@ -95,7 +93,7 @@ export async function contact(formData, ctx) {
     return { error: 'Entrada inválida' };
   }
 
-  await db.messages.create({ ...result.data, ip: ctx.req.ip });
+  await db.messages.create({ ...result.data });
   return { success: true };
 }
 ---
@@ -144,4 +142,4 @@ export async function heavyAction(formData, ctx) {
 }
 ```
 
-Todos os padrões acima (o marcador "use server", ctx.rateLimit, ctx.setCookie, return { redirect/error }, o endpoint fetch exato `/_nexus/action/Name`, tratamento de races) são tirados diretamente do pacote server e dos exemplos reais no monorepo. Use-os exatamente como mostrado. Combine com load() (para dados iniciais), runes (para estado de UI), e islands (para a parte cliente). Veja as outras páginas desta lista para o quadro completo.
+Todos os padrões acima (o marcador "use server", ctx.setCookie, return { redirect/error }, o endpoint fetch exato `/_nexus/action/Name`) são tirados diretamente do pacote server e dos exemplos reais no monorepo. Use-os exatamente como mostrado. Combine com load() (para dados iniciais), runes (para estado de UI), e islands (para a parte cliente). Veja as outras páginas desta lista para o quadro completo.

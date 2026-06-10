@@ -9,7 +9,7 @@
 | Frontmatter | `---` ... `---`             | Corre solo en servidor. Imports, valores exportados y funciones `load()` / `preload()` |
 | Template  | HTML compatible con Svelte 5 Runes (sin <script> adentro) | SSR con `{pretext.key}` (escapado). Soporta {#if}, {#each}, <nexus-island> |
 | `<style>` | `<style>` ... `</style>`     | Auto-scoped (hash data-nx). Va a CSS global en dev           |
-| `<script>`| `<script>` ... `</script>`   | Runes de cliente ($state etc.) o acciones "use server"       |
+| `<script>`| `<script>` ... `</script>`   | Runes de cliente ($state etc.) dentro de islands solamente    |
 
 ## Página mínima exacta (el archivo que realmente creas)
 
@@ -83,9 +83,7 @@ export async function load(ctx) {
 
 // Acción de servidor exacta (llamada desde form o island)
 export async function likePost(postId, ctx) {
-  if (!ctx.rateLimit('likePost', { max: 10, window: 60_000 })) {
-    return { error: 'Demasiados likes' };
-  }
+  "use server";
   await db.likes.create({ postId, userId: ctx.user?.id });
   return { liked: true };
 }
@@ -97,11 +95,6 @@ export async function likePost(postId, ctx) {
 <article>
   {pretext.post.html}   <!-- HTML sanitizado exacto del paquete de contenido -->
 </article>
-
-<form action={likePost} method="post">
-  <input type="hidden" name="postId" value="{pretext.post.meta.id}" />
-  <button type="submit">Me gusta</button>
-</form>
 
 <!-- Island exacta que puede llamar la acción o usar runes -->
 <nexus-island client:visible src="$lib/islands/like-button.ts" data-post-id="{pretext.post.meta.id}"></nexus-island>
@@ -122,6 +115,7 @@ export default function init(root: HTMLElement) {
   btn?.addEventListener('click', async () => {
     const res = await fetch('/_nexus/action/likePost', {
       method: 'POST',
+      headers: { 'x-nexus-action': '1' },
       body: new URLSearchParams({ postId }),
     });
     // manejar respuesta, actualizar UI con runes/state
@@ -129,7 +123,7 @@ export default function init(root: HTMLElement) {
 }
 ```
 
-## DX exacto en tiempo de compilación (v0.9.31)
+## DX exacto en tiempo de compilación (v0.9.32)
 
 Si escribes sintaxis rota el compilador te da **errores exactos** que puedes arreglar inmediatamente:
 
@@ -144,7 +138,7 @@ Todos los ejemplos arriba están tomados de uso real en el ejemplo paylinks-saas
 
 Ver la Referencia de Paquetes (packages.md) para códigos de error completos y ejemplos.
 
-## Prefetch de links (v0.9.31)
+## Prefetch de links (v0.9.32)
 
 Agrega `data-nx-prefetch` a cualquier etiqueta `<a>` para controlar cuándo se prefetch la siguiente página:
 
