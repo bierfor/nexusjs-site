@@ -11,9 +11,9 @@
     "start": "nexus start"
   },
   "dependencies": {
-    "@nexus_js/cli": "^0.9.31",
-    "@nexus_js/content": "^0.9.31",
-    "@nexus_js/runtime": "^0.9.31",
+    "@nexus_js/cli": "^0.9.32",
+    "@nexus_js/content": "^0.9.32",
+    "@nexus_js/runtime": "^0.9.32",
     "@nexus_js/server": "^0.9.32",
     "@tailwindcss/postcss": "^4.3.0",
     "autoprefixer": "^10.5.0",
