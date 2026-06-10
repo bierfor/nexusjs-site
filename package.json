@@ -11,20 +11,15 @@
     "start": "nexus start"
   },
   "dependencies": {
-    "@nexus_js/cli": "^0.9.30",
-    "@nexus_js/content": "^0.9.30",
-    "@nexus_js/runtime": "^0.9.30",
-    "@nexus_js/server": "^0.9.30",
+    "@nexus_js/cli": "^0.9.31",
+    "@nexus_js/content": "^0.9.31",
+    "@nexus_js/runtime": "^0.9.31",
+    "@nexus_js/server": "^0.9.31",
     "@tailwindcss/postcss": "^4.3.0",
     "autoprefixer": "^10.5.0",
     "gsap": "^3.15.0",
     "postcss": "^8.5.15",
     "shiki": "^1.0.0",
     "tailwindcss": "^4.3.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@nexus_js/server@0.9.30": "patches/@nexus_js__server@0.9.30.patch"
-    }
   }
 }
