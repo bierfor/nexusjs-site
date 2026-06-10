@@ -20,22 +20,21 @@ importers:
       '@nexus_js/server':
         specifier: ^0.9.30
         version: 0.9.30(@nexus_js/compiler@0.9.23)(@nexus_js/runtime@0.9.30)
-      gsap:
-        specifier: ^3.15.0
-        version: 3.15.0
-      shiki:
-        specifier: ^1.0.0
-        version: 1.29.2
-    devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.3.0
         version: 4.3.0
       autoprefixer:
         specifier: ^10.5.0
         version: 10.5.0(postcss@8.5.15)
+      gsap:
+        specifier: ^3.15.0
+        version: 3.15.0
       postcss:
         specifier: ^8.5.15
         version: 8.5.15
+      shiki:
+        specifier: ^1.0.0
+        version: 1.29.2
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
